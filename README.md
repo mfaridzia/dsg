@@ -101,6 +101,8 @@ flowchart LR
 2. **Aturan Batas Kuota Promo Bersama Lintas Tier (_Shared Quota Pool_):**
    - _Ambiguitas:_ Bagaimana kuota promo bekerja bila produk memiliki 3 opsi tier (Starter, Pro, Business)?
    - _Asumsi:_ Kuota promo dihitung sebagai **satu pool unit global per produk**. Contoh: Jika "Kodeva POS Kasir" memiliki sisa kuota promo 5 lisensi, maka pembelian 3 lisensi Starter + 2 lisensi Pro langsung menghabiskan kuota promo produk tersebut menjadi 0. Penambahan berikutnya otomatis dikunci oleh sistem keranjang belanja.
+3. **Kami perlu tahu berapa orang yang klik tombol beli dari landing page.**
+   - Di sini asumsi saya nantinya menggunakan event tracking seperti Google Analytics, Posthog, dsb untuk melacak jumlah berapa orang yg sudah klik tombol beli. Namun, untuk technical test ini saya tidak memasang Google Analytics nya untuk kesederhaanaan, tapi gantinya saya sudah menyiapkan pipeline data yg valid di window.dataLayer untuk nantinya dihubungkan/diganti dengan event tracking aslinya seperti GA4. Dan untuk simulasi juga sudah dibuatkan floating box di kanan bawah untuk melacak/melihat event yg sudah di track ketika user melakukan suatu "action".
 
 ---
 
@@ -125,7 +127,7 @@ flowchart LR
   - **Login Demo:** Dilengkapi fitur 1-klik masuk untuk reviewer (`admin@kodeva.com` / `admin123`).
 - [x] **Caching & On-Demand Revalidation (`/api/revalidate`):** Endpoint untuk purge cache instan (`revalidatePath`) saat konten di-publish tanpa redeploy manual.
 
-### 🎁 Fitur Bonus (Opsional) yang Berhasil Diimplementasikan:
+### 🎁 Fitur Bonus (Opsional) yang Sudah Diimplementasikan:
 
 - [x] **Katalog Shareable (URL Query Sync):** Pencarian instan kata kunci (`q`), pengurutan harga (`sort=price_asc/price_desc/discount`), dan filter kategori yang tersinkronisasi realtime ke URL (`/marketplace?category=...&sort=...&q=...`) sehingga tautan pencarian siap dibagikan langsung.
 - [x] **Pilihan Durasi Langganan & Tabel Komparasi:** Switcher durasi tagihan **Bulanan vs Tahunan (Hemat 20%)** di halaman detail produk, serta **Tabel Matriks Perbandingan Fitur** lengkap lintas tier paket (Starter, Pro, Business).
@@ -133,16 +135,20 @@ flowchart LR
 - [x] **Test Otomatis Logika Inti (`npm test`):** 9 automated unit tests bawaan Node.js test runner untuk memverifikasi logika batas kuota promo bersama, kalkulasi tagihan tahunan, dan validasi voucher.
 - [x] **Preview / Draft Konten CMS:** Kontrol status `Draft` vs `Published` pada artikel blog di `/admin` dengan tautan preview langsung ke halaman web publik.
 
-### Yang Belum Selesai (Limitasi Waktu 6–8 Jam):
+### Yang Belum Selesai/Dikerjakan
 
-- Pembayaran payment gateway sungguhan (Midtrans/Xendit) karena brief meminta cukup di sisi frontend simulasi.
+- Pengaturan layout dan urutan section landing page dari CMS (Bonus/Opsional)
+- Penjadwalan konten promo dari CMS (tayang dan berakhir otomatis pada tanggal tertentu) (Bonus/Opsional)
 
 ### Rencana Jika Ada Waktu 1 Minggu Lagi:
 
 1. **Multi-Region & Internationalization (i18n):** Integrasi Next-intl untuk routing `/id`, `/my`, dan `/sg` dengan switcher mata uang IDR/MYR/SGD.
-2. **Payment Gateway Produksi:** Integrasi webhook Midtrans Core API atau Xendit dengan validasi HMAC signature dan Redis lock.
+2. **Payment Gateway Produksi:** Menambahkan Integrasi webhook Payment Gateway (Midtrans, Xendit, dsb) dengan Core API
 3. **Automated Testing Suite:** End-to-end testing menggunakan Playwright untuk alur belanja dan Vitest untuk unit test invariant kuota promo.
 4. **Fitur Bonus CMS:** Penjadwalan tanggal mulai/selesai promo langsung dari dashboard admin dan drag-and-drop reorder section landing page.
+5. **Improve Codebase, UI/UX & Arstitektur**: Implementasi bagian yang belum seperti menambahkan event tracking, improve UI/UX di dashboard admin.
+6. **Auth**: Menggunakan auth yg lebih proper untuk login di halaman admin menggunakan Better Auth dengan Provider Username/Password dan Google Login agar memudahkan pengguna untuk masuk ke halaman admin.
+7. **Real Katalog/Produk Marketplace**: Integrasi data katalog di marketplace dengan data real yang ada di database
 
 ---
 

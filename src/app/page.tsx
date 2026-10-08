@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { db, ensureDatabaseTables } from "@/db";
 import { landingContent } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -8,6 +9,46 @@ import { FeaturedProducts } from "@/components/landing/FeaturedProducts";
 import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
 import { FAQSection } from "@/components/landing/FAQSection";
 import { LeadCaptureForm } from "@/components/landing/LeadCaptureForm";
+
+export const metadata: Metadata = {
+  title: "Kodeva — Solusi Software Kasir & HR Cloud Terintegrasi UMKM",
+  description:
+    "Otomatisasi aplikasi kasir POS, sistem payroll PPh 21, dan kontrol inventori multi-cabang. Amankan promo akhir tahun diskon s/d 45% sekarang.",
+  keywords: [
+    "aplikasi kasir",
+    "aplikasi kasir online",
+    "software POS",
+    "aplikasi HR",
+    "software payroll umkm",
+    "kodeva",
+  ],
+  openGraph: {
+    title: "Kodeva — Solusi Software Kasir & HR Cloud Terintegrasi UMKM",
+    description:
+      "Otomatisasi kasir, payroll karyawan, dan stok usaha tanpa ribet. Promo diskon lisensi s/d 45% + gratis setup cabang.",
+    url: "/",
+    siteName: "Kodeva",
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80",
+        width: 1200,
+        height: 630,
+        alt: "Dashboard Aplikasi Kasir & HR Kodeva",
+      },
+    ],
+    locale: "id_ID",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kodeva — Solusi Software Kasir & HR Cloud Terintegrasi UMKM",
+    description:
+      "Otomatisasi kasir, payroll karyawan, dan stok usaha tanpa ribet. Promo diskon lisensi s/d 45%.",
+    images: [
+      "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80",
+    ],
+  },
+};
 
 export const dynamic = "force-dynamic";
 

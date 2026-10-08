@@ -80,6 +80,9 @@ export default function CheckoutPage() {
     paymentMethod: string;
     licenseKeys?: { product: string; tier: string; key: string }[];
     errorReason?: string;
+    items?: OrderSnapshot["items"];
+    totalAmount?: number;
+    utm?: ReturnType<typeof utmStore.getUtmPayload>;
   } | null>(null);
 
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
@@ -229,6 +232,9 @@ export default function CheckoutPage() {
       customer: pendingOrder.customer,
       paymentMethod: pendingOrder.paymentMethod,
       licenseKeys,
+      items: pendingOrder.items,
+      totalAmount: pendingOrder.totalAmount,
+      utm: utmParams,
     });
 
     setPendingOrder(null);
@@ -520,6 +526,34 @@ export default function CheckoutPage() {
                       </div>
                     ))}
                   </div>
+
+                  {/* Expandable Mock Order Payload with UTM Attribution */}
+                  <details className="mt-4 p-3.5 bg-slate-900 rounded-xl text-left font-mono border border-slate-800 text-xs group">
+                    <summary className="cursor-pointer font-bold text-slate-200 flex items-center justify-between text-[11px] select-none">
+                      <span className="flex items-center gap-1.5">
+                        <span>📦</span>
+                        <span>Payload Mock Order (Termasuk Atribusi UTM)</span>
+                      </span>
+                      <span className="text-[10px] text-indigo-400 font-sans group-open:hidden">
+                        Klik untuk lihat JSON ↓
+                      </span>
+                    </summary>
+                    <pre className="mt-2.5 p-3 bg-slate-950 rounded-lg text-emerald-400 overflow-x-auto text-[10px] leading-relaxed">
+                      {JSON.stringify(
+                        {
+                          order_id: orderResult.invoiceNumber,
+                          status: "PAID",
+                          customer: orderResult.customer,
+                          payment_method: orderResult.paymentMethod,
+                          total_amount: orderResult.totalAmount,
+                          attribution_utm: orderResult.utm,
+                          items: orderResult.items,
+                        },
+                        null,
+                        2
+                      )}
+                    </pre>
+                  </details>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 pt-2">

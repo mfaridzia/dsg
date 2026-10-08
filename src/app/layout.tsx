@@ -21,7 +21,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kodeva — Software Bisnis & Kasir Cloud untuk UMKM Indonesia",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://dsg-kodeva.vercel.app"),
+  title: {
+    default: "Kodeva — Software Bisnis & Kasir Cloud untuk UMKM Indonesia",
+    template: "%s | Kodeva",
+  },
   description:
     "Otomatisasi aplikasi kasir POS, sistem HR & payroll PPh 21, dan kontrol inventori multi-cabang. Amankan promo akhir tahun diskon s/d 45% sekarang.",
   keywords: [
@@ -35,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Kodeva — Solusi Cloud Bisnis Terpadu UMKM",
     description: "Promo Akhir Tahun: Diskon Lisensi Software Kasir & HR hingga 45%.",
-    url: "https://kodeva.dsg.id",
+    url: "https://dsg-kodeva.vercel.app",
     siteName: "Kodeva",
     images: [
       {
@@ -52,6 +56,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Kodeva — Software Bisnis UMKM",
     description: "Promo Akhir Tahun: Diskon Lisensi Software Kasir & HR hingga 45%.",
+    images: [
+      "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1200&q=80",
+    ],
   },
   icons: {
     icon: [

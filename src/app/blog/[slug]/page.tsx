@@ -54,10 +54,37 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   return {
     title: `${post.title} — Kodeva Blog`,
     description: post.excerpt,
+    keywords: [
+      post.category,
+      "aplikasi kasir",
+      "aplikasi HR",
+      "software umkm",
+      "tips bisnis",
+      "kodeva",
+    ],
     openGraph: {
       title: post.title,
       description: post.excerpt,
-      images: [{ url: post.coverImageUrl, width: 1200, height: 630 }],
+      url: `/blog/${post.slug}`,
+      siteName: "Kodeva",
+      type: "article",
+      publishedTime: post.publishedAt,
+      authors: [post.author.name],
+      images: [
+        {
+          url: post.coverImageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+      locale: "id_ID",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+      images: [post.coverImageUrl],
     },
   };
 }
