@@ -16,7 +16,9 @@ export function formatIDR(amount: number): string {
 
 export function formatDate(date: string | Date | number): string {
   const d = new Date(date);
+  if (isNaN(d.getTime())) return "-";
   return new Intl.DateTimeFormat("id-ID", {
+    timeZone: "Asia/Jakarta",
     dateStyle: "medium",
   }).format(d);
 }

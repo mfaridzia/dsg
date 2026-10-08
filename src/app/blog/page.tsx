@@ -73,7 +73,7 @@ export default async function BlogPage() {
           role: r.authorRole,
           avatarUrl: r.authorAvatarUrl,
         },
-        publishedAt: new Date(r.publishedAt).toISOString().split("T")[0],
+        publishedAt: new Date(r.publishedAt).toISOString(),
         readTimeMinutes: r.readTimeMinutes,
         linkedProductSlug: r.linkedProductSlug || undefined,
       }));

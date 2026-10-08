@@ -16,9 +16,11 @@ import {
   AlertCircle,
   Loader2,
   Sparkles,
+  Eye,
 } from "lucide-react";
 import { BlogPost, BlogFormData } from "@/types/blog";
 import { PRODUCTS } from "@/lib/data/products";
+import { formatDate } from "@/lib/utils";
 import QuillEditor from "@/components/admin/QuillEditor";
 import { toast } from "sonner";
 
@@ -400,22 +402,38 @@ export function BlogManagerTab({
               </select>
             </div>
 
-            <div className="sm:col-span-2 flex justify-end gap-2 pt-3 border-t border-slate-100">
-              <button
-                type="button"
-                onClick={() => setEditingBlog(null)}
-                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold"
-              >
-                Batal
-              </button>
-              <button
-                type="submit"
-                disabled={isSaving}
-                className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white font-bold transition flex items-center gap-1.5"
-              >
-                <Save className="w-3.5 h-3.5" />
-                <span>{isSaving ? "Menyimpan..." : "Simpan & Publikasikan"}</span>
-              </button>
+            <div className="sm:col-span-2 flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-100">
+              <div>
+                {editingBlog.slug ? (
+                  <Link
+                    href={`/blog/preview/${editingBlog.slug}`}
+                    target="_blank"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition"
+                    title="Buka pratinjau draf di tab baru"
+                  >
+                    <Eye className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>Buka Pratinjau Draf</span>
+                  </Link>
+                ) : null}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingBlog(null)}
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSaving}
+                  className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white font-bold transition flex items-center gap-1.5"
+                >
+                  <Save className="w-3.5 h-3.5" />
+                  <span>{isSaving ? "Menyimpan..." : "Simpan & Publikasikan"}</span>
+                </button>
+              </div>
             </div>
           </form>
         </div>
@@ -454,8 +472,14 @@ export function BlogManagerTab({
                       <div className="font-bold text-slate-900 leading-snug line-clamp-1">
                         {blog.title}
                       </div>
-                      <div className="text-[10px] font-mono text-slate-400 mt-0.5">
-                        /blog/{blog.slug}
+                      <div className="text-[10px] font-mono text-slate-400 mt-0.5 flex items-center gap-1.5">
+                        <span>/blog/{blog.slug}</span>
+                        {blog.publishedAt && (
+                          <>
+                            <span>•</span>
+                            <span className="text-slate-500 font-sans">{formatDate(blog.publishedAt)}</span>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -488,12 +512,16 @@ export function BlogManagerTab({
                 <td className="px-6 py-4 text-right">
                   <div className="flex items-center justify-end gap-1.5">
                     <Link
-                      href={`/blog/${blog.slug}`}
+                      href={blog.status === "draft" ? `/blog/preview/${blog.slug}` : `/blog/${blog.slug}`}
                       target="_blank"
                       className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-700 transition"
-                      title="Buka Artikel"
+                      title={blog.status === "draft" ? "Pratinjau Draf" : "Buka Artikel"}
                     >
-                      <ExternalLink className="w-3.5 h-3.5" />
+                      {blog.status === "draft" ? (
+                        <Eye className="w-3.5 h-3.5 text-amber-600" />
+                      ) : (
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      )}
                     </Link>
                     <button
                       onClick={() => setEditingBlog(blog)}
