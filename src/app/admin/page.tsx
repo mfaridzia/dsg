@@ -77,7 +77,9 @@ export default function AdminPortalPage() {
   const [loginError, setLoginError] = useState<string | null>(null);
 
   // Active Navigation Tab: 'overview' | 'landing' | 'blogs' | 'leads'
-  const [activeTab, setActiveTab] = useState<"overview" | "landing" | "blogs" | "leads">("overview");
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "landing" | "blogs" | "leads"
+  >("overview");
 
   // --- 1. Leads State ---
   const [leadsList, setLeadsList] = useState<Lead[]>([]);
@@ -115,7 +117,9 @@ export default function AdminPortalPage() {
   const [loadingBlogs, setLoadingBlogs] = useState(false);
   const [editingBlog, setEditingBlog] = useState<BlogFormData | null>(null);
   const [savingBlog, setSavingBlog] = useState(false);
-  const [imageInputMode, setImageInputMode] = useState<"upload" | "url">("upload");
+  const [imageInputMode, setImageInputMode] = useState<"upload" | "url">(
+    "upload",
+  );
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
@@ -142,9 +146,13 @@ export default function AdminPortalPage() {
       setIsAuthenticated(true);
       sessionStorage.setItem("kodeva_admin_auth", "true");
       setLoginError(null);
-      toast.success("Login berhasil! Selamat datang di Dashboard Admin Kodeva.");
+      toast.success(
+        "Login berhasil! Selamat datang di Dashboard Admin Kodeva.",
+      );
     } else {
-      setLoginError("Email atau password demo salah. Gunakan admin@kodeva.com / admin123");
+      setLoginError(
+        "Email atau password demo salah. Gunakan admin@kodeva.com / admin123",
+      );
       toast.error("Autentikasi gagal. Silakan gunakan kredensial demo.");
     }
   };
@@ -173,8 +181,8 @@ export default function AdminPortalPage() {
         setLeadsList(
           json.data.sort(
             (a: Lead, b: Lead) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          )
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          ),
         );
       }
     } catch (err) {
@@ -225,7 +233,9 @@ export default function AdminPortalPage() {
       });
       const json = await res.json();
       if (json.success) {
-        toast.success("Konten landing page berhasil disimpan dan direvalidasi!");
+        toast.success(
+          "Konten landing page berhasil disimpan dan direvalidasi!",
+        );
       } else {
         toast.error("Gagal menyimpan perubahan landing page.");
       }
@@ -249,7 +259,9 @@ export default function AdminPortalPage() {
       ...landingData,
       faqs: [...landingData.faqs, newFaq],
     });
-    toast.info("Pertanyaan FAQ baru ditambahkan. Klik 'Simpan FAQ' untuk menerapkan.");
+    toast.info(
+      "Pertanyaan FAQ baru ditambahkan. Klik 'Simpan FAQ' untuk menerapkan.",
+    );
   };
 
   const handleRemoveFaq = (idxToRemove: number) => {
@@ -271,7 +283,8 @@ export default function AdminPortalPage() {
       role: "Owner / Pengusaha",
       businessName: "Nama Bisnis / Toko",
       businessType: "Food & Beverage",
-      avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+      avatarUrl:
+        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
       quote: "",
       rating: 5,
     };
@@ -279,12 +292,16 @@ export default function AdminPortalPage() {
       ...landingData,
       testimonials: [...(landingData.testimonials || []), newTestimonial],
     });
-    toast.info("Testimoni baru ditambahkan ke draft editor. Klik 'Simpan Perubahan Landing Page' untuk menerapkan.");
+    toast.info(
+      "Testimoni baru ditambahkan ke draft editor. Klik 'Simpan Perubahan Landing Page' untuk menerapkan.",
+    );
   };
 
   const handleRemoveTestimonial = (idxToRemove: number) => {
     if (!landingData) return;
-    const newTestis = (landingData.testimonials || []).filter((_, idx) => idx !== idxToRemove);
+    const newTestis = (landingData.testimonials || []).filter(
+      (_, idx) => idx !== idxToRemove,
+    );
     setLandingData({
       ...landingData,
       testimonials: newTestis,
@@ -292,14 +309,20 @@ export default function AdminPortalPage() {
     toast.info("Testimoni dihapus dari daftar.");
   };
 
-  const handleTestimonialAvatarUpload = async (idx: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTestimonialAvatarUpload = async (
+    idx: number,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = e.target.files?.[0];
     if (!file || !landingData) return;
     const formData = new FormData();
     formData.append("file", file);
     try {
       toast.info("Mengunggah foto avatar testimoni...");
-      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
       const data = await res.json();
       if (data.success && data.url) {
         const newTestis = [...landingData.testimonials];
@@ -356,7 +379,8 @@ export default function AdminPortalPage() {
       category: "Kasir & Operasional",
       excerpt: "",
       content: "<p>Tuliskan panduan atau artikel bisnis lengkap di sini...</p>",
-      coverImageUrl: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1200&q=80",
+      coverImageUrl:
+        "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1200&q=80",
       linkedProductSlug: "kodeva-pos-kasir",
       status: "published",
     });
@@ -376,7 +400,8 @@ export default function AdminPortalPage() {
         blog.coverImageUrl ??
         blog.cover_image_url ??
         "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1200&q=80",
-      linkedProductSlug: blog.linkedProductSlug ?? blog.linked_product_slug ?? "",
+      linkedProductSlug:
+        blog.linkedProductSlug ?? blog.linked_product_slug ?? "",
       status: blog.status ?? "published",
     });
     setImageInputMode("upload");
@@ -394,7 +419,9 @@ export default function AdminPortalPage() {
       });
       const json = await res.json();
       if (json.success) {
-        toast.success(`Artikel "${editingBlog.title}" berhasil disimpan dan direvalidasi!`);
+        toast.success(
+          `Artikel "${editingBlog.title}" berhasil disimpan dan direvalidasi!`,
+        );
         setEditingBlog(null);
         fetchBlogs();
       } else {
@@ -449,7 +476,8 @@ export default function AdminPortalPage() {
             </div>
             <h1 className="text-xl font-bold">Portal Dashboard Admin Kodeva</h1>
             <p className="text-xs text-slate-400">
-              Kelola landing page, publikasi artikel blog, dan pantau database leads UMKM.
+              Kelola landing page, publikasi artikel blog, dan pantau database
+              leads UMKM.
             </p>
           </div>
 
@@ -459,10 +487,16 @@ export default function AdminPortalPage() {
               Kredensial Demo Reviewer:
             </div>
             <div>
-              Email: <code className="font-mono bg-black/40 px-1 rounded">admin@kodeva.com</code>
+              Email:{" "}
+              <code className="font-mono bg-black/40 px-1 rounded">
+                admin@kodeva.com
+              </code>
             </div>
             <div>
-              Password: <code className="font-mono bg-black/40 px-1 rounded">admin123</code>
+              Password:{" "}
+              <code className="font-mono bg-black/40 px-1 rounded">
+                admin123
+              </code>
             </div>
           </div>
 
@@ -475,7 +509,9 @@ export default function AdminPortalPage() {
 
           <form onSubmit={handleLogin} className="space-y-4 text-xs">
             <div>
-              <label className="text-slate-300 font-semibold block mb-1">Email Administrator</label>
+              <label className="text-slate-300 font-semibold block mb-1">
+                Email Administrator
+              </label>
               <input
                 type="email"
                 required
@@ -487,7 +523,9 @@ export default function AdminPortalPage() {
             </div>
 
             <div>
-              <label className="text-slate-300 font-semibold block mb-1">Password</label>
+              <label className="text-slate-300 font-semibold block mb-1">
+                Password
+              </label>
               <input
                 type="password"
                 required
@@ -533,20 +571,24 @@ export default function AdminPortalPage() {
   // AUTHENTICATED DASHBOARD LAYOUT (Full SaaS Layout with Sidebar)
   // =========================================================================
   return (
-    <div className="min-h-screen bg-slate-100 flex font-sans">
+    <div className="h-screen bg-slate-100 flex font-sans overflow-hidden">
       {/* ------------------------------------------------------------- */}
       {/* 1. LEFT SIDEBAR NAVIGATION                                    */}
       {/* ------------------------------------------------------------- */}
-      <aside className="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between border-r border-slate-800 shrink-0 select-none">
-        <div>
+      <aside className="w-64 h-screen bg-slate-900 text-slate-300 flex flex-col justify-between border-r border-slate-800 shrink-0 select-none">
+        <div className="flex-1 overflow-y-auto">
           {/* Brand Header */}
-          <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-800">
+          <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-800 sticky top-0 bg-slate-900 z-10">
             <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-extrabold text-sm shadow-md">
               K
             </div>
             <div>
-              <div className="font-bold text-white text-sm tracking-tight">Kodeva Cloud</div>
-              <div className="text-[10px] text-indigo-400 font-mono">Edge Admin CMS</div>
+              <div className="font-bold text-white text-sm tracking-tight">
+                Kodeva Cloud
+              </div>
+              <div className="text-[10px] text-indigo-400 font-mono">
+                Edge Admin CMS
+              </div>
             </div>
           </div>
 
@@ -619,7 +661,7 @@ export default function AdminPortalPage() {
         </div>
 
         {/* Sidebar Footer (User Info & Actions) */}
-        <div className="p-3 border-t border-slate-800 space-y-2">
+        <div className="p-3 border-t border-slate-800 space-y-2 shrink-0 bg-slate-900">
           <Link
             href="/"
             target="_blank"
@@ -635,8 +677,12 @@ export default function AdminPortalPage() {
                 A
               </div>
               <div className="min-w-0">
-                <div className="text-xs font-bold text-white truncate">Administrator</div>
-                <div className="text-[10px] text-slate-400 truncate">admin@kodeva.com</div>
+                <div className="text-xs font-bold text-white truncate">
+                  Administrator
+                </div>
+                <div className="text-[10px] text-slate-400 truncate">
+                  admin@kodeva.com
+                </div>
               </div>
             </div>
             <button
@@ -653,7 +699,7 @@ export default function AdminPortalPage() {
       {/* ------------------------------------------------------------- */}
       {/* 2. MAIN CONTENT AREA                                          */}
       {/* ------------------------------------------------------------- */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
         {/* Top Header Bar */}
         <header className="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-3">
@@ -665,18 +711,6 @@ export default function AdminPortalPage() {
               {activeTab === "blogs" && "Manajemen Blog"}
               {activeTab === "leads" && "Data Leads & CRM"}
             </span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {activeTab === "blogs" && (
-              <button
-                onClick={handleOpenNewBlog}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Tulis Artikel</span>
-              </button>
-            )}
           </div>
         </header>
 
@@ -700,10 +734,14 @@ export default function AdminPortalPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
                   <div className="flex items-center justify-between text-slate-400">
-                    <span className="text-xs font-semibold">Total Leads Masuk</span>
+                    <span className="text-xs font-semibold">
+                      Total Leads Masuk
+                    </span>
                     <Users className="w-4 h-4 text-indigo-600" />
                   </div>
-                  <div className="text-2xl font-black text-slate-900">{leadsList.length}</div>
+                  <div className="text-2xl font-black text-slate-900">
+                    {leadsList.length}
+                  </div>
                   <div className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
                     <TrendingUp className="w-3 h-3" />
                     <span>Valid (Anti-Spam)</span>
@@ -712,31 +750,47 @@ export default function AdminPortalPage() {
 
                 <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
                   <div className="flex items-center justify-between text-slate-400">
-                    <span className="text-xs font-semibold">Artikel Blog Aktif</span>
+                    <span className="text-xs font-semibold">
+                      Artikel Blog Aktif
+                    </span>
                     <BookOpen className="w-4 h-4 text-sky-600" />
                   </div>
-                  <div className="text-2xl font-black text-slate-900">{blogsList.length}</div>
-                  <div className="text-[11px] text-slate-500">Dipublikasikan</div>
+                  <div className="text-2xl font-black text-slate-900">
+                    {blogsList.length}
+                  </div>
+                  <div className="text-[11px] text-slate-500">
+                    Dipublikasikan
+                  </div>
                 </div>
 
                 <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
                   <div className="flex items-center justify-between text-slate-400">
-                    <span className="text-xs font-semibold">Katalog Software</span>
+                    <span className="text-xs font-semibold">
+                      Katalog Software
+                    </span>
                     <Layers className="w-4 h-4 text-amber-600" />
                   </div>
-                  <div className="text-2xl font-black text-slate-900">{PRODUCTS.length}</div>
-                  <div className="text-[11px] text-amber-600 font-semibold">Produk Siap Pakai</div>
+                  <div className="text-2xl font-black text-slate-900">
+                    {PRODUCTS.length}
+                  </div>
+                  <div className="text-[11px] text-amber-600 font-semibold">
+                    Produk Siap Pakai
+                  </div>
                 </div>
 
                 <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
                   <div className="flex items-center justify-between text-slate-400">
-                    <span className="text-xs font-semibold">Pertanyaan FAQ</span>
+                    <span className="text-xs font-semibold">
+                      Pertanyaan FAQ
+                    </span>
                     <Sparkles className="w-4 h-4 text-violet-600" />
                   </div>
                   <div className="text-2xl font-black text-slate-900">
                     {landingData?.faqs.length ?? 0}
                   </div>
-                  <div className="text-[11px] text-slate-500">Daftar pertanyaan aktif</div>
+                  <div className="text-[11px] text-slate-500">
+                    Daftar pertanyaan aktif
+                  </div>
                 </div>
               </div>
 
@@ -745,8 +799,12 @@ export default function AdminPortalPage() {
                 <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
                   <div className="p-5 border-b border-slate-100 flex items-center justify-between">
                     <div>
-                      <h3 className="font-bold text-slate-900 text-sm">Leads Terbaru Masuk</h3>
-                      <p className="text-[11px] text-slate-400">Calon klien yang mengisi formulir konsultasi.</p>
+                      <h3 className="font-bold text-slate-900 text-sm">
+                        Leads Terbaru Masuk
+                      </h3>
+                      <p className="text-[11px] text-slate-400">
+                        Calon klien yang mengisi formulir konsultasi.
+                      </p>
                     </div>
                     <button
                       onClick={() => setActiveTab("leads")}
@@ -771,21 +829,33 @@ export default function AdminPortalPage() {
                           <tr key={lead.id} className="hover:bg-slate-50/60">
                             <td className="px-5 py-3 font-semibold text-slate-800">
                               <div>{lead.name}</div>
-                              <div className="text-[10px] text-slate-400">{lead.company || "Pribadi / UMKM"}</div>
+                              <div className="text-[10px] text-slate-400">
+                                {lead.company || "Pribadi / UMKM"}
+                              </div>
                             </td>
-                            <td className="px-5 py-3 font-mono text-slate-600">{lead.whatsapp}</td>
-                            <td className="px-5 py-3 text-slate-700">{lead.interest}</td>
+                            <td className="px-5 py-3 font-mono text-slate-600">
+                              {lead.whatsapp}
+                            </td>
+                            <td className="px-5 py-3 text-slate-700">
+                              {lead.interest}
+                            </td>
                             <td className="px-5 py-3">
                               <span className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-[10px] font-mono">
-                                {(lead as any).utmSource || (lead as any).utm_source || "direct"}
+                                {(lead as any).utmSource ||
+                                  (lead as any).utm_source ||
+                                  "direct"}
                               </span>
                             </td>
                           </tr>
                         ))}
                         {leadsList.length === 0 && (
                           <tr>
-                            <td colSpan={4} className="px-5 py-8 text-center text-slate-400 text-xs">
-                              Belum ada leads masuk. Coba isi form konsultasi di beranda untuk menguji.
+                            <td
+                              colSpan={4}
+                              className="px-5 py-8 text-center text-slate-400 text-xs"
+                            >
+                              Belum ada leads masuk. Coba isi form konsultasi di
+                              beranda untuk menguji.
                             </td>
                           </tr>
                         )}
@@ -796,7 +866,9 @@ export default function AdminPortalPage() {
 
                 {/* Quick Shortcuts */}
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-5 space-y-4">
-                  <h3 className="font-bold text-slate-900 text-sm">Aksi Cepat Dashboard</h3>
+                  <h3 className="font-bold text-slate-900 text-sm">
+                    Aksi Cepat Dashboard
+                  </h3>
 
                   <div className="space-y-2">
                     <button
@@ -810,7 +882,9 @@ export default function AdminPortalPage() {
                         <div className="text-xs font-bold text-slate-800 group-hover:text-indigo-600">
                           Tulis Artikel Blog Baru
                         </div>
-                        <div className="text-[10px] text-slate-400">Editor WYSIWYG Quill & Cover Upload</div>
+                        <div className="text-[10px] text-slate-400">
+                          Editor WYSIWYG Quill & Cover Upload
+                        </div>
                       </div>
                     </button>
 
@@ -825,7 +899,9 @@ export default function AdminPortalPage() {
                         <div className="text-xs font-bold text-slate-800 group-hover:text-indigo-600">
                           Edit Hero & FAQ Landing
                         </div>
-                        <div className="text-[10px] text-slate-400">Ubah promo banner & tambah FAQ</div>
+                        <div className="text-[10px] text-slate-400">
+                          Ubah promo banner & tambah FAQ
+                        </div>
                       </div>
                     </button>
 
@@ -840,7 +916,9 @@ export default function AdminPortalPage() {
                         <div className="text-xs font-bold text-slate-800 group-hover:text-indigo-600">
                           Ekspor / Pantau Data Leads
                         </div>
-                        <div className="text-[10px] text-slate-400">Atribusi UTM first-touch & kontak</div>
+                        <div className="text-[10px] text-slate-400">
+                          Atribusi UTM first-touch & kontak
+                        </div>
                       </div>
                     </button>
                   </div>
@@ -867,12 +945,16 @@ export default function AdminPortalPage() {
               <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-5">
                 <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
                   <Layout className="w-4 h-4 text-indigo-600" />
-                  <h3 className="font-bold text-slate-900 text-sm">Banner Utama (Hero Section)</h3>
+                  <h3 className="font-bold text-slate-900 text-sm">
+                    Banner Utama (Hero Section)
+                  </h3>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 text-xs">
                   <div>
-                    <label className="font-bold text-slate-700 block mb-1">Badge Promo Kecil</label>
+                    <label className="font-bold text-slate-700 block mb-1">
+                      Badge Promo Kecil
+                    </label>
                     <input
                       type="text"
                       value={landingData.hero.badge ?? ""}
@@ -887,7 +969,9 @@ export default function AdminPortalPage() {
                   </div>
 
                   <div>
-                    <label className="font-bold text-slate-700 block mb-1">Judul Utama Hero (H1)</label>
+                    <label className="font-bold text-slate-700 block mb-1">
+                      Judul Utama Hero (H1)
+                    </label>
                     <input
                       type="text"
                       value={landingData.hero.title ?? ""}
@@ -902,14 +986,19 @@ export default function AdminPortalPage() {
                   </div>
 
                   <div>
-                    <label className="font-bold text-slate-700 block mb-1">Subjudul (Deskripsi Penjelas)</label>
+                    <label className="font-bold text-slate-700 block mb-1">
+                      Subjudul (Deskripsi Penjelas)
+                    </label>
                     <textarea
                       rows={3}
                       value={landingData.hero.subtitle ?? ""}
                       onChange={(e) =>
                         setLandingData({
                           ...landingData,
-                          hero: { ...landingData.hero, subtitle: e.target.value },
+                          hero: {
+                            ...landingData.hero,
+                            subtitle: e.target.value,
+                          },
                         })
                       }
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-900 focus:bg-white"
@@ -917,14 +1006,19 @@ export default function AdminPortalPage() {
                   </div>
 
                   <div>
-                    <label className="font-bold text-slate-700 block mb-1">URL Gambar Ilustrasi Hero</label>
+                    <label className="font-bold text-slate-700 block mb-1">
+                      URL Gambar Ilustrasi Hero
+                    </label>
                     <input
                       type="text"
                       value={landingData.hero.heroImageUrl ?? ""}
                       onChange={(e) =>
                         setLandingData({
                           ...landingData,
-                          hero: { ...landingData.hero, heroImageUrl: e.target.value },
+                          hero: {
+                            ...landingData.hero,
+                            heroImageUrl: e.target.value,
+                          },
                         })
                       }
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-900 font-mono text-[11px] focus:bg-white"
@@ -939,10 +1033,13 @@ export default function AdminPortalPage() {
                   <div>
                     <div className="flex items-center gap-2">
                       <MessageSquareQuote className="w-4 h-4 text-indigo-600" />
-                      <h3 className="font-bold text-slate-900 text-sm">Kelola Testimoni Klien & Pengusaha</h3>
+                      <h3 className="font-bold text-slate-900 text-sm">
+                        Kelola Testimoni Klien & Pengusaha
+                      </h3>
                     </div>
                     <p className="text-[11px] text-slate-500 mt-0.5">
-                      Kisah sukses pengguna yang tampil di landing page untuk membangun kepercayaan calon pembeli.
+                      Kisah sukses pengguna yang tampil di landing page untuk
+                      membangun kepercayaan calon pembeli.
                     </p>
                   </div>
                   <button
@@ -963,8 +1060,12 @@ export default function AdminPortalPage() {
                     >
                       <div className="flex items-center justify-between border-b border-slate-200/60 pb-3">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-indigo-700">Testimoni #{idx + 1}</span>
-                          <span className="text-[11px] text-slate-400 font-mono">({testi.id})</span>
+                          <span className="font-bold text-indigo-700">
+                            Testimoni #{idx + 1}
+                          </span>
+                          <span className="text-[11px] text-slate-400 font-mono">
+                            ({testi.id})
+                          </span>
                         </div>
                         <button
                           type="button"
@@ -982,7 +1083,10 @@ export default function AdminPortalPage() {
                         <div className="sm:col-span-3 flex flex-col items-center sm:items-start gap-2.5">
                           <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-indigo-200 bg-slate-100 shadow-xs shrink-0">
                             <Image
-                              src={testi.avatarUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
+                              src={
+                                testi.avatarUrl ||
+                                "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
+                              }
                               alt={testi.authorName || "Avatar"}
                               fill
                               sizes="64px"
@@ -990,12 +1094,16 @@ export default function AdminPortalPage() {
                             />
                           </div>
                           <div className="w-full space-y-1">
-                            <label className="text-[10px] font-bold text-slate-500 uppercase">Foto Avatar</label>
+                            <label className="text-[10px] font-bold text-slate-500 uppercase">
+                              Foto Avatar
+                            </label>
                             <input
                               type="file"
                               id={`avatar-upload-${idx}`}
                               accept="image/png, image/jpeg, image/webp"
-                              onChange={(e) => handleTestimonialAvatarUpload(idx, e)}
+                              onChange={(e) =>
+                                handleTestimonialAvatarUpload(idx, e)
+                              }
                               className="hidden"
                             />
                             <label
@@ -1012,7 +1120,10 @@ export default function AdminPortalPage() {
                               onChange={(e) => {
                                 const newTestis = [...landingData.testimonials];
                                 newTestis[idx].avatarUrl = e.target.value;
-                                setLandingData({ ...landingData, testimonials: newTestis });
+                                setLandingData({
+                                  ...landingData,
+                                  testimonials: newTestis,
+                                });
                               }}
                               className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-[10px] font-mono text-slate-600 mt-1"
                             />
@@ -1022,7 +1133,9 @@ export default function AdminPortalPage() {
                         {/* Details Column */}
                         <div className="sm:col-span-9 grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
-                            <label className="font-bold text-slate-700 block mb-1">Nama Klien / Pengusaha</label>
+                            <label className="font-bold text-slate-700 block mb-1">
+                              Nama Klien / Pengusaha
+                            </label>
                             <input
                               type="text"
                               placeholder="Contoh: Hendra Wijaya"
@@ -1030,14 +1143,19 @@ export default function AdminPortalPage() {
                               onChange={(e) => {
                                 const newTestis = [...landingData.testimonials];
                                 newTestis[idx].authorName = e.target.value;
-                                setLandingData({ ...landingData, testimonials: newTestis });
+                                setLandingData({
+                                  ...landingData,
+                                  testimonials: newTestis,
+                                });
                               }}
                               className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 font-semibold text-slate-900"
                             />
                           </div>
 
                           <div>
-                            <label className="font-bold text-slate-700 block mb-1">Jabatan / Role</label>
+                            <label className="font-bold text-slate-700 block mb-1">
+                              Jabatan / Role
+                            </label>
                             <input
                               type="text"
                               placeholder="Contoh: Owner / Founder / HR Manager"
@@ -1045,14 +1163,19 @@ export default function AdminPortalPage() {
                               onChange={(e) => {
                                 const newTestis = [...landingData.testimonials];
                                 newTestis[idx].role = e.target.value;
-                                setLandingData({ ...landingData, testimonials: newTestis });
+                                setLandingData({
+                                  ...landingData,
+                                  testimonials: newTestis,
+                                });
                               }}
                               className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-slate-900"
                             />
                           </div>
 
                           <div>
-                            <label className="font-bold text-slate-700 block mb-1">Nama Usaha & Info Cabang</label>
+                            <label className="font-bold text-slate-700 block mb-1">
+                              Nama Usaha & Info Cabang
+                            </label>
                             <input
                               type="text"
                               placeholder="Contoh: Kopi Seduh Nusantara (4 Outlet)"
@@ -1060,14 +1183,19 @@ export default function AdminPortalPage() {
                               onChange={(e) => {
                                 const newTestis = [...landingData.testimonials];
                                 newTestis[idx].businessName = e.target.value;
-                                setLandingData({ ...landingData, testimonials: newTestis });
+                                setLandingData({
+                                  ...landingData,
+                                  testimonials: newTestis,
+                                });
                               }}
                               className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-slate-900"
                             />
                           </div>
 
                           <div>
-                            <label className="font-bold text-slate-700 block mb-1">Kategori Industri / Bisnis</label>
+                            <label className="font-bold text-slate-700 block mb-1">
+                              Kategori Industri / Bisnis
+                            </label>
                             <input
                               type="text"
                               placeholder="Contoh: Food & Beverage / Retail / Jasa"
@@ -1075,7 +1203,10 @@ export default function AdminPortalPage() {
                               onChange={(e) => {
                                 const newTestis = [...landingData.testimonials];
                                 newTestis[idx].businessType = e.target.value;
-                                setLandingData({ ...landingData, testimonials: newTestis });
+                                setLandingData({
+                                  ...landingData,
+                                  testimonials: newTestis,
+                                });
                               }}
                               className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-slate-900"
                             />
@@ -1083,16 +1214,23 @@ export default function AdminPortalPage() {
 
                           {/* Rating selector */}
                           <div className="sm:col-span-2 flex items-center justify-between bg-white p-2.5 rounded-lg border border-slate-200">
-                            <span className="font-bold text-slate-700 text-xs">Rating Bintang:</span>
+                            <span className="font-bold text-slate-700 text-xs">
+                              Rating Bintang:
+                            </span>
                             <div className="flex items-center gap-1.5">
                               {[1, 2, 3, 4, 5].map((star) => (
                                 <button
                                   key={star}
                                   type="button"
                                   onClick={() => {
-                                    const newTestis = [...landingData.testimonials];
+                                    const newTestis = [
+                                      ...landingData.testimonials,
+                                    ];
                                     newTestis[idx].rating = star;
-                                    setLandingData({ ...landingData, testimonials: newTestis });
+                                    setLandingData({
+                                      ...landingData,
+                                      testimonials: newTestis,
+                                    });
                                   }}
                                   className="p-1 hover:scale-110 transition cursor-pointer"
                                   title={`${star} Bintang`}
@@ -1114,7 +1252,9 @@ export default function AdminPortalPage() {
 
                           {/* Quote */}
                           <div className="sm:col-span-2">
-                            <label className="font-bold text-slate-700 block mb-1">Kutipan Cerita Testimoni</label>
+                            <label className="font-bold text-slate-700 block mb-1">
+                              Kutipan Cerita Testimoni
+                            </label>
                             <textarea
                               rows={3}
                               placeholder="Ceritakan pengalaman nyata bagaimana aplikasi Kodeva menghemat waktu dan meningkatkan omzet usaha..."
@@ -1122,7 +1262,10 @@ export default function AdminPortalPage() {
                               onChange={(e) => {
                                 const newTestis = [...landingData.testimonials];
                                 newTestis[idx].quote = e.target.value;
-                                setLandingData({ ...landingData, testimonials: newTestis });
+                                setLandingData({
+                                  ...landingData,
+                                  testimonials: newTestis,
+                                });
                               }}
                               className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-slate-700 leading-relaxed"
                             />
@@ -1132,7 +1275,8 @@ export default function AdminPortalPage() {
                     </div>
                   ))}
 
-                  {(!landingData.testimonials || landingData.testimonials.length === 0) && (
+                  {(!landingData.testimonials ||
+                    landingData.testimonials.length === 0) && (
                     <div className="p-8 text-center text-slate-400 border border-dashed border-slate-200 rounded-xl text-xs space-y-2">
                       <p>Belum ada testimoni klien yang terdaftar.</p>
                       <button
@@ -1145,16 +1289,17 @@ export default function AdminPortalPage() {
                     </div>
                   )}
 
-                  {landingData.testimonials && landingData.testimonials.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={handleAddTestimonial}
-                      className="w-full py-2.5 rounded-xl border border-dashed border-slate-300 hover:border-indigo-400 hover:bg-indigo-50/40 text-indigo-600 font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
-                    >
-                      <Plus className="w-4 h-4" />
-                      <span>+ Tambah Testimoni Lainnya</span>
-                    </button>
-                  )}
+                  {landingData.testimonials &&
+                    landingData.testimonials.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={handleAddTestimonial}
+                        className="w-full py-2.5 rounded-xl border border-dashed border-slate-300 hover:border-indigo-400 hover:bg-indigo-50/40 text-indigo-600 font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>+ Tambah Testimoni Lainnya</span>
+                      </button>
+                    )}
                 </div>
               </div>
 
@@ -1164,10 +1309,13 @@ export default function AdminPortalPage() {
                   <div>
                     <div className="flex items-center gap-2">
                       <Sparkles className="w-4 h-4 text-indigo-600" />
-                      <h3 className="font-bold text-slate-900 text-sm">Kelola FAQ (Tanya Jawab Dinamis)</h3>
+                      <h3 className="font-bold text-slate-900 text-sm">
+                        Kelola FAQ (Tanya Jawab Dinamis)
+                      </h3>
                     </div>
                     <p className="text-[11px] text-slate-500 mt-0.5">
-                      Bebas menambah atau menghapus jumlah FAQ tanpa batasan statis.
+                      Bebas menambah atau menghapus jumlah FAQ tanpa batasan
+                      statis.
                     </p>
                   </div>
                   <button
@@ -1182,9 +1330,14 @@ export default function AdminPortalPage() {
 
                 <div className="space-y-3.5">
                   {landingData.faqs.map((faq, idx) => (
-                    <div key={faq.id || idx} className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
+                    <div
+                      key={faq.id || idx}
+                      className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs"
+                    >
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-indigo-700">Pertanyaan #{idx + 1}</span>
+                        <span className="font-bold text-indigo-700">
+                          Pertanyaan #{idx + 1}
+                        </span>
                         <button
                           type="button"
                           onClick={() => handleRemoveFaq(idx)}
@@ -1255,7 +1408,11 @@ export default function AdminPortalPage() {
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white font-bold text-xs shadow-md transition cursor-pointer"
                 >
                   <Save className="w-4 h-4" />
-                  <span>{savingLanding ? "Menyimpan Perubahan..." : "Simpan Perubahan Landing Page"}</span>
+                  <span>
+                    {savingLanding
+                      ? "Menyimpan Perubahan..."
+                      : "Simpan Perubahan Landing Page"}
+                  </span>
                 </button>
               </div>
             </div>
@@ -1272,7 +1429,8 @@ export default function AdminPortalPage() {
                     Manajemen Artikel Blog
                   </h2>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Tulis dan publikasikan artikel blog, kelola gambar sampul, dan tautkan ke produk software.
+                    Tulis dan publikasikan artikel blog, kelola gambar sampul,
+                    dan tautkan ke produk software.
                   </p>
                 </div>
                 <button
@@ -1290,10 +1448,14 @@ export default function AdminPortalPage() {
                   <div className="flex items-center justify-between pb-4 border-b border-slate-100">
                     <div>
                       <h3 className="font-bold text-slate-900 text-base">
-                        {editingBlog.id ? "Edit Artikel Blog" : "Tulis Artikel Baru"}
+                        {editingBlog.id
+                          ? "Edit Artikel Blog"
+                          : "Tulis Artikel Baru"}
                       </h3>
                       <p className="text-xs text-slate-400">
-                        {editingBlog.id ? `ID: ${editingBlog.id}` : "Gunakan editor WYSIWYG untuk format teks rapi"}
+                        {editingBlog.id
+                          ? `ID: ${editingBlog.id}`
+                          : "Gunakan editor WYSIWYG untuk format teks rapi"}
                       </p>
                     </div>
                     <button
@@ -1305,9 +1467,14 @@ export default function AdminPortalPage() {
                     </button>
                   </div>
 
-                  <form onSubmit={handleSaveBlog} className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  <form
+                    onSubmit={handleSaveBlog}
+                    className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs"
+                  >
                     <div className="sm:col-span-2 space-y-1">
-                      <label className="font-bold text-slate-700">Judul Artikel</label>
+                      <label className="font-bold text-slate-700">
+                        Judul Artikel
+                      </label>
                       <input
                         type="text"
                         required
@@ -1316,7 +1483,11 @@ export default function AdminPortalPage() {
                           setEditingBlog({
                             ...editingBlog,
                             title: e.target.value,
-                            slug: editingBlog.slug || e.target.value.toLowerCase().replace(/[^a-z0-9]/g, "-"),
+                            slug:
+                              editingBlog.slug ||
+                              e.target.value
+                                .toLowerCase()
+                                .replace(/[^a-z0-9]/g, "-"),
                           })
                         }
                         placeholder="Contoh: 5 Tips Mengoptimalkan Pembukuan Kasir Cafe"
@@ -1325,36 +1496,61 @@ export default function AdminPortalPage() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="font-bold text-slate-700">Slug URL (SEO Friendly)</label>
+                      <label className="font-bold text-slate-700">
+                        Slug URL (SEO Friendly)
+                      </label>
                       <input
                         type="text"
                         required
                         value={editingBlog.slug ?? ""}
-                        onChange={(e) => setEditingBlog({ ...editingBlog, slug: e.target.value })}
+                        onChange={(e) =>
+                          setEditingBlog({
+                            ...editingBlog,
+                            slug: e.target.value,
+                          })
+                        }
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-mono text-[11px] focus:bg-white"
                       />
                     </div>
 
                     <div className="space-y-1">
-                      <label className="font-bold text-slate-700">Kategori Artikel</label>
+                      <label className="font-bold text-slate-700">
+                        Kategori Artikel
+                      </label>
                       <select
                         value={editingBlog.category ?? "Kasir & Operasional"}
-                        onChange={(e) => setEditingBlog({ ...editingBlog, category: e.target.value })}
+                        onChange={(e) =>
+                          setEditingBlog({
+                            ...editingBlog,
+                            category: e.target.value,
+                          })
+                        }
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:bg-white"
                       >
-                        <option value="Kasir & Operasional">Kasir & Operasional</option>
+                        <option value="Kasir & Operasional">
+                          Kasir & Operasional
+                        </option>
                         <option value="SDM & Regulasi">SDM & Regulasi</option>
-                        <option value="Operasional & Stok">Operasional & Stok</option>
+                        <option value="Operasional & Stok">
+                          Operasional & Stok
+                        </option>
                         <option value="Marketing & CRM">Marketing & CRM</option>
                       </select>
                     </div>
 
                     <div className="sm:col-span-2 space-y-1">
-                      <label className="font-bold text-slate-700">Ringkasan Singkat (Excerpt)</label>
+                      <label className="font-bold text-slate-700">
+                        Ringkasan Singkat (Excerpt)
+                      </label>
                       <textarea
                         rows={2}
                         value={editingBlog.excerpt ?? ""}
-                        onChange={(e) => setEditingBlog({ ...editingBlog, excerpt: e.target.value })}
+                        onChange={(e) =>
+                          setEditingBlog({
+                            ...editingBlog,
+                            excerpt: e.target.value,
+                          })
+                        }
                         placeholder="Ringkasan 1-2 kalimat untuk preview kartu blog..."
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-900 focus:bg-white"
                       />
@@ -1364,11 +1560,15 @@ export default function AdminPortalPage() {
                     <div className="sm:col-span-2 space-y-1.5">
                       <label className="font-bold text-slate-700 flex items-center gap-1.5">
                         <FileText className="w-3.5 h-3.5 text-indigo-600" />
-                        <span>Isi Konten Artikel (WYSIWYG Editor Quill.js)</span>
+                        <span>
+                          Isi Konten Artikel (WYSIWYG Editor Quill.js)
+                        </span>
                       </label>
                       <QuillEditor
                         value={editingBlog.content ?? ""}
-                        onChange={(content) => setEditingBlog({ ...editingBlog, content })}
+                        onChange={(content) =>
+                          setEditingBlog({ ...editingBlog, content })
+                        }
                         placeholder="Tuliskan artikel lengkap di sini. Gunakan Heading 2/3 untuk sub-bab agar hierarki tipografi rapi..."
                       />
                     </div>
@@ -1382,7 +1582,8 @@ export default function AdminPortalPage() {
                             <span>Gambar Sampul Artikel (Cover Image)</span>
                           </label>
                           <p className="text-[11px] text-slate-500">
-                            Upload file dari komputer Anda atau pilih URL gambar Unsplash.
+                            Upload file dari komputer Anda atau pilih URL gambar
+                            Unsplash.
                           </p>
                         </div>
 
@@ -1448,10 +1649,13 @@ export default function AdminPortalPage() {
                                     <Upload className="w-5 h-5" />
                                   </div>
                                   <div className="text-xs font-semibold text-slate-700">
-                                    <span className="text-indigo-600 underline">Pilih foto dari komputer</span>
+                                    <span className="text-indigo-600 underline">
+                                      Pilih foto dari komputer
+                                    </span>
                                   </div>
                                   <p className="text-[10px] text-slate-400">
-                                    Mendukung JPG, PNG, WebP (Tersimpan otomatis ke sistem)
+                                    Mendukung JPG, PNG, WebP (Tersimpan otomatis
+                                    ke sistem)
                                   </p>
                                 </>
                               )}
@@ -1463,7 +1667,12 @@ export default function AdminPortalPage() {
                           <input
                             type="url"
                             value={editingBlog.coverImageUrl ?? ""}
-                            onChange={(e) => setEditingBlog({ ...editingBlog, coverImageUrl: e.target.value })}
+                            onChange={(e) =>
+                              setEditingBlog({
+                                ...editingBlog,
+                                coverImageUrl: e.target.value,
+                              })
+                            }
                             placeholder="https://images.unsplash.com/..."
                             className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-slate-900 font-mono text-[11px]"
                           />
@@ -1475,15 +1684,32 @@ export default function AdminPortalPage() {
                             </div>
                             <div className="flex flex-wrap gap-1.5">
                               {[
-                                { label: "Kasir Resto", url: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1200&q=80" },
-                                { label: "Retail Mart", url: "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=1200&q=80" },
-                                { label: "Payroll HR", url: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80" },
-                                { label: "Gudang Stok", url: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80" },
+                                {
+                                  label: "Kasir Resto",
+                                  url: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1200&q=80",
+                                },
+                                {
+                                  label: "Retail Mart",
+                                  url: "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=1200&q=80",
+                                },
+                                {
+                                  label: "Payroll HR",
+                                  url: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80",
+                                },
+                                {
+                                  label: "Gudang Stok",
+                                  url: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80",
+                                },
                               ].map((preset, pIdx) => (
                                 <button
                                   key={pIdx}
                                   type="button"
-                                  onClick={() => setEditingBlog({ ...editingBlog, coverImageUrl: preset.url })}
+                                  onClick={() =>
+                                    setEditingBlog({
+                                      ...editingBlog,
+                                      coverImageUrl: preset.url,
+                                    })
+                                  }
                                   className="px-2.5 py-1 rounded-md bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 text-slate-700 text-[10px] font-semibold transition"
                                 >
                                   + {preset.label}
@@ -1502,12 +1728,16 @@ export default function AdminPortalPage() {
                               src={editingBlog.coverImageUrl}
                               alt="Preview cover"
                               fill
-                              unoptimized={editingBlog.coverImageUrl.startsWith("data:")}
+                              unoptimized={editingBlog.coverImageUrl.startsWith(
+                                "data:",
+                              )}
                               className="object-cover"
                             />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <div className="text-[11px] font-bold text-slate-700">Preview Gambar Sampul Aktif</div>
+                            <div className="text-[11px] font-bold text-slate-700">
+                              Preview Gambar Sampul Aktif
+                            </div>
                             <div className="text-[10px] font-mono text-slate-400 truncate">
                               {editingBlog.coverImageUrl}
                             </div>
@@ -1517,10 +1747,17 @@ export default function AdminPortalPage() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="font-bold text-slate-700">Tautkan ke Produk Software</label>
+                      <label className="font-bold text-slate-700">
+                        Tautkan ke Produk Software
+                      </label>
                       <select
                         value={editingBlog.linkedProductSlug ?? ""}
-                        onChange={(e) => setEditingBlog({ ...editingBlog, linkedProductSlug: e.target.value })}
+                        onChange={(e) =>
+                          setEditingBlog({
+                            ...editingBlog,
+                            linkedProductSlug: e.target.value,
+                          })
+                        }
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:bg-white"
                       >
                         <option value="">-- Tanpa Tautan Produk --</option>
@@ -1533,13 +1770,22 @@ export default function AdminPortalPage() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="font-bold text-slate-700">Status Publikasi</label>
+                      <label className="font-bold text-slate-700">
+                        Status Publikasi
+                      </label>
                       <select
                         value={editingBlog.status ?? "published"}
-                        onChange={(e) => setEditingBlog({ ...editingBlog, status: e.target.value })}
+                        onChange={(e) =>
+                          setEditingBlog({
+                            ...editingBlog,
+                            status: e.target.value,
+                          })
+                        }
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:bg-white"
                       >
-                        <option value="published">Published (Tayang di Web)</option>
+                        <option value="published">
+                          Published (Tayang di Web)
+                        </option>
                         <option value="draft">Draft (Disembunyikan)</option>
                       </select>
                     </div>
@@ -1558,7 +1804,11 @@ export default function AdminPortalPage() {
                         className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white font-bold transition flex items-center gap-1.5"
                       >
                         <Save className="w-3.5 h-3.5" />
-                        <span>{savingBlog ? "Menyimpan..." : "Simpan & Publikasikan"}</span>
+                        <span>
+                          {savingBlog
+                            ? "Menyimpan..."
+                            : "Simpan & Publikasikan"}
+                        </span>
                       </button>
                     </div>
                   </form>
@@ -1579,15 +1829,26 @@ export default function AdminPortalPage() {
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {blogsList.map((blog) => (
-                      <tr key={blog.id} className="hover:bg-slate-50/70 transition">
+                      <tr
+                        key={blog.id}
+                        className="hover:bg-slate-50/70 transition"
+                      >
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
                             <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-slate-100 shrink-0 border border-slate-200">
                               <Image
-                                src={blog.coverImageUrl || blog.cover_image_url || "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1200&q=80"}
+                                src={
+                                  blog.coverImageUrl ||
+                                  blog.cover_image_url ||
+                                  "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1200&q=80"
+                                }
                                 alt=""
                                 fill
-                                unoptimized={(blog.coverImageUrl || blog.cover_image_url || "").startsWith("data:")}
+                                unoptimized={(
+                                  blog.coverImageUrl ||
+                                  blog.cover_image_url ||
+                                  ""
+                                ).startsWith("data:")}
                                 className="object-cover"
                               />
                             </div>
@@ -1607,9 +1868,11 @@ export default function AdminPortalPage() {
                           </span>
                         </td>
                         <td className="px-6 py-4 text-slate-600 text-[11px]">
-                          {blog.linkedProductSlug || blog.linked_product_slug ? (
+                          {blog.linkedProductSlug ||
+                          blog.linked_product_slug ? (
                             <span className="text-indigo-600 font-bold font-mono">
-                              {blog.linkedProductSlug || blog.linked_product_slug}
+                              {blog.linkedProductSlug ||
+                                blog.linked_product_slug}
                             </span>
                           ) : (
                             <span className="text-slate-400">-</span>
@@ -1644,7 +1907,9 @@ export default function AdminPortalPage() {
                               <Edit3 className="w-3.5 h-3.5" />
                             </button>
                             <button
-                              onClick={() => handleDeleteBlog(blog.id, blog.title)}
+                              onClick={() =>
+                                handleDeleteBlog(blog.id, blog.title)
+                              }
                               className="p-1.5 hover:bg-rose-50 rounded-lg text-slate-400 hover:text-rose-600 transition"
                               title="Hapus Artikel"
                             >
@@ -1656,8 +1921,13 @@ export default function AdminPortalPage() {
                     ))}
                     {blogsList.length === 0 && (
                       <tr>
-                        <td colSpan={5} className="px-6 py-8 text-center text-slate-400">
-                          {loadingBlogs ? "Memuat artikel..." : "Belum ada artikel. Klik 'Tulis Artikel Baru'."}
+                        <td
+                          colSpan={5}
+                          className="px-6 py-8 text-center text-slate-400"
+                        >
+                          {loadingBlogs
+                            ? "Memuat artikel..."
+                            : "Belum ada artikel. Klik 'Tulis Artikel Baru'."}
                         </td>
                       </tr>
                     )}
@@ -1678,7 +1948,8 @@ export default function AdminPortalPage() {
                     Database Leads Masuk & Tracking CRM
                   </h2>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Data calon klien terintegrasi dengan UTM First-Touch Attribution untuk evaluasi ROI channel iklan.
+                    Data calon klien terintegrasi dengan UTM First-Touch
+                    Attribution untuk evaluasi ROI channel iklan.
                   </p>
                 </div>
 
@@ -1699,7 +1970,9 @@ export default function AdminPortalPage() {
                     className="p-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 transition"
                     title="Refresh Data"
                   >
-                    <RefreshCw className={`w-3.5 h-3.5 ${loadingLeads ? "animate-spin" : ""}`} />
+                    <RefreshCw
+                      className={`w-3.5 h-3.5 ${loadingLeads ? "animate-spin" : ""}`}
+                    />
                   </button>
                 </div>
               </div>
@@ -1718,9 +1991,14 @@ export default function AdminPortalPage() {
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {filteredLeads.map((lead) => (
-                      <tr key={lead.id} className="hover:bg-slate-50/70 transition">
+                      <tr
+                        key={lead.id}
+                        className="hover:bg-slate-50/70 transition"
+                      >
                         <td className="px-6 py-4">
-                          <div className="font-bold text-slate-900">{lead.name}</div>
+                          <div className="font-bold text-slate-900">
+                            {lead.name}
+                          </div>
                           <div className="text-[11px] text-slate-500 flex items-center gap-2 mt-0.5">
                             <span className="font-mono">{lead.whatsapp}</span>
                             <span>•</span>
@@ -1728,7 +2006,11 @@ export default function AdminPortalPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4 text-slate-700">
-                          {lead.company || <span className="text-slate-400 italic">Pribadi</span>}
+                          {lead.company || (
+                            <span className="text-slate-400 italic">
+                              Pribadi
+                            </span>
+                          )}
                         </td>
                         <td className="px-6 py-4">
                           <span className="bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-md text-[11px] font-semibold border border-indigo-100">
@@ -1738,11 +2020,22 @@ export default function AdminPortalPage() {
                         <td className="px-6 py-4">
                           <div className="space-y-0.5 text-[11px]">
                             <div className="font-mono font-bold text-slate-800">
-                              {(lead as any).utmSource || (lead as any).utm_source || "organic / direct"}
+                              {(lead as any).utmSource ||
+                                (lead as any).utm_source ||
+                                "organic / direct"}
                             </div>
-                            {((lead as any).utmMedium || (lead as any).utm_medium || (lead as any).utmCampaign || (lead as any).utm_campaign) && (
+                            {((lead as any).utmMedium ||
+                              (lead as any).utm_medium ||
+                              (lead as any).utmCampaign ||
+                              (lead as any).utm_campaign) && (
                               <div className="text-[10px] text-slate-400 font-mono">
-                                {(lead as any).utmMedium || (lead as any).utm_medium || "-"} / {(lead as any).utmCampaign || (lead as any).utm_campaign || "-"}
+                                {(lead as any).utmMedium ||
+                                  (lead as any).utm_medium ||
+                                  "-"}{" "}
+                                /{" "}
+                                {(lead as any).utmCampaign ||
+                                  (lead as any).utm_campaign ||
+                                  "-"}
                               </div>
                             )}
                           </div>
@@ -1754,8 +2047,13 @@ export default function AdminPortalPage() {
                     ))}
                     {filteredLeads.length === 0 && (
                       <tr>
-                        <td colSpan={5} className="px-6 py-8 text-center text-slate-400">
-                          {loadingLeads ? "Memuat database leads..." : "Tidak ada data leads yang cocok."}
+                        <td
+                          colSpan={5}
+                          className="px-6 py-8 text-center text-slate-400"
+                        >
+                          {loadingLeads
+                            ? "Memuat database leads..."
+                            : "Tidak ada data leads yang cocok."}
                         </td>
                       </tr>
                     )}
