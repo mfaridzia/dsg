@@ -68,7 +68,8 @@ export async function POST(req: NextRequest) {
       .where(eq(landingContent.id, "main"));
 
     // Instant On-Demand Revalidation
-    revalidatePath("/");
+    revalidatePath("/", "page");
+    revalidatePath("/", "layout");
 
     return NextResponse.json({
       success: true,

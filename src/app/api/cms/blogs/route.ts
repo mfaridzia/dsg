@@ -77,9 +77,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Revalidate blog pages
-    revalidatePath("/blog");
-    revalidatePath(`/blog/${postSlug}`);
-    revalidatePath("/");
+    revalidatePath("/blog", "page");
+    revalidatePath(`/blog/${postSlug}`, "page");
+    revalidatePath("/", "page");
 
     return NextResponse.json({
       success: true,
@@ -104,7 +104,8 @@ export async function DELETE(req: NextRequest) {
     await ensureDatabaseTables();
     await db.delete(blogPosts).where(eq(blogPosts.id, id));
 
-    revalidatePath("/blog");
+    revalidatePath("/blog", "page");
+    revalidatePath("/", "page");
     return NextResponse.json({ success: true, message: "Artikel berhasil dihapus" });
   } catch (err: unknown) {
     console.error("[Delete Blog Error]:", err);

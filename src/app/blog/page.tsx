@@ -4,6 +4,8 @@ import { eq, desc } from "drizzle-orm";
 import { DEFAULT_BLOG_POSTS, BlogPost } from "@/lib/data/cmsContent";
 import { BlogListClient } from "@/components/blog/BlogListClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function BlogPage() {
   await ensureDatabaseTables();
 

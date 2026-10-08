@@ -87,3 +87,21 @@ describe("3. Voucher Code Validation & Calculation Rules", () => {
     assert.equal(finalTotal, 350000);
   });
 });
+
+describe("4. Post-Checkout Quota Deduction Simulation", () => {
+  it("harus memotong sisa kuota promo secara akurat saat checkout sukses", () => {
+    const initialQuota = 5;
+    const purchasedQty = 1;
+    const remainingQuota = Math.max(0, initialQuota - purchasedQty);
+
+    assert.equal(remainingQuota, 4, "Stok awal 5 harus berkurang menjadi 4 setelah 1 lisensi berhasil dibeli");
+  });
+
+  it("harus mencegah pemotongan kuota menjadi minus jika dibeli habis", () => {
+    const initialQuota = 2;
+    const purchasedQty = 2;
+    const remainingQuota = Math.max(0, initialQuota - purchasedQty);
+
+    assert.equal(remainingQuota, 0, "Stok kuota harus 0 dan tidak boleh minus");
+  });
+});

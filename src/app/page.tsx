@@ -9,6 +9,8 @@ import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
 import { FAQSection } from "@/components/landing/FAQSection";
 import { LeadCaptureForm } from "@/components/landing/LeadCaptureForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   await ensureDatabaseTables();
 
