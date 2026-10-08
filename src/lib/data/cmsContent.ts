@@ -1,3 +1,11 @@
+export type PromoSchedule = {
+  enabled: boolean;
+  startDate: string;
+  endDate: string;
+  promoBadgeText: string;
+  fallbackBadgeText: string;
+};
+
 export type LandingContent = {
   hero: {
     badge: string;
@@ -10,6 +18,7 @@ export type LandingContent = {
     heroImageUrl: string;
     highlights: string[];
   };
+  promoSchedule?: PromoSchedule;
   featuredProductIds: string[];
   testimonials: {
     id: string;
@@ -64,6 +73,13 @@ export const DEFAULT_LANDING_CONTENT: LandingContent = {
       "Siap Digunakan dalam 10 Menit",
       "Garansi Dukungan Teknis 7 Hari Seminggu",
     ],
+  },
+  promoSchedule: {
+    enabled: true,
+    startDate: "2025-11-01",
+    endDate: "2026-12-31",
+    promoBadgeText: "🔥 Promo Akhir Tahun: Diskon Lisensi s/d 45% + Gratis Setup Cabang",
+    fallbackBadgeText: "✨ Solusi Software Bisnis & Kasir Cloud Terpercaya untuk UMKM",
   },
   featuredProductIds: ["prod-pos-01", "prod-hr-02", "prod-inv-03"],
   testimonials: [

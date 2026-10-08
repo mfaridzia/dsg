@@ -58,6 +58,7 @@ export default async function HomePage() {
   let hero = DEFAULT_LANDING_CONTENT.hero;
   let faqs = DEFAULT_LANDING_CONTENT.faqs;
   let testimonials = DEFAULT_LANDING_CONTENT.testimonials;
+  let promoSchedule = DEFAULT_LANDING_CONTENT.promoSchedule;
 
   try {
     const rows = await db.select().from(landingContent).where(eq(landingContent.id, "main"));
@@ -76,6 +77,13 @@ export default async function HomePage() {
       };
       faqs = JSON.parse(row.faqsJson);
       testimonials = JSON.parse(row.testimonialsJson);
+      if (row.promoScheduleJson) {
+        try {
+          promoSchedule = JSON.parse(row.promoScheduleJson);
+        } catch {
+          // ignore
+        }
+      }
     }
   } catch (err) {
     console.error("Failed to read dynamic landing content:", err);
@@ -87,7 +95,7 @@ export default async function HomePage() {
 
   return (
     <div>
-      <HeroSection content={hero} />
+      <HeroSection content={hero} promoSchedule={promoSchedule} />
       <FeaturedProducts products={featured} />
       <TestimonialsSection testimonials={testimonials} />
       <FAQSection faqs={faqs} />

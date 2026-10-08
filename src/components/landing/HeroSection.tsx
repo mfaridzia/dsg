@@ -4,22 +4,26 @@ import Link from "next/link";
 import Image from "next/image";
 import { trackCtaClick } from "@/lib/analytics/dataLayer";
 import { ArrowRight, CheckCircle2, ShieldCheck, Zap } from "lucide-react";
-import { LandingContent } from "@/lib/data/cmsContent";
+import { LandingContent, PromoSchedule } from "@/types/cms";
+import { getPromoScheduleStatus } from "@/lib/utils";
 
 interface HeroSectionProps {
   content: LandingContent["hero"];
+  promoSchedule?: PromoSchedule;
 }
 
-export function HeroSection({ content }: HeroSectionProps) {
+export function HeroSection({ content, promoSchedule }: HeroSectionProps) {
+  const scheduleStatus = getPromoScheduleStatus(promoSchedule, content.badge);
+
   const handlePrimaryCta = () => {
     trackCtaClick("hero_primary_katalog", "hero_section", {
-      campaign: "promo-akhir-tahun",
+      campaign: scheduleStatus.isActive ? "promo-akhir-tahun" : "regular",
     });
   };
 
   const handleSecondaryCta = () => {
     trackCtaClick("hero_secondary_konsultasi", "hero_section", {
-      campaign: "promo-akhir-tahun",
+      campaign: scheduleStatus.isActive ? "promo-akhir-tahun" : "regular",
     });
   };
 
@@ -34,8 +38,14 @@ export function HeroSection({ content }: HeroSectionProps) {
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
             {/* Promo Pill Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-100/80 border border-indigo-200 text-indigo-800 text-xs font-semibold shadow-xs">
-              <Zap className="w-3.5 h-3.5 text-amber-500 fill-amber-500 animate-pulse" />
-              <span>{content.badge}</span>
+              <span>{scheduleStatus.badgeText}</span>
+              {scheduleStatus.isActive &&
+                scheduleStatus.daysRemaining !== undefined &&
+                scheduleStatus.daysRemaining <= 60 && (
+                  <span className="hidden sm:inline bg-indigo-200/90 text-indigo-900 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    Sisa {scheduleStatus.daysRemaining} hari
+                  </span>
+                )}
             </div>
 
             {/* Main Headline */}
@@ -104,17 +114,6 @@ export function HeroSection({ content }: HeroSectionProps) {
                       Pantau Rekap Penjualan Kasir & Status Payroll Cabang
                     </p>
                   </div>
-                </div>
-              </div>
-
-              {/* Floating Badge Widget */}
-              <div className="absolute -bottom-6 -left-4 sm:-left-6 bg-white p-3.5 rounded-xl shadow-xl border border-slate-200/80 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-sm">
-                  99%
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-slate-900">Uptime Server SLA</div>
-                  <div className="text-xs text-slate-600">Aman untuk Operasional Harian</div>
                 </div>
               </div>
             </div>

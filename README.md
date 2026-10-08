@@ -132,20 +132,20 @@ flowchart LR
 - [x] **Katalog Shareable (URL Query Sync):** Pencarian instan kata kunci (`q`), pengurutan harga (`sort=price_asc/price_desc/discount`), dan filter kategori yang tersinkronisasi realtime ke URL (`/marketplace?category=...&sort=...&q=...`) sehingga tautan pencarian siap dibagikan langsung.
 - [x] **Pilihan Durasi Langganan & Tabel Komparasi:** Switcher durasi tagihan **Bulanan vs Tahunan (Hemat 20%)** di halaman detail produk, serta **Tabel Matriks Perbandingan Fitur** lengkap lintas tier paket (Starter, Pro, Business).
 - [x] **Sistem Kode Voucher Promo:** Input voucher di keranjang & checkout (`DSGHEMAT`, `KODEVABARU`, `PROMOAKHIRTAHUN`) dengan validasi minimal belanja, kuota pemakaian, dan batas pemotongan harga maksimal.
-- [x] **Test Otomatis Logika Inti (`npm test`):** 9 automated unit tests bawaan Node.js test runner untuk memverifikasi logika batas kuota promo bersama, kalkulasi tagihan tahunan, dan validasi voucher.
+- [x] **Test Otomatis Logika Inti (`npm test`):** 15 automated unit tests bawaan Node.js test runner untuk memverifikasi logika batas kuota promo bersama, kalkulasi tagihan tahunan, validasi voucher, dan penjadwalan konten promo.
 - [x] **Preview / Draft Konten CMS:** Kontrol status `Draft` vs `Published` pada artikel blog di `/admin` dengan tautan preview langsung ke halaman web publik.
+- [x] **Penjadwalan Konten Promo Otomatis dari CMS:** Tim marketing dapat mengatur tanggal mulai dan tanggal selesai promo dari CMS `/admin`. Badge dan banner promo otomatis tayang saat periode aktif dan otomatis beralih ke teks default saat kedaluwarsa tanpa perlu bantuan developer.
 
 ### Yang Belum Selesai/Dikerjakan
 
 - Pengaturan layout dan urutan section landing page dari CMS (Bonus/Opsional)
-- Penjadwalan konten promo dari CMS (tayang dan berakhir otomatis pada tanggal tertentu) (Bonus/Opsional)
 
 ### Rencana Jika Ada Waktu 1 Minggu Lagi:
 
 1. **Multi-Region & Internationalization (i18n):** Integrasi Next-intl untuk routing `/id`, `/my`, dan `/sg` dengan switcher mata uang IDR/MYR/SGD.
 2. **Payment Gateway Produksi:** Menambahkan Integrasi webhook Payment Gateway (Midtrans, Xendit, dsb) dengan Core API
 3. **Automated Testing Suite:** End-to-end testing menggunakan Playwright untuk alur belanja dan Vitest untuk unit test invariant kuota promo.
-4. **Fitur Bonus CMS:** Penjadwalan tanggal mulai/selesai promo langsung dari dashboard admin dan drag-and-drop reorder section landing page.
+4. **Fitur Bonus CMS:** Fitur drag-and-drop reorder section landing page secara visual.
 5. **Improve Codebase, UI/UX & Arstitektur**: Implementasi bagian yang belum seperti menambahkan event tracking, improve UI/UX di dashboard admin.
 6. **Auth**: Menggunakan auth yg lebih proper untuk login di halaman admin menggunakan Better Auth dengan Provider Username/Password dan Google Login agar memudahkan pengguna untuk masuk ke halaman admin.
 7. **Real Katalog/Produk Marketplace**: Integrasi data katalog di marketplace dengan data real yang ada di database

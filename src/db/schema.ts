@@ -29,6 +29,7 @@ export const landingContent = sqliteTable("landing_content", {
   ctaSecondaryLink: text("cta_secondary_link").notNull(),
   faqsJson: text("faqs_json").notNull(),
   testimonialsJson: text("testimonials_json").notNull(),
+  promoScheduleJson: text("promo_schedule_json"),
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
 });
 

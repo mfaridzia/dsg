@@ -34,6 +34,9 @@ export async function GET() {
         },
         faqs: JSON.parse(row.faqsJson),
         testimonials: JSON.parse(row.testimonialsJson),
+        promoSchedule: row.promoScheduleJson
+          ? JSON.parse(row.promoScheduleJson)
+          : undefined,
         updatedAt: row.updatedAt,
       },
     });
@@ -48,7 +51,7 @@ export async function POST(req: NextRequest) {
     await ensureDatabaseTables();
     const body = await req.json();
 
-    const { hero, faqs, testimonials } = body;
+    const { hero, faqs, testimonials, promoSchedule } = body;
 
     await db
       .update(landingContent)
@@ -63,6 +66,7 @@ export async function POST(req: NextRequest) {
         ctaSecondaryLink: hero.ctaSecondaryLink,
         faqsJson: JSON.stringify(faqs),
         testimonialsJson: JSON.stringify(testimonials),
+        promoScheduleJson: promoSchedule ? JSON.stringify(promoSchedule) : null,
         updatedAt: new Date(),
       })
       .where(eq(landingContent.id, "main"));

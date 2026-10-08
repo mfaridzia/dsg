@@ -129,9 +129,17 @@ export async function ensureDatabaseTables() {
         cta_secondary_link TEXT NOT NULL,
         faqs_json TEXT NOT NULL,
         testimonials_json TEXT NOT NULL,
+        promo_schedule_json TEXT,
         updated_at INTEGER NOT NULL
       )
     `);
+
+    // Safe migration: add promo_schedule_json column if missing
+    try {
+      await client.execute("ALTER TABLE landing_content ADD COLUMN promo_schedule_json TEXT");
+    } catch {
+      // Column already exists, ignore
+    }
 
     // 3. Blog Posts Table
     await client.execute(`

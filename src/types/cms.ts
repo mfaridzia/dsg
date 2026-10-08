@@ -28,8 +28,17 @@ export interface TestimonialItem {
   rating: number;
 }
 
+export interface PromoSchedule {
+  enabled: boolean;
+  startDate: string;
+  endDate: string;
+  promoBadgeText: string;
+  fallbackBadgeText: string;
+}
+
 export interface LandingContent {
   hero: HeroContent;
+  promoSchedule?: PromoSchedule;
   featuredProductIds: string[];
   testimonials: TestimonialItem[];
   faqs: FAQItem[];

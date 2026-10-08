@@ -11,8 +11,12 @@ import {
   Upload,
   Star,
   Save,
+  Calendar,
+  Clock,
+  AlertCircle,
 } from "lucide-react";
-import { LandingContent, FAQItem, TestimonialItem } from "@/types/cms";
+import { LandingContent, FAQItem, TestimonialItem, PromoSchedule } from "@/types/cms";
+import { getPromoScheduleStatus } from "@/lib/utils";
 import { toast } from "sonner";
 
 interface LandingContentTabProps {
@@ -27,6 +31,16 @@ export function LandingContentTab({
   isSaving,
 }: LandingContentTabProps) {
   const [data, setData] = useState<LandingContent>(initialData);
+
+  const currentSchedule: PromoSchedule = data.promoSchedule || {
+    enabled: true,
+    startDate: "2025-11-01",
+    endDate: "2026-12-31",
+    promoBadgeText: data.hero.badge,
+    fallbackBadgeText: "✨ Solusi Software Bisnis & Kasir Cloud Terpercaya untuk UMKM",
+  };
+
+  const scheduleStatus = getPromoScheduleStatus(currentSchedule, data.hero.badge);
 
   const handleAddFaq = () => {
     const newFaq: FAQItem = {
@@ -115,6 +129,167 @@ export function LandingContentTab({
         <p className="text-xs text-slate-500 mt-0.5">
           Perubahan langsung diperbarui pada halaman beranda dan database Cloudflare D1.
         </p>
+      </div>
+
+      {/* Promo Scheduling Section (Bonus Feature) */}
+      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+              <Calendar className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold text-slate-900 text-sm">Penjadwalan Promo Otomatis</h3>
+                <span className="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  Fitur Bonus
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400">
+                Tayang dan berakhir otomatis sesuai tanggal tanpa perlu campur tangan developer.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            {scheduleStatus.status === "active" && (
+              <span className="bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full text-xs inline-flex items-center gap-1.5 shadow-2xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>{scheduleStatus.label}</span>
+              </span>
+            )}
+            {scheduleStatus.status === "upcoming" && (
+              <span className="bg-amber-100 text-amber-800 font-bold px-3 py-1 rounded-full text-xs inline-flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-amber-600" />
+                <span>{scheduleStatus.label}</span>
+              </span>
+            )}
+            {scheduleStatus.status === "expired" && (
+              <span className="bg-rose-100 text-rose-800 font-bold px-3 py-1 rounded-full text-xs inline-flex items-center gap-1.5">
+                <AlertCircle className="w-3.5 h-3.5 text-rose-600" />
+                <span>Periode Berakhir (Teks Default Aktif)</span>
+              </span>
+            )}
+            {scheduleStatus.status === "disabled" && (
+              <span className="bg-slate-100 text-slate-600 font-medium px-3 py-1 rounded-full text-xs">
+                Jadwal Nonaktif
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div className="space-y-4 text-xs">
+          <label className="flex items-center gap-2.5 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={currentSchedule.enabled}
+              onChange={(e) =>
+                setData((prev) => ({
+                  ...prev,
+                  promoSchedule: {
+                    ...currentSchedule,
+                    enabled: e.target.checked,
+                  },
+                }))
+              }
+              className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500"
+            />
+            <span className="font-bold text-slate-800">
+              Aktifkan Penjadwalan Otomatis Berdasarkan Tanggal
+            </span>
+          </label>
+
+          {currentSchedule.enabled && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <div>
+                <label className="font-bold text-slate-700 block mb-1">
+                  Tanggal Mulai Tayang
+                </label>
+                <input
+                  type="date"
+                  value={currentSchedule.startDate}
+                  onChange={(e) =>
+                    setData((prev) => ({
+                      ...prev,
+                      promoSchedule: {
+                        ...currentSchedule,
+                        startDate: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-slate-900 focus:ring-2 focus:ring-indigo-500/20"
+                />
+              </div>
+
+              <div>
+                <label className="font-bold text-slate-700 block mb-1">
+                  Tanggal Berakhir Tayang
+                </label>
+                <input
+                  type="date"
+                  value={currentSchedule.endDate}
+                  onChange={(e) =>
+                    setData((prev) => ({
+                      ...prev,
+                      promoSchedule: {
+                        ...currentSchedule,
+                        endDate: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-slate-900 focus:ring-2 focus:ring-indigo-500/20"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="font-bold text-slate-700 block mb-1">
+                  Teks Badge Saat Promo Aktif
+                </label>
+                <input
+                  type="text"
+                  value={currentSchedule.promoBadgeText}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setData((prev) => ({
+                      ...prev,
+                      hero: { ...prev.hero, badge: val },
+                      promoSchedule: {
+                        ...currentSchedule,
+                        promoBadgeText: val,
+                      },
+                    }));
+                  }}
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-slate-900 focus:ring-2 focus:ring-indigo-500/20"
+                  placeholder="Contoh: 🔥 Promo Akhir Tahun: Diskon Lisensi s/d 45%"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="font-bold text-slate-700 block mb-1">
+                  Teks Badge Cadangan (Fallback saat Promo Berakhir)
+                </label>
+                <input
+                  type="text"
+                  value={currentSchedule.fallbackBadgeText}
+                  onChange={(e) =>
+                    setData((prev) => ({
+                      ...prev,
+                      promoSchedule: {
+                        ...currentSchedule,
+                        fallbackBadgeText: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-slate-900 focus:ring-2 focus:ring-indigo-500/20"
+                  placeholder="Contoh: ✨ Solusi Software Bisnis & Kasir Cloud Terpercaya untuk UMKM"
+                />
+                <p className="text-[10px] text-slate-400 mt-1">
+                  Teks ini otomatis menggantikan badge promo segera setelah tanggal berakhir lewat.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Hero Banner Section */}

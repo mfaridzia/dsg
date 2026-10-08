@@ -42,13 +42,15 @@ export function Navbar() {
     <>
       {/* Top Banner Promo Akhir Tahun */}
       <div className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-sky-600 text-white text-xs py-2 px-4 text-center font-medium flex items-center justify-center gap-2 shadow-sm">
-        <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
         <span>
-          <strong>Promo Akhir Tahun Kodeva:</strong> Amankan diskon lisensi hingga 45% sebelum kuota habis!
+          <strong>Promo Akhir Tahun Kodeva:</strong> Amankan diskon lisensi
+          hingga 45% sebelum kuota habis!
         </span>
         <Link
           href="/marketplace"
-          onClick={() => trackCtaClick("banner_katalog_link", "top_announcement_bar")}
+          onClick={() =>
+            trackCtaClick("banner_katalog_link", "top_announcement_bar")
+          }
           className="underline hover:text-amber-200 transition font-semibold ml-1 hidden sm:inline"
         >
           Lihat Semua Produk →
@@ -147,9 +149,15 @@ export function Navbar() {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition"
-              aria-label={mobileMenuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
+              aria-label={
+                mobileMenuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"
+              }
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6 text-slate-800" />}
+              {mobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6 text-slate-800" />
+              )}
             </button>
           </div>
         </div>
@@ -181,7 +189,8 @@ export function Navbar() {
               onClick={() => handleNavClick("mobile_nav_blog")}
               className="flex items-center gap-2 py-2 text-sm font-semibold text-slate-800 border-b border-slate-100"
             >
-              <BookOpen className="w-4 h-4 text-slate-400" /> Blog & Panduan Bisnis
+              <BookOpen className="w-4 h-4 text-slate-400" /> Blog & Panduan
+              Bisnis
             </Link>
             <Link
               href="/cart"
@@ -189,7 +198,8 @@ export function Navbar() {
               className="flex items-center justify-between py-2 text-sm font-semibold text-slate-800 border-b border-slate-100"
             >
               <span className="flex items-center gap-2">
-                <ShoppingCart className="w-4 h-4 text-slate-500" /> Keranjang Belanja
+                <ShoppingCart className="w-4 h-4 text-slate-500" /> Keranjang
+                Belanja
               </span>
               {mounted && totalLicenseCount > 0 && (
                 <span className="bg-indigo-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
