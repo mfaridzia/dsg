@@ -7,7 +7,7 @@ import path from "path";
 import os from "os";
 
 const cfAccountId = process.env.CLOUDFLARE_ACCOUNT_ID;
-const cfDatabaseId = process.env.CLOUDFLARE_DATABASE_ID;
+const cfDatabaseId = process.env.CLOUDFLARE_DATABASE_ID || process.env.CLOUDFLARE_D1_DATABASE_ID;
 const cfApiToken = process.env.CLOUDFLARE_API_TOKEN || process.env.CLOUDFLARE_D1_TOKEN;
 
 const isCloudflareD1 = Boolean(cfAccountId && cfDatabaseId && cfApiToken);
