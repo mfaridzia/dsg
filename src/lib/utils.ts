@@ -115,3 +115,16 @@ export function getPromoScheduleStatus(
     daysRemaining: daysLeft,
   };
 }
+
+/**
+ * Optimizes Open Graph image URLs for instant scraper previews (WhatsApp / Telegram).
+ * Compresses Unsplash photos down to ~35-50KB with exact 800x420 aspect ratio.
+ */
+export function getOptimizedOgImageUrl(url: string): string {
+  if (!url) return url;
+  if (url.includes("images.unsplash.com")) {
+    const cleanUrl = url.split("?")[0];
+    return `${cleanUrl}?auto=format&fit=crop&w=800&h=420&q=65`;
+  }
+  return url;
+}

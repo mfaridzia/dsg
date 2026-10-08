@@ -83,42 +83,44 @@ export function LeadsManagerTab({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="relative">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+          <div className="relative flex-1 sm:w-56">
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Cari nama, email, wa..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="bg-white border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 w-56"
+              className="bg-white border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 w-full"
             />
           </div>
 
-          <button
-            onClick={handleExportCsv}
-            disabled={leads.length === 0}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition disabled:opacity-50 cursor-pointer"
-            title="Download CSV"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>Ekspor CSV</span>
-          </button>
+          <div className="flex items-center gap-2 justify-end sm:justify-start shrink-0">
+            <button
+              onClick={handleExportCsv}
+              disabled={leads.length === 0}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition disabled:opacity-50 cursor-pointer"
+              title="Download CSV"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Ekspor CSV</span>
+            </button>
 
-          <button
-            onClick={onRefresh}
-            disabled={isLoading}
-            className="p-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 transition cursor-pointer"
-            title="Refresh Data"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
-          </button>
+            <button
+              onClick={onRefresh}
+              disabled={isLoading}
+              className="p-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 transition cursor-pointer"
+              title="Refresh Data"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
+            </button>
+          </div>
         </div>
       </div>
 
       {/* LEADS TABLE */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        <table className="w-full text-left text-xs">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-x-auto">
+        <table className="w-full min-w-[700px] text-left text-xs">
           <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-bold uppercase text-[10px]">
             <tr>
               <th className="px-6 py-3.5">Kontak Klien</th>

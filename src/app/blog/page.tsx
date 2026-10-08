@@ -24,9 +24,9 @@ export const metadata: Metadata = {
     siteName: "Kodeva",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80",
-        width: 1200,
-        height: 630,
+        url: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&h=420&q=65",
+        width: 800,
+        height: 420,
         alt: "Panduan Edukasi Bisnis Kodeva",
       },
     ],
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     description:
       "Pelajari panduan memilih aplikasi kasir, tips HR payroll, dan strategi efisiensi operasional UMKM Indonesia.",
     images: [
-      "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&h=420&q=65",
     ],
   },
 };

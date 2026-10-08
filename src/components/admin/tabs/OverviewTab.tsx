@@ -94,7 +94,7 @@ export function OverviewTab({
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+            <table className="w-full min-w-[500px] text-left text-xs">
               <thead className="bg-slate-50 text-slate-500 font-semibold text-[10px] uppercase border-b border-slate-100">
                 <tr>
                   <th className="px-5 py-3">Nama & Perusahaan</th>

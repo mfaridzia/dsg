@@ -153,7 +153,7 @@ export function BlogManagerTab({
 
       {/* CREATE / EDIT BLOG FORM */}
       {editingBlog && (
-        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-md space-y-6">
+        <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-md space-y-6">
           <div className="flex items-center justify-between pb-4 border-b border-slate-100">
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-indigo-600" />
@@ -422,8 +422,8 @@ export function BlogManagerTab({
       )}
 
       {/* BLOG ARTICLES TABLE */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        <table className="w-full text-left text-xs">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-x-auto">
+        <table className="w-full min-w-[700px] text-left text-xs">
           <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-bold uppercase text-[10px]">
             <tr>
               <th className="px-6 py-3.5">Artikel & Cover</th>

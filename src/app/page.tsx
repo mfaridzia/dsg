@@ -30,9 +30,9 @@ export const metadata: Metadata = {
     siteName: "Kodeva",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80",
-        width: 1200,
-        height: 630,
+        url: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&h=420&q=65",
+        width: 800,
+        height: 420,
         alt: "Dashboard Aplikasi Kasir & HR Kodeva",
       },
     ],
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     description:
       "Otomatisasi kasir, payroll karyawan, dan stok usaha tanpa ribet. Promo diskon lisensi s/d 45%.",
     images: [
-      "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&h=420&q=65",
     ],
   },
 };

@@ -15,6 +15,7 @@ Aplikasi web landing page promosi, sistem blog dengan CMS mandiri (_Built-in Edg
   - Tracking GA4 dataLayer deduplication, first-touch UTM attribution, & floating inspector
   - Built-in Admin CMS dashboard (`/admin`), pengujian build, dan penulisan dokumentasit
   - Deployment ke Vercel / Cloudflare & verifikasi live production environment
+  - Check, test dan improve fitur dan codebase setelah deploy
 
 ---
 

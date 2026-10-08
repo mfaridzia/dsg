@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PRODUCTS } from "@/lib/data/products";
 import { ProductDetailClient } from "@/components/marketplace/ProductDetailClient";
+import { getOptimizedOgImageUrl } from "@/lib/utils";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -21,9 +22,10 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     return { title: "Produk Tidak Ditemukan — Kodeva" };
   }
 
-  const primaryImage =
+  const rawImage =
     product.screenshots[0]?.url ||
-    "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=1200&q=80";
+    "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=800&h=420&q=65";
+  const primaryImage = getOptimizedOgImageUrl(rawImage);
 
   return {
     title: `${product.name} — Promo Lisensi Software Kodeva`,
@@ -44,8 +46,8 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
       images: [
         {
           url: primaryImage,
-          width: 1200,
-          height: 630,
+          width: 800,
+          height: 420,
           alt: product.name,
         },
       ],

@@ -7,7 +7,7 @@ import { blogPosts } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { DEFAULT_BLOG_POSTS, BlogPost } from "@/lib/data/cmsContent";
 import { PRODUCTS } from "@/lib/data/products";
-import { formatDate, formatIDR } from "@/lib/utils";
+import { formatDate, formatIDR, getOptimizedOgImageUrl } from "@/lib/utils";
 import { Calendar, Clock, ArrowLeft, ArrowRight, Tag, Sparkles } from "lucide-react";
 
 interface BlogPostPageProps {
@@ -72,9 +72,9 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       authors: [post.author.name],
       images: [
         {
-          url: post.coverImageUrl,
-          width: 1200,
-          height: 630,
+          url: getOptimizedOgImageUrl(post.coverImageUrl),
+          width: 800,
+          height: 420,
           alt: post.title,
         },
       ],
@@ -84,7 +84,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       card: "summary_large_image",
       title: post.title,
       description: post.excerpt,
-      images: [post.coverImageUrl],
+      images: [getOptimizedOgImageUrl(post.coverImageUrl)],
     },
   };
 }

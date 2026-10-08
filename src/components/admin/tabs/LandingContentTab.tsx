@@ -134,7 +134,7 @@ export function LandingContentTab({
       </div>
 
       {/* Promo Scheduling Section (Bonus Feature) */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-5">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-xs space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
@@ -316,7 +316,7 @@ export function LandingContentTab({
       </div>
 
       {/* Hero Banner Section */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-5">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-xs space-y-5">
         <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
           <Layout className="w-4 h-4 text-indigo-600" />
           <h3 className="font-bold text-slate-900 text-sm">Banner Utama (Hero Section)</h3>
@@ -376,7 +376,7 @@ export function LandingContentTab({
       </div>
 
       {/* Dynamic Testimonials Manager Section */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-5">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-xs space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
           <div>
             <div className="flex items-center gap-2">
@@ -606,7 +606,7 @@ export function LandingContentTab({
       </div>
 
       {/* Dynamic FAQ Builder Section */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-5">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-xs space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
           <div>
             <div className="flex items-center gap-2">

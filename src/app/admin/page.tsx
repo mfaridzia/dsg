@@ -29,6 +29,7 @@ export default function AdminPage() {
 
   const [activeTab, setActiveTab] = useState<AdminTab>("overview");
   const [editingBlog, setEditingBlog] = useState<BlogPost | Partial<BlogPost> | null>(null);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   // TanStack Query Hooks
   const { data: landingData, isLoading: loadingLanding } = useAdminLandingContent();
@@ -81,13 +82,18 @@ export default function AdminPage() {
         blogsCount={blogs.length}
         leadsCount={leads.length}
         onLogout={handleLogout}
+        mobileOpen={mobileNavOpen}
+        onCloseMobile={() => setMobileNavOpen(false)}
       />
 
       {/* 2. MAIN CONTENT AREA */}
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
-        <AdminHeader activeTab={activeTab} />
+        <AdminHeader
+          activeTab={activeTab}
+          onToggleMobileMenu={() => setMobileNavOpen((prev) => !prev)}
+        />
 
-        <main className="p-8 max-w-7xl w-full mx-auto space-y-8">
+        <main className="p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6 sm:space-y-8">
           {/* TAB 1: OVERVIEW */}
           {activeTab === "overview" && (
             <OverviewTab

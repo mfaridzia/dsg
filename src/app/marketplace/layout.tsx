@@ -20,9 +20,9 @@ export const metadata: Metadata = {
     siteName: "Kodeva",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=1200&q=80",
-        width: 1200,
-        height: 630,
+        url: "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=800&h=420&q=65",
+        width: 800,
+        height: 420,
         alt: "Katalog Software Kodeva Marketplace",
       },
     ],
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     description:
       "Pilihan software kasir POS, sistem HR payroll, dan stok barang. Diskon lisensi s/d 45%.",
     images: [
-      "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=800&h=420&q=65",
     ],
   },
 };
