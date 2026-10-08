@@ -17,6 +17,9 @@ import {
 } from "lucide-react";
 
 import { useIsMounted } from "@/hooks/useIsMounted";
+import { useAdminLandingContent } from "@/hooks/useAdminData";
+import { getPromoScheduleStatus } from "@/lib/utils";
+import { DEFAULT_LANDING_CONTENT } from "@/lib/data/cmsContent";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -24,6 +27,11 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const items = useCartStore((state) => state.items);
   const totalLicenseCount = items.reduce((sum, item) => sum + item.quantity, 0);
+
+  const { data: landingData } = useAdminLandingContent();
+  const scheduleStatus = getPromoScheduleStatus(
+    landingData?.promoSchedule ?? DEFAULT_LANDING_CONTENT.promoSchedule
+  );
 
   useEffect(() => {
     useCartStore.persist.rehydrate();
@@ -40,22 +48,23 @@ export function Navbar() {
 
   return (
     <>
-      {/* Top Banner Promo Akhir Tahun */}
-      <div className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-sky-600 text-white text-xs py-2 px-4 text-center font-medium flex items-center justify-center gap-2 shadow-sm">
-        <span>
-          <strong>Promo Akhir Tahun Kodeva:</strong> Amankan diskon lisensi
-          hingga 45% sebelum kuota habis!
-        </span>
-        <Link
-          href="/marketplace"
-          onClick={() =>
-            trackCtaClick("banner_katalog_link", "top_announcement_bar")
-          }
-          className="underline hover:text-amber-200 transition font-semibold ml-1 hidden sm:inline"
-        >
-          Lihat Semua Produk →
-        </Link>
-      </div>
+      {/* Dynamic Top Announcement Bar (Auto-hides when expired or disabled in CMS) */}
+      {scheduleStatus.isActive && (
+        <div className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-sky-600 text-white text-xs py-2 px-4 text-center font-medium flex items-center justify-center gap-2 shadow-sm transition-all duration-300">
+          <span>{scheduleStatus.bannerText}</span>
+          {scheduleStatus.linkText && (
+            <Link
+              href={scheduleStatus.linkUrl || "/marketplace"}
+              onClick={() =>
+                trackCtaClick("banner_katalog_link", "top_announcement_bar")
+              }
+              className="underline hover:text-amber-200 transition font-semibold ml-1 hidden sm:inline"
+            >
+              {scheduleStatus.linkText}
+            </Link>
+          )}
+        </div>
+      )}
 
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">

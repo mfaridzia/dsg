@@ -25,14 +25,20 @@ export interface PromoScheduleInput {
   enabled: boolean;
   startDate: string;
   endDate: string;
-  promoBadgeText: string;
-  fallbackBadgeText: string;
+  bannerText?: string;
+  linkText?: string;
+  linkUrl?: string;
+  promoBadgeText?: string;
+  fallbackBadgeText?: string;
 }
 
 export interface PromoScheduleStatus {
   isActive: boolean;
   status: "active" | "upcoming" | "expired" | "disabled";
   label: string;
+  bannerText: string;
+  linkText: string;
+  linkUrl: string;
   badgeText: string;
   daysRemaining?: number;
 }
@@ -41,12 +47,25 @@ export function getPromoScheduleStatus(
   schedule?: PromoScheduleInput,
   currentHeroBadge?: string
 ): PromoScheduleStatus {
+  const defaultBanner =
+    "Promo Akhir Tahun Kodeva: Amankan diskon lisensi hingga 45% sebelum kuota habis!";
+  const bannerText =
+    schedule?.bannerText ||
+    schedule?.promoBadgeText ||
+    currentHeroBadge ||
+    defaultBanner;
+  const linkText = schedule?.linkText || "Lihat Semua Produk →";
+  const linkUrl = schedule?.linkUrl || "/marketplace";
+
   if (!schedule || !schedule.enabled) {
     return {
-      isActive: true,
+      isActive: false,
       status: "disabled",
-      label: "Jadwal Dinonaktifkan (Selalu Aktif)",
-      badgeText: currentHeroBadge || schedule?.promoBadgeText || "🔥 Promo Spesial Berlangsung",
+      label: "Jadwal Dinonaktifkan (Banner Disembunyikan)",
+      bannerText,
+      linkText,
+      linkUrl,
+      badgeText: bannerText,
     };
   }
 
@@ -60,7 +79,10 @@ export function getPromoScheduleStatus(
       isActive: false,
       status: "upcoming",
       label: `Terjadwal (Tayang ${daysUntilStart} hari lagi)`,
-      badgeText: schedule.fallbackBadgeText || "✨ Solusi Software Bisnis & Kasir Cloud Terpercaya untuk UMKM",
+      bannerText,
+      linkText,
+      linkUrl,
+      badgeText: schedule.fallbackBadgeText || bannerText,
       daysRemaining: daysUntilStart,
     };
   }
@@ -70,7 +92,10 @@ export function getPromoScheduleStatus(
       isActive: false,
       status: "expired",
       label: "Periode Promo Telah Berakhir",
-      badgeText: schedule.fallbackBadgeText || "✨ Solusi Software Bisnis & Kasir Cloud Terpercaya untuk UMKM",
+      bannerText,
+      linkText,
+      linkUrl,
+      badgeText: schedule.fallbackBadgeText || bannerText,
       daysRemaining: 0,
     };
   }
@@ -83,7 +108,10 @@ export function getPromoScheduleStatus(
     isActive: true,
     status: "active",
     label: daysLeft !== undefined ? `Sedang Tayang (Sisa ${daysLeft} hari)` : "Sedang Tayang",
-    badgeText: schedule.promoBadgeText || currentHeroBadge || "🔥 Promo Spesial Berlangsung",
+    bannerText,
+    linkText,
+    linkUrl,
+    badgeText: bannerText,
     daysRemaining: daysLeft,
   };
 }

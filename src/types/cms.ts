@@ -1,5 +1,5 @@
 export interface HeroContent {
-  badge: string;
+  badge?: string;
   title: string;
   subtitle: string;
   ctaPrimaryText: string;
@@ -32,8 +32,11 @@ export interface PromoSchedule {
   enabled: boolean;
   startDate: string;
   endDate: string;
-  promoBadgeText: string;
-  fallbackBadgeText: string;
+  bannerText: string;
+  linkText?: string;
+  linkUrl?: string;
+  promoBadgeText?: string;
+  fallbackBadgeText?: string;
 }
 
 export interface LandingContent {

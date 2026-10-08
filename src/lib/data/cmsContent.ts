@@ -2,13 +2,16 @@ export type PromoSchedule = {
   enabled: boolean;
   startDate: string;
   endDate: string;
-  promoBadgeText: string;
-  fallbackBadgeText: string;
+  bannerText: string;
+  linkText?: string;
+  linkUrl?: string;
+  promoBadgeText?: string;
+  fallbackBadgeText?: string;
 };
 
 export type LandingContent = {
   hero: {
-    badge: string;
+    badge?: string;
     title: string;
     subtitle: string;
     ctaPrimaryText: string;
@@ -58,7 +61,7 @@ export type BlogPost = {
 
 export const DEFAULT_LANDING_CONTENT: LandingContent = {
   hero: {
-    badge: "🔥 Promo Akhir Tahun: Diskon Lisensi s/d 45% + Gratis Setup Cabang",
+    badge: "",
     title: "Otomatisasi Kasir, Payroll, dan Stok Usaha Anda Tanpa Ribet",
     subtitle:
       "Platform software bisnis cloud terpadu untuk UMKM Indonesia. Pantau laporan omzet cabang, hitung gaji & PPh 21 otomatis, dan amankan stok barang dari mana saja lewat HP.",
@@ -78,8 +81,10 @@ export const DEFAULT_LANDING_CONTENT: LandingContent = {
     enabled: true,
     startDate: "2025-11-01",
     endDate: "2026-12-31",
-    promoBadgeText: "🔥 Promo Akhir Tahun: Diskon Lisensi s/d 45% + Gratis Setup Cabang",
-    fallbackBadgeText: "✨ Solusi Software Bisnis & Kasir Cloud Terpercaya untuk UMKM",
+    bannerText: "Promo Akhir Tahun Kodeva: Amankan diskon lisensi hingga 45% sebelum kuota habis!",
+    linkText: "Lihat Semua Produk →",
+    linkUrl: "/marketplace",
+    promoBadgeText: "Promo Akhir Tahun: Diskon Lisensi s/d 45%",
   },
   featuredProductIds: ["prod-pos-01", "prod-hr-02", "prod-inv-03"],
   testimonials: [

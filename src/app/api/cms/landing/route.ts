@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     await db
       .update(landingContent)
       .set({
-        heroBadge: hero.badge,
+        heroBadge: hero.badge || "",
         heroTitle: hero.title,
         heroSubtitle: hero.subtitle,
         heroImageUrl: hero.heroImageUrl,

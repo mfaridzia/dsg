@@ -3,9 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { trackCtaClick } from "@/lib/analytics/dataLayer";
-import { ArrowRight, CheckCircle2, ShieldCheck, Zap } from "lucide-react";
+import { ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
 import { LandingContent, PromoSchedule } from "@/types/cms";
-import { getPromoScheduleStatus } from "@/lib/utils";
 
 interface HeroSectionProps {
   content: LandingContent["hero"];
@@ -13,17 +12,17 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ content, promoSchedule }: HeroSectionProps) {
-  const scheduleStatus = getPromoScheduleStatus(promoSchedule, content.badge);
+  const isPromoActive = promoSchedule?.enabled ?? true;
 
   const handlePrimaryCta = () => {
     trackCtaClick("hero_primary_katalog", "hero_section", {
-      campaign: scheduleStatus.isActive ? "promo-akhir-tahun" : "regular",
+      campaign: isPromoActive ? "promo-akhir-tahun" : "regular",
     });
   };
 
   const handleSecondaryCta = () => {
     trackCtaClick("hero_secondary_konsultasi", "hero_section", {
-      campaign: scheduleStatus.isActive ? "promo-akhir-tahun" : "regular",
+      campaign: isPromoActive ? "promo-akhir-tahun" : "regular",
     });
   };
 
@@ -36,18 +35,6 @@ export function HeroSection({ content, promoSchedule }: HeroSectionProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left Text Content */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            {/* Promo Pill Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-100/80 border border-indigo-200 text-indigo-800 text-xs font-semibold shadow-xs">
-              <span>{scheduleStatus.badgeText}</span>
-              {scheduleStatus.isActive &&
-                scheduleStatus.daysRemaining !== undefined &&
-                scheduleStatus.daysRemaining <= 60 && (
-                  <span className="hidden sm:inline bg-indigo-200/90 text-indigo-900 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                    Sisa {scheduleStatus.daysRemaining} hari
-                  </span>
-                )}
-            </div>
-
             {/* Main Headline */}
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15]">
               {content.title}

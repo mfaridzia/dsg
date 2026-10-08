@@ -61,17 +61,40 @@ describe("5. Promo Content Scheduling Logic (Bonus Feature)", () => {
     assert.equal(result.badgeText, "✨ Solusi Terpercaya Normal");
   });
 
-  test("harus berstatus disabled jika penjadwalan dinonaktifkan oleh admin", () => {
+  test("harus berstatus disabled dan menyembunyikan banner jika penjadwalan dinonaktifkan oleh admin", () => {
     const schedule: PromoScheduleInput = {
       enabled: false,
       startDate: "2025-01-01",
       endDate: "2025-01-10",
-      promoBadgeText: "🔥 Promo Nonaktif",
-      fallbackBadgeText: "✨ Konten Biasa",
+      bannerText: "🔥 Promo Nonaktif",
+      linkText: "Buka Katalog",
+      linkUrl: "/marketplace",
     };
 
-    const result = getPromoScheduleStatus(schedule, "Fallback Badge Saat Ini");
-    assert.equal(result.isActive, true);
+    const result = getPromoScheduleStatus(schedule);
+    assert.equal(result.isActive, false);
     assert.equal(result.status, "disabled");
+    assert.equal(result.bannerText, "🔥 Promo Nonaktif");
+  });
+
+  test("harus mendukung kustomisasi teks banner, link text, dan URL tujuan", () => {
+    const today = new Date();
+    const pastDate = new Date(today.getTime() - 1 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+    const futureDate = new Date(today.getTime() + 10 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+
+    const schedule: PromoScheduleInput = {
+      enabled: true,
+      startDate: pastDate,
+      endDate: futureDate,
+      bannerText: "Diskon Lisensi POS 50% Khusus Hari Ini!",
+      linkText: "Klaim Diskon Sekarang →",
+      linkUrl: "/marketplace?discount=50",
+    };
+
+    const result = getPromoScheduleStatus(schedule);
+    assert.equal(result.isActive, true);
+    assert.equal(result.bannerText, "Diskon Lisensi POS 50% Khusus Hari Ini!");
+    assert.equal(result.linkText, "Klaim Diskon Sekarang →");
+    assert.equal(result.linkUrl, "/marketplace?discount=50");
   });
 });
