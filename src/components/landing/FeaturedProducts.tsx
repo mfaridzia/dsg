@@ -65,16 +65,16 @@ export function FeaturedProducts({ products }: FeaturedProductsProps) {
                   
                   {/* Badges */}
                   <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
-                    <span className="bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
+                    <span className="bg-indigo-600 text-white text-xs font-bold px-2 py-0.5 rounded shadow">
                       {product.category}
                     </span>
-                    <span className="bg-rose-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow flex items-center gap-1">
+                    <span className="bg-rose-600 text-white text-xs font-bold px-2 py-0.5 rounded shadow flex items-center gap-1">
                       <Sparkles className="w-2.5 h-2.5" /> Hemat {discountPercent}%
                     </span>
                   </div>
 
                   {/* Sisa Kuota Bar */}
-                  <div className="absolute bottom-3 left-3 right-3 bg-slate-900/90 backdrop-blur-sm px-2.5 py-1.5 rounded-lg border border-slate-700/80 flex items-center justify-between text-[11px] text-white">
+                  <div className="absolute bottom-3 left-3 right-3 bg-slate-900/90 backdrop-blur-sm px-2.5 py-1.5 rounded-lg border border-slate-700/80 flex items-center justify-between text-xs text-white">
                     <span className="text-slate-300">Sisa Kuota Promo:</span>
                     <span className="font-bold font-mono text-amber-400">
                       {currentQuota > 0 ? `${currentQuota} Lisensi Tersedia` : "Habis"}
@@ -94,7 +94,7 @@ export function FeaturedProducts({ products }: FeaturedProductsProps) {
 
                     {/* Features Preview */}
                     <div className="mt-4 space-y-2 border-t border-slate-200/80 pt-4">
-                      <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                      <div className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
                         Fitur Paket Rekomendasi ({defaultTier.name}):
                       </div>
                       {defaultTier.features.slice(0, 3).map((feat, idx) => (

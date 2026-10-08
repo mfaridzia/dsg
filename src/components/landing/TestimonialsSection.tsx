@@ -59,10 +59,10 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-slate-900">{testi.authorName}</h4>
-                  <p className="text-[11px] text-slate-500 font-medium">
+                  <p className="text-xs text-slate-600 font-medium">
                     {testi.role} — {testi.businessName}
                   </p>
-                  <span className="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-medium">
+                  <span className="text-xs bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded font-medium">
                     {testi.businessType}
                   </span>
                 </div>

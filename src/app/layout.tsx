@@ -5,8 +5,8 @@ import { Toaster } from "sonner";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FloatingCartButton } from "@/components/layout/FloatingCartButton";
-import { DataLayerInspector } from "@/components/marketing/DataLayerInspector";
 import { UtmTracker } from "@/components/marketing/UtmTracker";
+import { DataLayerInspector } from "@/components/marketing/DataLayerInspector";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,6 +53,14 @@ export const metadata: Metadata = {
     title: "Kodeva — Software Bisnis UMKM",
     description: "Promo Akhir Tahun: Diskon Lisensi Software Kasir & HR hingga 45%.",
   },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -63,8 +71,13 @@ export default function RootLayout({
   return (
     <html
       lang="id"
+      data-scroll-behavior="smooth"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
     >
+      <head>
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+      </head>
       <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 font-sans">
         <Toaster richColors position="top-right" closeButton />
         <UtmTracker />

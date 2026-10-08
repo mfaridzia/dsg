@@ -73,11 +73,11 @@ export function Navbar() {
                 <span className="font-extrabold text-lg text-slate-900 tracking-tight">
                   Kodeva
                 </span>
-                <span className="text-[10px] bg-indigo-50 text-indigo-700 font-bold px-1.5 py-0.5 rounded border border-indigo-200/60">
+                <span className="text-xs bg-indigo-50 text-indigo-700 font-bold px-1.5 py-0.5 rounded border border-indigo-200/60">
                   Cloud UMKM
                 </span>
               </div>
-              <span className="block text-[10px] text-slate-500 -mt-1 font-medium">
+              <span className="block text-xs text-slate-500 -mt-0.5 font-medium">
                 by Digital Solusi Grup
               </span>
             </div>
@@ -149,7 +149,7 @@ export function Navbar() {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition"
-              aria-label="Menu"
+              aria-label={mobileMenuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6 text-slate-800" />}
             </button>

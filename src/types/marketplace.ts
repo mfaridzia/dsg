@@ -26,6 +26,16 @@ export type Product = {
   tiers: ProductTier[];
 };
 
+export type Voucher = {
+  code: string;
+  type: "percentage" | "fixed";
+  amount: number;
+  minSpend: number;
+  maxDiscount?: number;
+  remainingQuota: number;
+  description: string;
+};
+
 export type CartItem = {
   productId: string;
   productSlug: string;
@@ -37,4 +47,5 @@ export type CartItem = {
   originalPrice: number;
   quantity: number;
   maxSharedQuota: number;
+  billingCycle?: "monthly" | "yearly";
 };

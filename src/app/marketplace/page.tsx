@@ -1,25 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import { PRODUCTS } from "@/lib/data/products";
 import { formatIDR } from "@/lib/utils";
 import { useCartStore } from "@/lib/store/cartStore";
 import { trackCtaClick } from "@/lib/analytics/dataLayer";
 import {
-  Store,
   Filter,
   Flame,
   Sparkles,
   ArrowRight,
-  ShieldCheck,
   Check,
-  Users,
+  Search,
+  ArrowUpDown,
+  X,
+  Share2,
+  CheckCircle2,
 } from "lucide-react";
+import { toast } from "sonner";
 
-export default function MarketplaceCatalogPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("Semua");
+function MarketplaceCatalogContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Read initial values from URL search params
+  const initialCategory = searchParams.get("category") || "Semua";
+  const initialSort = searchParams.get("sort") || "featured";
+  const initialQuery = searchParams.get("q") || "";
+
+  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
+  const [selectedSort, setSelectedSort] = useState<string>(initialSort);
+  const [searchQuery, setSearchQuery] = useState<string>(initialQuery);
+  const [copiedLink, setCopiedLink] = useState(false);
+
   const getEffectivePoolQuota = useCartStore((state) => state.getEffectivePoolQuota);
 
   const categories = [
@@ -30,21 +46,97 @@ export default function MarketplaceCatalogPage() {
     "Add-On",
   ];
 
-  const filteredProducts =
-    selectedCategory === "Semua"
-      ? PRODUCTS
-      : PRODUCTS.filter((p) => p.category === selectedCategory);
+  // Synchronize state changes to URL query params (shareable URLs)
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (selectedCategory && selectedCategory !== "Semua") {
+      params.set("category", selectedCategory);
+    }
+    if (selectedSort && selectedSort !== "featured") {
+      params.set("sort", selectedSort);
+    }
+    if (searchQuery.trim()) {
+      params.set("q", searchQuery.trim());
+    }
 
-  const handleCategoryChange = (cat: string) => {
-    setSelectedCategory(cat);
-    trackCtaClick(`filter_katalog_${cat}`, "marketplace_catalog_filter");
+    const queryStr = params.toString();
+    const newUrl = queryStr ? `/marketplace?${queryStr}` : `/marketplace`;
+    router.replace(newUrl, { scroll: false });
+  }, [selectedCategory, selectedSort, searchQuery, router]);
+
+  // Filter & Sort Logic
+  const filteredProducts = useMemo(() => {
+    let result = [...PRODUCTS];
+
+    // 1. Filter by category
+    if (selectedCategory !== "Semua") {
+      result = result.filter((p) => p.category === selectedCategory);
+    }
+
+    // 2. Filter by search query
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      result = result.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.tagline.toLowerCase().includes(q) ||
+          p.description.toLowerCase().includes(q) ||
+          p.category.toLowerCase().includes(q)
+      );
+    }
+
+    // 3. Sort products
+    if (selectedSort === "price_asc") {
+      result.sort((a, b) => {
+        const minA = Math.min(...a.tiers.map((t) => t.priceMonthly));
+        const minB = Math.min(...b.tiers.map((t) => t.priceMonthly));
+        return minA - minB;
+      });
+    } else if (selectedSort === "price_desc") {
+      result.sort((a, b) => {
+        const minA = Math.min(...a.tiers.map((t) => t.priceMonthly));
+        const minB = Math.min(...b.tiers.map((t) => t.priceMonthly));
+        return minB - minA;
+      });
+    } else if (selectedSort === "discount") {
+      result.sort((a, b) => {
+        const discA = Math.max(
+          ...a.tiers.map(
+            (t) => (t.originalPriceMonthly - t.priceMonthly) / t.originalPriceMonthly
+          )
+        );
+        const discB = Math.max(
+          ...b.tiers.map(
+            (t) => (t.originalPriceMonthly - t.priceMonthly) / t.originalPriceMonthly
+          )
+        );
+        return discB - discA;
+      });
+    }
+
+    return result;
+  }, [selectedCategory, searchQuery, selectedSort]);
+
+  const handleCopyShareLink = () => {
+    if (typeof window !== "undefined") {
+      navigator.clipboard.writeText(window.location.href);
+      setCopiedLink(true);
+      toast.success("Link filter katalog disalin ke clipboard! Siap dibagikan.");
+      setTimeout(() => setCopiedLink(false), 2000);
+    }
+  };
+
+  const handleResetFilters = () => {
+    setSelectedCategory("Semua");
+    setSelectedSort("featured");
+    setSearchQuery("");
   };
 
   return (
     <div className="py-12 sm:py-16 bg-slate-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Header Banner */}
-        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-8 sm:p-12 text-white shadow-xl mb-12 relative overflow-hidden">
+        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-8 sm:p-12 text-white shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none" />
 
           <div className="max-w-3xl space-y-4 relative z-10">
@@ -62,27 +154,93 @@ export default function MarketplaceCatalogPage() {
           </div>
         </div>
 
-        {/* Filter Category Tabs */}
-        <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none">
-            <Filter className="w-4 h-4 text-slate-400 shrink-0 ml-1" />
-            {categories.map((cat) => (
+        {/* Search, Filter & Sort Controls Toolbar */}
+        <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-xs space-y-4">
+          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+            {/* Search Input */}
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Cari software (misal: kasir, payroll, stok, qr menu)..."
+                className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-hidden focus:border-indigo-500 transition"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+
+            {/* Sort Dropdown & Share Link */}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-2xl px-3 py-1.5 text-xs">
+                <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
+                <span className="text-slate-500 text-[11px] font-medium hidden sm:inline">Urutkan:</span>
+                <select
+                  value={selectedSort}
+                  onChange={(e) => setSelectedSort(e.target.value)}
+                  className="bg-transparent text-slate-800 font-semibold text-xs focus:outline-none cursor-pointer"
+                >
+                  <option value="featured">Rekomendasi</option>
+                  <option value="price_asc">Harga Terendah</option>
+                  <option value="price_desc">Harga Tertinggi</option>
+                  <option value="discount">Diskon Terbesar</option>
+                </select>
+              </div>
+
               <button
-                key={cat}
-                onClick={() => handleCategoryChange(cat)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-                  selectedCategory === cat
-                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
-                    : "bg-white text-slate-600 border border-slate-200 hover:border-slate-300"
-                }`}
+                type="button"
+                onClick={handleCopyShareLink}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition cursor-pointer shrink-0"
+                title="Salin Link Filter URL"
               >
-                {cat}
+                {copiedLink ? (
+                  <>
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                    <span className="text-emerald-700">Tersalin!</span>
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="w-3.5 h-3.5 text-slate-500" />
+                    <span className="hidden sm:inline">Bagikan</span>
+                  </>
+                )}
               </button>
-            ))}
+            </div>
           </div>
 
-          <div className="text-xs text-slate-500 font-medium">
-            Menampilkan <strong className="text-slate-900">{filteredProducts.length}</strong> produk software
+          {/* Category Tabs */}
+          <div className="flex items-center justify-between flex-wrap gap-3 pt-3 border-t border-slate-100">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+              <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0 ml-1" />
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    setSelectedCategory(cat);
+                    trackCtaClick(`filter_katalog_${cat}`, "marketplace_catalog_filter");
+                  }}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                    selectedCategory === cat
+                      ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
+                      : "bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            <div className="text-xs text-slate-500 font-medium">
+              Menampilkan <strong className="text-slate-900">{filteredProducts.length}</strong> produk software
+            </div>
           </div>
         </div>
 
@@ -203,7 +361,37 @@ export default function MarketplaceCatalogPage() {
             );
           })}
         </div>
+
+        {/* Empty Search Result */}
+        {filteredProducts.length === 0 && (
+          <div className="bg-white rounded-3xl p-12 text-center border border-slate-200 max-w-md mx-auto space-y-4">
+            <div className="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto">
+              <Search className="w-8 h-8" />
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-900 text-base">Tidak ada software yang cocok</h3>
+              <p className="text-xs text-slate-500 mt-1">
+                Kata kunci &ldquo;{searchQuery}&rdquo; atau filter &ldquo;{selectedCategory}&rdquo; tidak menemukan hasil.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleResetFilters}
+              className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition"
+            >
+              Reset Filter Pencarian
+            </button>
+          </div>
+        )}
       </div>
     </div>
+  );
+}
+
+export default function MarketplaceCatalogPage() {
+  return (
+    <Suspense fallback={<div className="py-24 text-center text-slate-500 font-medium">Memuat katalog software...</div>}>
+      <MarketplaceCatalogContent />
+    </Suspense>
   );
 }

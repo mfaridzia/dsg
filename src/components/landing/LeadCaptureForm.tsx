@@ -147,10 +147,11 @@ export function LeadCaptureForm() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {/* Nama Lengkap */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-medium text-slate-300">
+                  <label htmlFor="lead-name" className="block text-xs font-medium text-slate-300">
                     Nama Lengkap <span className="text-rose-400">*</span>
                   </label>
                   <input
+                    id="lead-name"
                     type="text"
                     required
                     value={name}
@@ -162,10 +163,11 @@ export function LeadCaptureForm() {
 
                 {/* Nomor WhatsApp */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-medium text-slate-300">
+                  <label htmlFor="lead-whatsapp" className="block text-xs font-medium text-slate-300">
                     Nomor WhatsApp Aktif <span className="text-rose-400">*</span>
                   </label>
                   <input
+                    id="lead-whatsapp"
                     type="tel"
                     required
                     value={whatsapp}
@@ -177,10 +179,11 @@ export function LeadCaptureForm() {
 
                 {/* Email Perusahaan */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-medium text-slate-300">
+                  <label htmlFor="lead-email" className="block text-xs font-medium text-slate-300">
                     Email Kantor / Bisnis <span className="text-rose-400">*</span>
                   </label>
                   <input
+                    id="lead-email"
                     type="email"
                     required
                     value={email}
@@ -192,10 +195,11 @@ export function LeadCaptureForm() {
 
                 {/* Nama Usaha */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-medium text-slate-300">
+                  <label htmlFor="lead-company" className="block text-xs font-medium text-slate-300">
                     Nama Usaha / Brand (Opsional)
                   </label>
                   <input
+                    id="lead-company"
                     type="text"
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
@@ -207,10 +211,11 @@ export function LeadCaptureForm() {
 
               {/* Produk yang Diminati */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-medium text-slate-300">
+                <label htmlFor="lead-interest" className="block text-xs font-medium text-slate-300">
                   Modul yang Ingin Diberikan Demo
                 </label>
                 <select
+                  id="lead-interest"
                   value={interest}
                   onChange={(e) => setInterest(e.target.value)}
                   className="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-hidden focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
@@ -242,7 +247,7 @@ export function LeadCaptureForm() {
                     </>
                   )}
                 </button>
-                <p className="text-[11px] text-slate-500 text-center mt-2.5">
+                <p className="text-xs text-slate-400 text-center mt-2.5">
                   Privasi terjamin. Data Anda tidak akan dibagikan ke pihak ketiga atau digunakan untuk spam.
                 </p>
               </div>

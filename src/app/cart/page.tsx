@@ -17,6 +17,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
+import { VoucherInput } from "@/components/cart/VoucherInput";
 
 export function CartPage() {
   const [mounted, setMounted] = useState(false);
@@ -163,6 +164,11 @@ export function CartPage() {
                         <span className="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-0.5 rounded">
                           Paket {item.tierName}
                         </span>
+                        {item.billingCycle === "yearly" && (
+                          <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded">
+                            Tahunan (Hemat 20%)
+                          </span>
+                        )}
                       </div>
                       <h4 className="text-base font-bold text-slate-900">
                         <Link
@@ -173,7 +179,7 @@ export function CartPage() {
                         </Link>
                       </h4>
                       <div className="text-xs text-slate-500 font-mono">
-                        {formatIDR(item.price)} / lisensi / bulan
+                        {formatIDR(item.price)} / lisensi / {item.billingCycle === "yearly" ? "tahun" : "bulan"}
                         <span className="text-slate-400 line-through ml-2">
                           {formatIDR(item.originalPrice)}
                         </span>
@@ -290,13 +296,22 @@ export function CartPage() {
                     <span className="flex items-center gap-1">
                       <Sparkles className="w-3.5 h-3.5" /> Diskon Promo Akhir Tahun:
                     </span>
-                    <span className="font-mono">- {formatIDR(totalSavings)}</span>
+                    <span className="font-mono">- {formatIDR(cartStore.getOriginalSubtotal() - cartStore.getSubtotal())}</span>
                   </div>
+
+                  {cartStore.getVoucherDiscount() > 0 && (
+                    <div className="flex justify-between text-indigo-600 font-semibold">
+                      <span className="flex items-center gap-1">
+                        <Sparkles className="w-3.5 h-3.5" /> Diskon Kupon ({cartStore.appliedVoucher?.code}):
+                      </span>
+                      <span className="font-mono">- {formatIDR(cartStore.getVoucherDiscount())}</span>
+                    </div>
+                  )}
 
                   <div className="pt-4 border-t border-slate-200 flex items-baseline justify-between text-base">
                     <span className="font-extrabold text-slate-900">Total Tagihan:</span>
                     <span className="text-2xl font-black text-indigo-600 font-mono">
-                      {formatIDR(subtotal)}
+                      {formatIDR(cartStore.getFinalTotal())}
                     </span>
                   </div>
                   <div className="text-[10px] text-slate-400 text-right">
@@ -304,12 +319,14 @@ export function CartPage() {
                   </div>
                 </div>
 
+                <VoucherInput />
+
                 <Link
                   href="/checkout"
                   onClick={handleBeginCheckout}
                   className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-xl shadow-indigo-600/25 transition-all hover:scale-[1.01] active:scale-99"
                 >
-                  <span>Lanjutkan ke Checkout</span>
+                  <span>Lanjutkan ke Checkout ({formatIDR(cartStore.getFinalTotal())})</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
 

@@ -26,6 +26,7 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import { toast } from "sonner";
+import { VoucherInput } from "@/components/cart/VoucherInput";
 
 interface OrderSnapshot {
   invoiceNumber: string;
@@ -92,6 +93,8 @@ export default function CheckoutPage() {
 
   const items = cartStore.items;
   const subtotal = cartStore.getSubtotal();
+  const finalTotal = cartStore.getFinalTotal();
+  const voucherDiscount = cartStore.getVoucherDiscount();
   const utmParams = utmStore.getUtmPayload();
 
   // Reset any lingering order result when entering with active cart items or unmounting
@@ -182,7 +185,7 @@ export default function CheckoutPage() {
         price: item.price,
         quantity: item.quantity,
       })),
-      totalAmount: subtotal,
+      totalAmount: finalTotal,
     };
 
     setPendingOrder(snapshot);
@@ -744,6 +747,12 @@ export default function CheckoutPage() {
                     <span>Subtotal:</span>
                     <span className="font-mono font-medium">{formatIDR(subtotal)}</span>
                   </div>
+                  {voucherDiscount > 0 && (
+                    <div className="flex justify-between text-indigo-600 font-semibold">
+                      <span>Diskon Kupon ({cartStore.appliedVoucher?.code}):</span>
+                      <span className="font-mono">- {formatIDR(voucherDiscount)}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-slate-500">
                     <span>Biaya Layanan & PPN:</span>
                     <span className="font-mono font-medium text-emerald-600">Termasuk</span>
@@ -751,17 +760,19 @@ export default function CheckoutPage() {
                   <div className="flex justify-between text-slate-900 font-extrabold text-base pt-2 border-t border-slate-100">
                     <span>Total Tagihan:</span>
                     <span className="font-mono text-xl text-indigo-600">
-                      {formatIDR(subtotal)}
+                      {formatIDR(finalTotal)}
                     </span>
                   </div>
                 </div>
+
+                <VoucherInput />
 
                 <button
                   type="submit"
                   className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-xl shadow-indigo-600/25 transition-all hover:scale-[1.01] active:scale-99 cursor-pointer"
                 >
                   <ShieldCheck className="w-4 h-4" />
-                  <span>Lanjut ke Pembayaran ({formatIDR(subtotal)})</span>
+                  <span>Lanjut ke Pembayaran ({formatIDR(finalTotal)})</span>
                 </button>
 
                 <p className="text-[10px] text-slate-400 text-center leading-relaxed">

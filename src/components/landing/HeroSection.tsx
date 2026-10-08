@@ -90,6 +90,8 @@ export function HeroSection({ content }: HeroSectionProps) {
                   width={640}
                   height={420}
                   priority
+                  fetchPriority="high"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 640px"
                   className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-6">
@@ -112,7 +114,7 @@ export function HeroSection({ content }: HeroSectionProps) {
                 </div>
                 <div>
                   <div className="text-xs font-bold text-slate-900">Uptime Server SLA</div>
-                  <div className="text-[10px] text-slate-500">Aman untuk Operasional Harian</div>
+                  <div className="text-xs text-slate-600">Aman untuk Operasional Harian</div>
                 </div>
               </div>
             </div>

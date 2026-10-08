@@ -106,6 +106,14 @@ Brief sengaja membiarkan beberapa aspek terbuka untuk interpretasi kandidat. Ber
   - **Login Demo:** Dilengkapi fitur 1-klik masuk untuk reviewer (`admin@kodeva.com` / `admin123`).
 - [x] **Caching & On-Demand Revalidation (`/api/revalidate`):** Endpoint untuk purge cache instan (`revalidatePath`) saat konten di-publish tanpa redeploy manual.
 
+### 🎁 Fitur Bonus (Opsional) yang Berhasil Diimplementasikan:
+
+- [x] **Katalog Shareable (URL Query Sync):** Pencarian instan kata kunci (`q`), pengurutan harga (`sort=price_asc/price_desc/discount`), dan filter kategori yang tersinkronisasi realtime ke URL (`/marketplace?category=...&sort=...&q=...`) sehingga tautan pencarian siap dibagikan langsung.
+- [x] **Pilihan Durasi Langganan & Tabel Komparasi:** Switcher durasi tagihan **Bulanan vs Tahunan (Hemat 20%)** di halaman detail produk, serta **Tabel Matriks Perbandingan Fitur** lengkap lintas tier paket (Starter, Pro, Business).
+- [x] **Sistem Kode Voucher Promo:** Input voucher di keranjang & checkout (`DSGHEMAT`, `KODEVABARU`, `PROMOAKHIRTAHUN`) dengan validasi minimal belanja, kuota pemakaian, dan batas pemotongan harga maksimal.
+- [x] **Test Otomatis Logika Inti (`npm test`):** 9 automated unit tests bawaan Node.js test runner untuk memverifikasi logika batas kuota promo bersama, kalkulasi tagihan tahunan, dan validasi voucher.
+- [x] **Preview / Draft Konten CMS:** Kontrol status `Draft` vs `Published` pada artikel blog di `/admin` dengan tautan preview langsung ke halaman web publik.
+
 ### Yang Belum Selesai (Limitasi Waktu 6–8 Jam):
 
 - Pembayaran payment gateway sungguhan (Midtrans/Xendit) karena brief meminta cukup di sisi frontend simulasi.
