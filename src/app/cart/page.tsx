@@ -43,7 +43,6 @@ export function CartPage() {
   const items = cartStore.items;
   const subtotal = cartStore.getSubtotal();
   const originalSubtotal = cartStore.getOriginalSubtotal();
-  const totalSavings = cartStore.getTotalSavings();
   const totalLicenses = cartStore.getTotalLicenseCount();
 
   const handleUpdateQty = (productId: string, tierId: string, delta: number) => {

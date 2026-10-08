@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/store/cartStore";
 import { useUtmStore } from "@/lib/store/utmStore";
+import { useIsMounted } from "@/hooks/useIsMounted";
 import { formatIDR } from "@/lib/utils";
 import { pushToDataLayer } from "@/lib/analytics/dataLayer";
 import {
@@ -22,7 +23,6 @@ import {
   FileText,
   QrCode,
   Clock,
-  ExternalLink,
   ShoppingCart,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -47,9 +47,13 @@ interface OrderSnapshot {
   totalAmount: number;
 }
 
+function generateInvoiceNumber(): string {
+  return `INV-KDV-${Date.now().toString().slice(-6)}`;
+}
+
 export default function CheckoutPage() {
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsMounted();
 
   // Buyer Form State (strictly scoped)
   const [name, setName] = useState("");
@@ -87,8 +91,6 @@ export default function CheckoutPage() {
   useEffect(() => {
     useCartStore.persist.rehydrate();
     useUtmStore.persist.rehydrate();
-    const timer = setTimeout(() => setMounted(true), 15);
-    return () => clearTimeout(timer);
   }, []);
 
   const items = cartStore.items;
@@ -96,18 +98,6 @@ export default function CheckoutPage() {
   const finalTotal = cartStore.getFinalTotal();
   const voucherDiscount = cartStore.getVoucherDiscount();
   const utmParams = utmStore.getUtmPayload();
-
-  // Reset any lingering order result when entering with active cart items or unmounting
-  useEffect(() => {
-    if (items.length > 0) {
-      setOrderResult(null);
-      setPendingOrder(null);
-    }
-    return () => {
-      setOrderResult(null);
-      setPendingOrder(null);
-    };
-  }, [items.length]);
 
   // Countdown timer for pending payment step
   useEffect(() => {
@@ -173,7 +163,7 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (items.length === 0) return;
 
-    const invoiceNumber = `INV-KDV-${Date.now().toString().slice(-6)}`;
+    const invoiceNumber = generateInvoiceNumber();
     const snapshot: OrderSnapshot = {
       invoiceNumber,
       customer: { name, email, whatsapp, company },

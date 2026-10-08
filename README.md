@@ -8,13 +8,13 @@ Aplikasi web landing page promosi, sistem blog dengan CMS mandiri (_Built-in Edg
 
 - **Total Durasi:** ~7 jam kerja aktif.
 - **Rincian:**
-  - Analisis brief, pemodelan domain, dan keputusan arsitektur stack: ~1 jam
-  - Setup Next.js 16, Drizzle ORM, Edge SQLite / Cloudflare D1-ready schema: ~1 jam
-  - Landing page, anti-spam lead capture API, dan blog dengan CMS dinamis: ~1,5 jam
-  - Mini marketplace (katalog 6 produk, detail switcher paket, keranjang kuota promo bersama, checkout simulasi): ~1,5 jam
-  - Tracking GA4 dataLayer deduplication, first-touch UTM attribution, & floating inspector: ~45 menit
-  - Built-in Admin CMS dashboard (`/admin`), pengujian build, dan penulisan dokumentasi: ~45 menit
-  - Deployment ke Vercel / Cloudflare & verifikasi live production environment: ~30 menit
+  - Analisis brief, pemodelan domain, dan keputusan arsitektur stack
+  - Setup Next.js 16, Drizzle ORM, Edge SQLite / Cloudflare D1-ready schema
+  - Landing page, anti-spam lead capture API, dan blog dengan CMS dinamis
+  - Mini marketplace (katalog 6 produk, detail switcher paket, keranjang kuota promo bersama, checkout simulasi)
+  - Tracking GA4 dataLayer deduplication, first-touch UTM attribution, & floating inspector
+  - Built-in Admin CMS dashboard (`/admin`), pengujian build, dan penulisan dokumentasit
+  - Deployment ke Vercel / Cloudflare & verifikasi live production environment
 
 ---
 

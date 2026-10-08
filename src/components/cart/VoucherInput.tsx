@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useCartStore } from "@/lib/store/cartStore";
 import { formatIDR } from "@/lib/utils";
-import { Ticket, CheckCircle2, XCircle, Tag, ArrowRight } from "lucide-react";
+import { Ticket, CheckCircle2, Tag } from "lucide-react";
 import { toast } from "sonner";
 import { SAMPLE_VOUCHERS } from "@/lib/data/vouchers";
 

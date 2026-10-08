@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useUtmStore } from "@/lib/store/utmStore";
 import { trackCtaClick } from "@/lib/analytics/dataLayer";
 import { ShieldCheck, Send, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
@@ -15,7 +15,7 @@ export function LeadCaptureForm() {
   
   // Anti-spam states
   const [honeypot, setHoneypot] = useState(""); // Bot trap
-  const [renderedAt, setRenderedAt] = useState<number>(0);
+  const renderedAtRef = useRef<number>(0);
 
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -24,7 +24,7 @@ export function LeadCaptureForm() {
   const utmStore = useUtmStore();
 
   useEffect(() => {
-    setRenderedAt(Date.now());
+    renderedAtRef.current = Date.now();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -48,7 +48,7 @@ export function LeadCaptureForm() {
           company,
           interest,
           website: honeypot, // Honeypot field
-          renderedAt,
+          renderedAt: renderedAtRef.current || Date.now(),
           utmSource: utmPayload.utm_source,
           utmMedium: utmPayload.utm_medium,
           utmCampaign: utmPayload.utm_campaign,

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db, ensureLeadsTable } from "@/db";
 import { leads } from "@/db/schema";
-import { nanoid } from "nanoid";
 
 const leadSchema = z.object({
   name: z.string().min(2, "Nama minimal 2 karakter"),

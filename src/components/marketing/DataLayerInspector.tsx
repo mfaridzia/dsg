@@ -4,18 +4,18 @@ import { useEffect, useState } from "react";
 import { subscribeToDataLayer } from "@/lib/analytics/dataLayer";
 import { useUtmStore } from "@/lib/store/utmStore";
 import { GA4EventPayload } from "@/types/marketing";
-import { Activity, ChevronDown, ChevronUp, Sparkles, Trash2 } from "lucide-react";
+import { Activity, ChevronDown, Sparkles, Trash2 } from "lucide-react";
+import { useIsMounted } from "@/hooks/useIsMounted";
 
 export function DataLayerInspector() {
   const [isOpen, setIsOpen] = useState(false);
   const [events, setEvents] = useState<GA4EventPayload[]>([]);
   const utmStore = useUtmStore();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsMounted();
 
   useEffect(() => {
     // Hydrate UTM store on client
     useUtmStore.persist.rehydrate();
-    setMounted(true);
 
     const unsubscribe = subscribeToDataLayer((newEvent) => {
       setEvents((prev) => [newEvent, ...prev.slice(0, 19)]);

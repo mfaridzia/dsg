@@ -19,8 +19,6 @@ import {
   Info,
   Check,
   AlertCircle,
-  Calendar,
-  X,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -29,7 +27,8 @@ interface ProductDetailClientProps {
 }
 
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
-  const [selectedTier, setSelectedTier] = useState<ProductTier | null>(null);
+  const defaultTier = product.tiers.find((t) => t.isPopular) || product.tiers[0];
+  const [selectedTier, setSelectedTier] = useState<ProductTier>(defaultTier);
   const [selectedScreenshotIdx, setSelectedScreenshotIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
@@ -41,23 +40,15 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const utmStore = useUtmStore();
   const hasTrackedViewItemRef = useRef(false);
 
-  // Set default tier
-  useEffect(() => {
-    if (product && !selectedTier) {
-      const defaultTier = product.tiers.find((t) => t.isPopular) || product.tiers[0];
-      setSelectedTier(defaultTier);
-    }
-  }, [product, selectedTier]);
-
   // Track view_item ONCE per mount (Deduplication guard)
   useEffect(() => {
-    if (product && selectedTier && !hasTrackedViewItemRef.current) {
+    if (product && !hasTrackedViewItemRef.current) {
       hasTrackedViewItemRef.current = true;
       trackViewItem(product, selectedTier, utmStore.getUtmPayload());
     }
   }, [product, selectedTier, utmStore]);
 
-  const activeTier = selectedTier || product.tiers[0];
+  const activeTier = selectedTier;
   const effectiveQuota = cartStore.getEffectivePoolQuota(
     product.sharedQuotaPoolId,
     product.remainingPromoQuota

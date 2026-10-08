@@ -9,10 +9,19 @@ interface QuillEditorProps {
   placeholder?: string;
 }
 
+interface QuillLike {
+  root: { innerHTML: string };
+  on: (event: string, handler: () => void) => void;
+}
+
 export default function QuillEditor({ value, onChange, placeholder }: QuillEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
-  const quillInstance = useRef<any>(null);
+  const quillInstance = useRef<QuillLike | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const onChangeRef = useRef(onChange);
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  });
 
   useEffect(() => {
     let active = true;
@@ -39,7 +48,7 @@ export default function QuillEditor({ value, onChange, placeholder }: QuillEdito
         },
       });
 
-      quillInstance.current = quill;
+      quillInstance.current = quill as unknown as QuillLike;
 
       if (value) {
         quill.root.innerHTML = value;
@@ -47,7 +56,7 @@ export default function QuillEditor({ value, onChange, placeholder }: QuillEdito
 
       quill.on("text-change", () => {
         const html = quill.root.innerHTML;
-        onChange(html === "<p><br></p>" ? "" : html);
+        onChangeRef.current(html === "<p><br></p>" ? "" : html);
       });
 
       setIsLoaded(true);
@@ -59,6 +68,7 @@ export default function QuillEditor({ value, onChange, placeholder }: QuillEdito
       active = false;
       quillInstance.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Sync value if updated externally (like when selecting a different blog to edit)

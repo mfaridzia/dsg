@@ -63,6 +63,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { QueryProvider } from "@/providers/QueryProvider";
+
 export default function RootLayout({
   children,
 }: {
@@ -79,13 +81,15 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
       </head>
       <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 font-sans">
-        <Toaster richColors position="top-right" closeButton />
-        <UtmTracker />
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <FloatingCartButton />
-        <DataLayerInspector />
+        <QueryProvider>
+          <Toaster richColors position="top-right" closeButton />
+          <UtmTracker />
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <FloatingCartButton />
+          <DataLayerInspector />
+        </QueryProvider>
       </body>
     </html>
   );

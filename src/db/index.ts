@@ -44,7 +44,7 @@ if (isCloudflareD1) {
   };
 
   dbInstance = drizzleProxy(
-    async (sql, params, method) => {
+    async (sql, params) => {
       const url = `https://api.cloudflare.com/client/v4/accounts/${cfAccountId}/d1/database/${cfDatabaseId}/raw`;
       const res = await fetch(url, {
         method: "POST",

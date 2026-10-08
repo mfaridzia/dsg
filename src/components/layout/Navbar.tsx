@@ -16,19 +16,17 @@ import {
   BookOpen,
 } from "lucide-react";
 
+import { useIsMounted } from "@/hooks/useIsMounted";
+
 export function Navbar() {
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsMounted();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const items = useCartStore((state) => state.items);
   const totalLicenseCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   useEffect(() => {
     useCartStore.persist.rehydrate();
-    setMounted(false);
-    // Slight timeout for clean hydration
-    const timer = setTimeout(() => setMounted(true), 10);
-    return () => clearTimeout(timer);
   }, []);
 
   if (pathname?.startsWith("/admin")) {
