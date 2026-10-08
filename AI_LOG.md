@@ -2,7 +2,7 @@
 
 ## 1. Tools AI yang Digunakan & Pembagian Peran
 
-- **Tool Utama:** AI Harness (seperti Claude, Codex, Antigravity)
+- **Tool Utama:** AI Harness (Claude, Codex, Antigravity)
 - **Peran & Pembagian Kerja:**
   - **Brainstorming & Trade-Off Analysis:** Berdiskusi mengevaluasi alternatif stack (Sanity vs Custom CMS vs SQLite/Cloudflare D1, Turso vs Supabase).
   - **Code Scaffolding & Boilerplate:** Mempercepat penulisan komponen UI Tailwind, schema, dan tipe data awalan.

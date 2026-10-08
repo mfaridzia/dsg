@@ -6,7 +6,7 @@ Aplikasi web landing page promosi, sistem blog dengan CMS mandiri (_Built-in Edg
 
 ## ⏱️ Waktu Pengerjaan Sebenarnya
 
-- **Total Durasi:** ~7 jam kerja aktif.
+- **Total Durasi:** ~8 jam kerja aktif.
 - **Rincian:**
   - Analisis brief, pemodelan domain, dan keputusan arsitektur stack
   - Setup Next.js 16, Drizzle ORM, Edge SQLite / Cloudflare D1-ready schema
