@@ -60,13 +60,20 @@ export default function CheckoutPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  if (!mounted) {
-    return <div className="py-24 text-center text-slate-500">Memuat halaman checkout...</div>;
-  }
-
   const items = cartStore.items;
   const subtotal = cartStore.getSubtotal();
   const utmParams = utmStore.getUtmPayload();
+
+  // Reset old order result if user comes back to checkout with active items in cart
+  useEffect(() => {
+    if (items.length > 0 && orderResult) {
+      setOrderResult(null);
+    }
+  }, [items.length, orderResult]);
+
+  if (!mounted) {
+    return <div className="py-24 text-center text-slate-500">Memuat halaman checkout...</div>;
+  }
 
   // Redirect if cart is empty and not viewing a finished order result
   if (items.length === 0 && !orderResult) {
@@ -184,7 +191,7 @@ export default function CheckoutPage() {
         </div>
 
         {/* Finished Order State (Success / Failed) */}
-        {orderResult ? (
+        {orderResult && items.length === 0 ? (
           <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-xl max-w-2xl mx-auto space-y-8 animate-scale-in">
             {orderResult.status === "success" ? (
               <>
@@ -267,12 +274,14 @@ export default function CheckoutPage() {
                 <div className="flex flex-col sm:flex-row gap-3 pt-2">
                   <Link
                     href="/marketplace"
+                    onClick={() => setOrderResult(null)}
                     className="flex-1 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs text-center shadow transition"
                   >
                     Beli Lisensi Software Lain
                   </Link>
                   <Link
                     href="/"
+                    onClick={() => setOrderResult(null)}
                     className="flex-1 py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs text-center transition"
                   >
                     Kembali ke Beranda

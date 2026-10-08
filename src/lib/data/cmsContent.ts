@@ -254,7 +254,7 @@ Pelanggan enggan membawa kartu fisik di dompet mereka. Dengan memanfaatkan nomor
 - **Pesan Win-Back:** Otomatis kirim tawaran promo bagi pelanggan yang sudah tidak berkunjung selama lebih dari 45 hari.
     `,
     coverImageUrl:
-      "https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=1200&q=80",
     category: "Marketing & CRM",
     author: {
       name: "Rizky Pratama",

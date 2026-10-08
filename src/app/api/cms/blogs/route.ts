@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
         content,
         coverImageUrl:
           coverImageUrl ||
-          "https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1200&q=80",
         authorName: "Tim Editorial Kodeva",
         authorRole: "Business Solution Lead",
         authorAvatarUrl:

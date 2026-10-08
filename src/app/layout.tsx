@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     siteName: "Kodeva",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&w=1200&q=80",
+        url: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1200&q=80",
         width: 1200,
         height: 630,
         alt: "Kodeva Cloud Business Platform",

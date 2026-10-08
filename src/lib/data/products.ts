@@ -15,7 +15,7 @@ export const PRODUCTS: Product[] = [
     badges: ["Best Seller", "Promo Akhir Tahun"],
     screenshots: [
       {
-        url: "https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&w=1200&q=80",
+        url: "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=1200&q=80",
         caption: "Tampilan antarmuka kasir cepat dan touch-friendly untuk tablet dan PC",
       },
       {

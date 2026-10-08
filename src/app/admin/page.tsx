@@ -29,6 +29,10 @@ import {
   LogOut,
   AlertCircle,
   Eye,
+  Upload,
+  ImageIcon,
+  Link2,
+  Loader2,
 } from "lucide-react";
 
 export default function AdminPortalPage() {
@@ -178,6 +182,63 @@ export default function AdminPortalPage() {
       console.error(err);
     } finally {
       setSavingLanding(false);
+    }
+  };
+
+  // FAQ Handlers
+  const handleAddFaq = () => {
+    if (!landingData) return;
+    const newFaq = {
+      id: `faq-${Date.now()}`,
+      question: "",
+      answer: "",
+    };
+    setLandingData({
+      ...landingData,
+      faqs: [...landingData.faqs, newFaq],
+    });
+  };
+
+  const handleRemoveFaq = (idxToRemove: number) => {
+    if (!landingData) return;
+    const newFaqs = landingData.faqs.filter((_, idx) => idx !== idxToRemove);
+    setLandingData({
+      ...landingData,
+      faqs: newFaqs,
+    });
+  };
+
+  // Image Upload State & Handlers
+  const [imageInputMode, setImageInputMode] = useState<"upload" | "url">("upload");
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !editingBlog) return;
+
+    setUploadingImage(true);
+    setUploadError(null);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success && data.url) {
+        setEditingBlog({ ...editingBlog, coverImageUrl: data.url });
+      } else {
+        setUploadError(data.error || "Gagal mengunggah gambar.");
+      }
+    } catch (err) {
+      console.error(err);
+      setUploadError("Terjadi kesalahan saat mengunggah file gambar.");
+    } finally {
+      setUploadingImage(false);
     }
   };
 
@@ -461,27 +522,53 @@ export default function AdminPortalPage() {
 
             {/* FAQ Editor */}
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
                 <div>
                   <h3 className="text-base font-bold text-slate-900">Kelola FAQ (Tanya Jawab)</h3>
-                  <p className="text-xs text-slate-500">Edit pertanyaan dan jawaban seputar software Kodeva.</p>
+                  <p className="text-xs text-slate-500">
+                    Tambah, ubah, atau hapus pertanyaan dan jawaban seputar software Kodeva secara fleksibel.
+                  </p>
                 </div>
-                <button
-                  onClick={handleSaveLanding}
-                  disabled={savingLanding}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md transition"
-                >
-                  <Save className="w-3.5 h-3.5" />
-                  <span>Simpan FAQ</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleAddFaq}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>Tambah FAQ</span>
+                  </button>
+                  <button
+                    onClick={handleSaveLanding}
+                    disabled={savingLanding}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md transition"
+                  >
+                    <Save className="w-3.5 h-3.5" />
+                    <span>Simpan FAQ</span>
+                  </button>
+                </div>
               </div>
 
               <div className="space-y-4">
                 {landingData.faqs.map((faq, idx) => (
-                  <div key={faq.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
-                    <div className="font-bold text-indigo-700">FAQ #{idx + 1}</div>
+                  <div key={faq.id || idx} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
+                    <div className="flex items-center justify-between">
+                      <div className="font-bold text-indigo-700 flex items-center gap-1.5">
+                        <span>FAQ #{idx + 1}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveFaq(idx)}
+                        className="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition flex items-center gap-1 text-[11px] font-semibold"
+                        title="Hapus pertanyaan ini"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Hapus</span>
+                      </button>
+                    </div>
                     <input
                       type="text"
+                      placeholder="Tuliskan pertanyaan FAQ..."
                       value={faq.question}
                       onChange={(e) => {
                         const newFaqs = [...landingData.faqs];
@@ -492,6 +579,7 @@ export default function AdminPortalPage() {
                     />
                     <textarea
                       rows={2}
+                      placeholder="Tuliskan jawaban lengkap..."
                       value={faq.answer}
                       onChange={(e) => {
                         const newFaqs = [...landingData.faqs];
@@ -502,7 +590,34 @@ export default function AdminPortalPage() {
                     />
                   </div>
                 ))}
+
+                {landingData.faqs.length === 0 && (
+                  <div className="p-8 text-center text-slate-400 border-2 border-dashed border-slate-200 rounded-2xl text-xs space-y-2">
+                    <p>Belum ada pertanyaan FAQ yang dibuat.</p>
+                    <button
+                      type="button"
+                      onClick={handleAddFaq}
+                      className="inline-flex items-center gap-1 text-indigo-600 font-bold hover:underline"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Tambah Pertanyaan Sekarang</span>
+                    </button>
+                  </div>
+                )}
               </div>
+
+              {landingData.faqs.length > 0 && (
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={handleAddFaq}
+                    className="w-full py-2.5 rounded-xl border border-dashed border-slate-300 hover:border-indigo-400 hover:bg-indigo-50/50 text-indigo-600 font-bold text-xs flex items-center justify-center gap-1.5 transition"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>+ Tambah Pertanyaan FAQ Lainnya</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -532,7 +647,7 @@ export default function AdminPortalPage() {
                     category: "Kasir & Operasional",
                     excerpt: "",
                     content: "",
-                    coverImageUrl: "https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&w=1200&q=80",
+                    coverImageUrl: "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=1200&q=80",
                     linkedProductSlug: "kodeva-pos-kasir",
                     status: "published",
                   })
@@ -622,6 +737,153 @@ export default function AdminPortalPage() {
                       placeholder="Tulis artikel di sini..."
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-mono text-xs"
                     />
+                  </div>
+
+                  {/* Cover Image Uploader (Option 1: Upload, Option 2: Unsplash/URL) */}
+                  <div className="sm:col-span-2 space-y-3 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div>
+                        <label className="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+                          <ImageIcon className="w-4 h-4 text-indigo-600" />
+                          <span>Gambar Sampul Artikel (Cover Image)</span>
+                        </label>
+                        <p className="text-[11px] text-slate-500">
+                          Pilih upload gambar dari perangkat atau gunakan URL gambar (misal dari Unsplash).
+                        </p>
+                      </div>
+
+                      {/* Mode Switcher Tabs */}
+                      <div className="flex bg-slate-200/80 p-0.5 rounded-lg text-[11px] font-semibold w-fit">
+                        <button
+                          type="button"
+                          onClick={() => setImageInputMode("upload")}
+                          className={`px-3 py-1 rounded-md transition flex items-center gap-1 ${
+                            imageInputMode === "upload"
+                              ? "bg-white text-indigo-700 shadow-xs"
+                              : "text-slate-600 hover:text-slate-900"
+                          }`}
+                        >
+                          <Upload className="w-3 h-3" />
+                          <span>Upload File</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setImageInputMode("url")}
+                          className={`px-3 py-1 rounded-md transition flex items-center gap-1 ${
+                            imageInputMode === "url"
+                              ? "bg-white text-indigo-700 shadow-xs"
+                              : "text-slate-600 hover:text-slate-900"
+                          }`}
+                        >
+                          <Link2 className="w-3 h-3" />
+                          <span>URL Gambar</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {uploadError && (
+                      <div className="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-[11px] flex items-center gap-1.5">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                        <span>{uploadError}</span>
+                      </div>
+                    )}
+
+                    {imageInputMode === "upload" ? (
+                      <div className="space-y-3">
+                        <div className="border-2 border-dashed border-slate-200 hover:border-indigo-400 bg-white rounded-xl p-4 text-center transition">
+                          <input
+                            type="file"
+                            id="blog-image-upload"
+                            accept="image/png, image/jpeg, image/webp, image/gif"
+                            onChange={handleFileUpload}
+                            disabled={uploadingImage}
+                            className="hidden"
+                          />
+                          <label
+                            htmlFor="blog-image-upload"
+                            className="cursor-pointer flex flex-col items-center justify-center space-y-2 py-2"
+                          >
+                            {uploadingImage ? (
+                              <div className="flex items-center gap-2 text-indigo-600 font-bold text-xs py-2">
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                                <span>Mengunggah gambar...</span>
+                              </div>
+                            ) : (
+                              <>
+                                <div className="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                                  <Upload className="w-5 h-5" />
+                                </div>
+                                <div className="text-xs font-semibold text-slate-700">
+                                  <span className="text-indigo-600 underline">Klik untuk pilih gambar</span> dari komputer
+                                </div>
+                                <p className="text-[10px] text-slate-400">
+                                  Mendukung format JPG, PNG, WebP (Maksimal 5MB)
+                                </p>
+                              </>
+                            )}
+                          </label>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <div className="space-y-1">
+                          <input
+                            type="url"
+                            value={editingBlog.coverImageUrl || ""}
+                            onChange={(e) => setEditingBlog({ ...editingBlog, coverImageUrl: e.target.value })}
+                            placeholder="https://images.unsplash.com/..."
+                            className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-slate-900 font-mono text-[11px]"
+                          />
+                        </div>
+
+                        {/* Preset Unsplash Badges */}
+                        <div className="space-y-1.5">
+                          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                            Pilihan Cepat Unsplash Gambar Bisnis:
+                          </div>
+                          <div className="flex flex-wrap gap-1.5">
+                            {[
+                              { label: "Kasir & Resto", url: "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=1200&q=80" },
+                              { label: "Manajemen HR", url: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80" },
+                              { label: "Gudang & Stok", url: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80" },
+                              { label: "Pajak & Finansial", url: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80" },
+                            ].map((preset, pIdx) => (
+                              <button
+                                key={pIdx}
+                                type="button"
+                                onClick={() => setEditingBlog({ ...editingBlog, coverImageUrl: preset.url })}
+                                className="px-2.5 py-1 rounded-md bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 text-slate-700 text-[10px] font-semibold transition"
+                              >
+                                + {preset.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Image Preview Thumbnail */}
+                    {editingBlog.coverImageUrl && (
+                      <div className="pt-2 border-t border-slate-200/80 flex items-center gap-3">
+                        <div className="relative w-20 h-14 rounded-lg overflow-hidden bg-slate-200 border border-slate-300 shrink-0">
+                          <Image
+                            src={editingBlog.coverImageUrl}
+                            alt="Preview cover"
+                            fill
+                            unoptimized={editingBlog.coverImageUrl.startsWith("data:")}
+                            className="object-cover"
+                          />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-[11px] font-bold text-slate-700">Preview Gambar Sampul</div>
+                          <div className="text-[10px] font-mono text-slate-400 truncate">
+                            {editingBlog.coverImageUrl.startsWith("data:")
+                              ? "File terunggah (Data URL)"
+                              : editingBlog.coverImageUrl}
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div className="space-y-1">
