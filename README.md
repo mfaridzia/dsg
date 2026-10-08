@@ -55,20 +55,45 @@ Aplikasi web landing page promosi, sistem blog dengan CMS mandiri (_Built-in Edg
 
 ## 🏛️ Arsitektur Singkat & Alasan Pemilihan Stack
 
-| Layer / Fitur        | Stack yang Dipilih                      | Alasan & Keputusan Teknis                                                                                                                                                                                                                                                                                                           |
-| :------------------- | :-------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Framework Utama**  | **Next.js 16 (App Router, TypeScript)** | Memaksimalkan SEO Google untuk pencarian aplikasi kasir & HR melalui SSR/SSG. Link preview WhatsApp dinamis via OpenGraph metadata. Performa mobile tinggi dengan optimasi `<Image />` WebP/AVIF.                                                                                                                                   |
-| **Sistem CMS**       | **Built-in Edge CMS (Drizzle ORM)**     | **Keputusan sadar menghindari vendor lock-in SaaS CMS.** CMS dibuat langsung di dalam aplikasi (rute `/admin`), siap dideploy ke **Cloudflare D1** (database SQLite edge) dan **Cloudflare R2** (object storage gambar bebas biaya egress). Reviewer dapat langsung menguji edit konten tanpa perlu registrasi/invite pihak ketiga. |
-| **Penyimpanan Data** | **SQLite / LibSQL (Drizzle ORM)**       | Skema Drizzle yang seragam untuk tabel `leads`, `landing_content`, dan `blog_posts`. Ringan, cepat, zero-config di lokal, dan _drop-in compatible_ ke Cloudflare D1 / Turso di production.                                                                                                                                          |
-| **State Management** | **Zustand (`persist` middleware)**      | Sangat ringan (<1KB, tidak membebani First Load JS mobile). Menggunakan `localStorage` persistence agar isi keranjang dan kuota promo tetap utuh saat halaman di-refresh.                                                                                                                                                           |
-| **Styling & UI**     | **Tailwind CSS v4 + Lucide Icons**      | Zero runtime CSS overhead, layout mobile-first yang responsif, dan ukuran tombol ramah sentuhan (touch target $\ge 44$px).                                                                                                                                                                                                          |
-| **Form & Validasi**  | **Zod + React Hook Form**               | Type-safety penuh, validasi skema, proteksi honeypot anti-bot, dan pencegahan spam pengisian kilat.                                                                                                                                                                                                                                 |
+### 📐 Arsitektur Sistem Singkat
+
+```mermaid
+flowchart LR
+    Client["📱 Pengunjung (Mobile / Desktop)"]
+    NextApp["⚡ Next.js 16 App Router (SSR & On-Demand ISR)"]
+    Admin["🛠️ Built-in CMS Admin (/admin)"]
+    ORM["🔄 Drizzle ORM"]
+    DB[("💾 Edge DB (SQLite / Cloudflare D1)")]
+    Storage[("🖼️ Storage Gambar (Cloudflare R2)")]
+    ClientStore["📦 Zustand Persist (Cart & Kuota Promo)"]
+
+    Client -->|Browse & Checkout| NextApp
+    Client -->|Simpan Cart Lokal| ClientStore
+    Admin -->|Update Konten & revalidatePath| NextApp
+    Admin -->|Upload Gambar Blog & Banner| NextApp
+    NextApp -->|Query & Mutasi Data| ORM
+    NextApp -->|Simpan & Serve Aset Gambar| Storage
+    ORM --> DB
+```
+
+- **Client & Presentation:** Next.js App Router (SSR/SSG untuk SEO maksimal) + Tailwind CSS v4 mobile-first. State keranjang dan simulasi kuota promo dikelola di client via Zustand (`persist` `localStorage`).
+- **Data & Storage Layer:** Built-in headless CMS internal pada rute `/admin` tanpa ketergantungan pihak ketiga. Data teks tersimpan di SQLite / Cloudflare D1 via Drizzle ORM, sedangkan berkas media/gambar di-upload dan disimpan ke Object Storage (Cloudflare R2).
+- **Caching & On-Demand Invalidation:** Perubahan konten beranda atau artikel blog di admin memicu `revalidatePath()` instan ke cache edge Next.js tanpa redeploy manual.
+
+### 🛠️ Alasan Pemilihan Stack
+
+| Layer / Fitur        | Stack yang Dipilih                      | Alasan & Keputusan Teknis                                                                                                                                                                                           |
+| :------------------- | :-------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Framework Utama**  | **Next.js 16 (App Router, TypeScript)** | Memaksimalkan SEO Google untuk pencarian dengan memanfaatkan fitur Next.js seperti ISG/SSR/SSG. Link preview WhatsApp dinamis via OpenGraph metadata. Performa mobile tinggi dengan optimasi `<Image />` WebP/AVIF. |
+| **Sistem CMS**       | **Built-in Edge CMS (Drizzle ORM)**     | **Menghindari vendor lock-in SaaS CMS.** CMS dibuat langsung di dalam aplikasi (rute `/admin`), dan menggunakan engine dari **Cloudflare D1** (database SQLite edge) dan **Cloudflare R2** (object storage gambar). |
+| **Penyimpanan Data** | **SQLite / LibSQL (Drizzle ORM)**       | Skema Drizzle yang seragam untuk tabel `leads`, `landing_content`, dan `blog_posts`. Ringan, cepat, zero-config di lokal, dan _drop-in compatible_ ke Cloudflare D1 di production.                                  |
+| **State Management** | **Zustand (`persist` middleware)**      | Dipilih karena simple, ringan (<1KB, tidak membebani First Load JS mobile). Menggunakan `localStorage` persistence agar isi keranjang dan kuota promo tidak hilang saat halaman di-refresh.                         |
+| **Styling & UI**     | **Tailwind CSS v4 + Lucide Icons**      | Zero runtime CSS overhead, layout mobile-first yang responsif                                                                                                                                                       |
+| **Form & Validasi**  | **Zod + React Hook Form**               | Untuk mendapatkan type-safety, validasi skema, seperti proteksi honeypot anti-bot, dan pencegahan spam pengisian kilat bot.                                                                                         |
 
 ---
 
 ## 💡 Asumsi yang Dibuat Atas Hal yang Ambigu
-
-Brief sengaja membiarkan beberapa aspek terbuka untuk interpretasi kandidat. Berikut asumsi dan keputusan yang diambil:
 
 1. **Rencana Ekspansi Malaysia & Singapura:**
    - _Ambiguitas:_ Apakah sistem harus sudah langsung multi-mata uang (MYR/SGD) dan multi-bahasa saat ini?
@@ -76,12 +101,6 @@ Brief sengaja membiarkan beberapa aspek terbuka untuk interpretasi kandidat. Ber
 2. **Aturan Batas Kuota Promo Bersama Lintas Tier (_Shared Quota Pool_):**
    - _Ambiguitas:_ Bagaimana kuota promo bekerja bila produk memiliki 3 opsi tier (Starter, Pro, Business)?
    - _Asumsi:_ Kuota promo dihitung sebagai **satu pool unit global per produk**. Contoh: Jika "Kodeva POS Kasir" memiliki sisa kuota promo 5 lisensi, maka pembelian 3 lisensi Starter + 2 lisensi Pro langsung menghabiskan kuota promo produk tersebut menjadi 0. Penambahan berikutnya otomatis dikunci oleh sistem keranjang belanja.
-3. **Pemisahan Lead Capture vs Checkout Marketplace:**
-   - _Ambiguitas:_ Apakah pengisi form demo di landing page otomatis terhubung ke akun checkout?
-   - _Asumsi:_ Form di landing page adalah untuk prospek konsultasi demo B2B (sales lead), sedangkan checkout adalah pembelian mandiri (_self-serve purchase_). Keduanya merekam parameter atribusi UTM yang sama sejak user pertama kali mendarat.
-4. **Alur Pengujian Pembayaran Simulasi:**
-   - _Ambiguitas:_ Bagaimana reviewer bisa mencoba alur sukses dan alur gagal secara realistis?
-   - _Asumsi:_ Disediakan toggle kontrol skenario interaktif di halaman checkout (_"Simulasikan Sukses"_ vs _"Simulasikan Gagal"_). Skenario sukses memotong kuota dan menerbitkan kunci lisensi aktif unik; skenario gagal menampilkan pesan error penolakan bank dan mempertahankan kuota promo.
 
 ---
 
@@ -196,11 +215,29 @@ Berikut spesifikasi teknis untuk implementasi tahap backend produksi:
 
 ## 📱 Skor Lighthouse Mobile (Landing Page)
 
-Landing page dioptimasi secara ketat mengikuti **Vercel React Best Practices** untuk mencapai target brief ($\ge 80$ Performance Mobile):
+Hasil audit performa dan Core Web Vitals dilakukan pada simulasi perangkat **Mobile**:
 
-- Menggunakan `<Image />` bawaan Next.js dengan WebP/AVIF compression dan `sizes` attribute yang tepat untuk meminimalkan LCP (Largest Contentful Paint).
-- Widget `DataLayerInspector` dimuat secara dinamis (`ssr: false`) agar tidak membebani ukuran bundle First Load JavaScript.
-- Kontras warna sesuai standar WCAG dan touch target minimum 44px untuk kenyamanan perangkat layar sentuh.
+| Halaman                                     | Performance | Accessibility | Best Practices |   SEO   |          Hasil Audit          |
+| :------------------------------------------ | :---------: | :-----------: | :------------: | :-----: | :---------------------------: |
+| **1. Beranda / Landing Page** (`/`)         |   **95**    |    **95**     |    **100**     | **100** | 🟢 Sangat Cepat & Teroptimasi |
+| **2. Pusat Edukasi & Blog** (`/blog`)       |   **97**    |    **89**     |    **100**     | **100** |       🟢 Skor Maksimal        |
+| **3. Katalog Marketplace** (`/marketplace`) |   **97**    |    **90**     |    **100**     | **100** |       🟢 Skor Maksimal        |
+
+Link PageSpeed Insights: https://pagespeed.web.dev/analysis/https-dsg-kodeva-vercel-app/unmqc4ry9d?form_factor=mobile
+
+### Screenshot Hasil Audit Google Lighthouse Mobile
+
+#### 1. Beranda / Landing Page (`/`) — Skor: 95 / 95 / 100 / 100
+
+![Lighthouse Home](docs/lighthouse/lighthouse-home.png)
+
+#### 2. Pusat Edukasi & Blog (`/blog`) — Skor: 97 / 89 / 100 / 100
+
+![Lighthouse Blog](docs/lighthouse/lighthouse-blog.png)
+
+#### 3. Katalog Marketplace (`/marketplace`) — Skor: 97 / 90 / 100 / 100
+
+![Lighthouse Marketplace](docs/lighthouse/lighthouse-marketplace.png)
 
 ---
 

@@ -1,9 +1,5 @@
 # Catatan Penggunaan AI (AI_LOG.md)
 
-Dokumen ini mencatat log penggunaan AI selama proses pengerjaan Technical Skill Test Fullstack Developer Kodeva (PT Digital Solusi Grup).
-
----
-
 ## 1. Tools AI yang Digunakan & Pembagian Peran
 
 - **Tool Utama:** AI Harness (seperti Claude, Codex, Antigravity)
@@ -49,14 +45,14 @@ Challenge keputusan saya jika ada pendekatan yang lebih tepat. "\_
 
 ## 3. Contoh Masalah / Kesalahan Output AI dan Cara Memperbaikinya
 
-### Kasus 1: AI Salah Mengimplementasikan Validasi Kuota Promo Keranjang (Jebakan Per-Item)
+### Kasus 1: AI Salah Mengimplementasikan Validasi Kuota Promo Keranjang/Cart
 
 - **Masalah yang Ditemukan:**  
-  Ketika pertama kali diminta membuat validasi kuota promo di keranjang, AI menghasilkan logika standar:  
+  Ketika pertama kali diminta membuat validasi kuota promo di keranjang/cart, AI menghasilkan logika standar:  
   `if (newItem.quantity > product.remainingQuota) reject;`  
   Logika ini **bocor parah**: jika produk "Kodeva Kasir" kuota promonya tersisa 5, user bisa memasukkan paket _Starter_ sebanyak 3 lisensi, lalu memasukkan lagi paket _Pro_ sebanyak 3 lisensi di baris keranjang baru. Totalnya jadi 6 lisensi, melampaui batas kuota promo 5!
 - **Cara Memperbaiki:**  
-  Saya menolak logika per-item tersebut dan merancang ulang pengecekan berbasis agregasi pool produk di `cartStore.ts`. Sistem menghitung akumulasi seluruh baris item yang memiliki `sharedQuotaPoolId` yang sama:
+  Menolak logika per-item tersebut dan meminta merancang ulang pengecekan berbasis agregasi pool produk di `cartStore.ts`. Sistem menghitung akumulasi seluruh baris item yang memiliki `sharedQuotaPoolId` yang sama:
 
   ```typescript
   const currentTotal = items
@@ -76,23 +72,23 @@ Challenge keputusan saya jika ada pendekatan yang lebih tepat. "\_
 ### Kasus 2: AI Menyimpan Parameter UTM Secara Sementara (Hilang Saat Navigasi Halaman)
 
 - **Masalah yang Ditemukan:**  
-  AI awalnya hanya membaca UTM langsung menggunakan hook `useSearchParams()` di komponen form lead dan checkout. Akibatnya, jika pengunjung mengklik link iklan dari TikTok (`/?utm_source=tiktok&utm_campaign=promo`), lalu mereka mengeklik menu _"Lihat Katalog Software"_ atau _"Baca Blog"_ terlebih dahulu sebelum checkout, parameter URL menjadi bersih (`/marketplace` tanpa query params), dan seluruh data atribusi UTM **hilang tak berbekas**.
+  AI awalnya hanya membaca UTM langsung menggunakan hook `useSearchParams()` di komponen form lead dan checkout. Akibatnya, jika pengunjung mengklik link iklan dari TikTok (`/?utm_source=tiktok&utm_campaign=promo`), lalu mereka mengeklik menu _"Lihat Katalog Software"_ atau _"Baca Blog"_ terlebih dahulu sebelum checkout, parameter URL menjadi bersih (`/marketplace` tanpa query params), dan seluruh data atribusi UTM **hilang**.
 - **Cara Memperbaiki:**  
-  Saya mengarahkan arsitektur _First-Touch Attribution Persistence_. Dibuat modul `utmStore.ts` berbasis Zustand yang menyimpan parameter UTM ke dalam storage browser segera saat user mendarat pertama kali di aplikasi. Kapan pun user berpindah halaman atau me-refresh tab, parameter UTM awal tetap tersimpan dan disuntikkan secara otomatis ke setiap request submission lead maupun order mock.
+  Saya mengarahkan arsitektur _First-Touch Attribution Persistence_. Dibuat modul `utmStore.ts` berbasis Zustand yang menyimpan parameter UTM ke dalam storage browser segera ketika user pertama kali masuk di aplikasi. Kapan pun user berpindah halaman atau me-refresh tab, parameter UTM awal tetap tersimpan dan di inject secara otomatis ke setiap request submission lead maupun order mock.
 - **Hasil Verifikasi:**  
-  Diuji dengan simulasi link `?utm_source=tiktok&utm_campaign=akhir-tahun`, lalu bernavigasi ke `/blog`, lalu ke `/marketplace/kodeva-pos-kasir`, lalu melakukan checkout. Pada tab DataLayer Inspector dan di tabel `/admin`, data lead dan payload order tetap teratribusi 100% ke TikTok.
+  Diuji dengan simulasi link `?utm_source=tiktok&utm_campaign=akhir-tahun`, lalu navigate ke `/blog`, lalu ke `/marketplace/kodeva-pos-kasir`, lalu melakukan checkout. Pada tab DataLayer Inspector dan di tabel `/admin`, data lead dan payload order tetap teratribusi 100% ke TikTok.
 
 ---
 
 ### Kasus 3: Breaking Change Next.js 16 pada `revalidateTag` & Prerender Date
 
 - **Masalah yang Ditemukan:**  
-  Ketika menjalankan production build `npm run build`, Next.js 16 melempar error:
+  Ketika menjalankan production build `npm run build`, Next.js 16 nge-throw error:
   1. `Expected 2 arguments, but got 1` pada fungsi `revalidateTag(tag)`.
   2. `Next.js encountered the unstable value new Date() while prerendering` pada komponen Footer.
      AI pada awalnya tidak menyadari breaking change ini karena batas _training data_ lamanya menganggap `revalidateTag` hanya menerima 1 argumen string.
 - **Cara Memperbaiki:**  
-  Saya memeriksa source code types Next.js 16 di `node_modules/next/cache.d.ts` dan membaca panduan di `AGENTS.md`. Ternyata Next.js 16 mewajibkan argumen profil cache kedua (misalnya `revalidateTag(tag, "max")`). Untuk masalah dynamic date di prerender, saya menggantinya dengan tahun statis yang deterministik.
+   Periksa source code types Next.js 16 di `node_modules/next/cache.d.ts`, cek dokumentasi terbaru dan membaca panduan di `AGENTS.md`. Ternyata Next.js 16 mewajibkan argumen profil cache kedua (misalnya `revalidateTag(tag, "max")`). Untuk masalah dynamic date di prerender, saya menggantinya dengan tahun statis yang deterministik.
 - **Hasil Verifikasi:**  
   Kompilasi build `npm run build` berjalan mulus dengan exit code 0 dan seluruh 24 rute halaman berhasil di-prerender.
 
@@ -100,24 +96,11 @@ Challenge keputusan saya jika ada pendekatan yang lebih tepat. "\_
 
 ## 4. Bagian Implementasi yang Banyak Dibantu AI & Pengujian Edge Case-nya
 
-### 1. Form Lead Capture & Proteksi Anti-Spam
-- **Bagian:** Pembuatan komponen `LeadCaptureForm.tsx` beserta rute API `/api/leads/route.ts` dengan proteksi honeypot anti-spam dan penyimpanan Drizzle SQLite.
-- **Edge Case yang Diuji:**
-  1. **Pengujian Bot Spam Cepat:** Form diisi secara instan via script dalam waktu < 1.2 detik sejak render.  
-     _Hasil:_ API menolak dengan status 400 (`"Terlalu cepat mengisi formulir"`).
-  2. **Pengujian Field Honeypot:** Field rahasia `website` (yang tersembunyi dari mata manusia via CSS) diisi nilai acak oleh bot scraper.  
-     _Hasil:_ API merespons silent success 200 tanpa menyimpan baris data ke database (mencegah penumpukan data sampah).
-  3. **Pengujian Nomor WhatsApp:** Memasukkan karakter huruf atau nomor kurang dari 8 digit.  
-     _Hasil:_ Validasi skema Zod menolak dan menampilkan indikator error merah pada input.
-  4. **Pengujian Input Duplikat / Karakter Spesial:** Memasukkan nama dengan tanda petik/simbol SQL (`O'Connor`, `<script>`).  
-     _Hasil:_ Parameterized query Drizzle ORM menyimpan string secara aman tanpa kerentanan SQL injection.
+### 1. Scaffolding Komponen UI & Interaktivitas Kompleks (Tier Switcher & Keranjang)
 
----
-
-### 2. Scaffolding Komponen UI & Interaktivitas Kompleks (Tier Switcher & Keranjang)
 - **Bagian:** Pembuatan komponen `ProductCard.tsx` (tier switch Starter/Pro/Business) dan `cartStore.ts` (Zustand + local storage persistence).
 - **Edge Case yang Diuji:**
-  1. **Perpindahan Tier Tanpa Stale State:** Mengganti paket dari *Starter* ke *Business* di halaman detail lalu langsung menekan *"Tambah ke Keranjang"*.  
+  1. **Perpindahan Tier Tanpa Stale State:** Mengganti paket dari _Starter_ ke _Business_ di halaman detail lalu langsung menekan _"Tambah ke Keranjang"_.  
      _Hasil:_ State tier, kalkulasi diskon coret, dan unit kuota ter-update seketika secara sinkron tanpa race condition atau salah harga.
   2. **Persistensi State Saat Refresh / Multi-Tab:** Menambah produk ke keranjang, membuka tab baru, atau me-refresh browser.  
      _Hasil:_ Isi keranjang dan akumulasi kuota tetap utuh berkat middleware Zustand `persist`, tanpa hydration mismatch warning di console.
@@ -126,7 +109,8 @@ Challenge keputusan saya jika ada pendekatan yang lebih tepat. "\_
 
 ---
 
-### 3. Pengecekan & Optimasi Performa (Lighthouse & Core Web Vitals)
+### 2. Pengecekan & Optimasi Performa (Lighthouse & Core Web Vitals)
+
 - **Bagian:** Audit performa halaman landing dan marketplace menggunakan Google Lighthouse serta optimasi aset gambar dan rendering.
 - **Edge Case yang Diuji:**
   1. **Largest Contentful Paint (LCP) < 1.2 Detik:** Gambar hero banner diuji pada simulasi jaringan lambat (Fast 3G).  
@@ -138,7 +122,8 @@ Challenge keputusan saya jika ada pendekatan yang lebih tepat. "\_
 
 ---
 
-### 4. Pencegahan Double-Trigger pada Event Tracking GA4 dataLayer
+### 3. Pencegahan Double-Trigger pada Event Tracking GA4 dataLayer
+
 - **Bagian:** Integrasi fungsi `trackEvent` di `dataLayer.ts` pada interaksi checkout (`add_to_cart`, `begin_checkout`, `purchase`).
 - **Edge Case yang Diuji:**
   1. **React Strict Mode / Double Render Guard:** Komponen di-mount dua kali di lingkungan development.  
@@ -152,9 +137,9 @@ Challenge keputusan saya jika ada pendekatan yang lebih tepat. "\_
 
 Meskipun AI sangat membantu untuk hal-hal repetitif, bagian inti berikut **sengaja saya rancang tanpa meminta AI memutuskannya sendiri secara sepihak tanpa ada interpensi dari Developernya**:
 
-### 1. Keputusan Arsitektur: Memilih Built-in Edge CMS Dibanding SaaS CMS Pihak Ketiga
+### 1. Keputusan Arsitektur dan Tech Stack
 
 - **Alasannya:**
-  - SaaS CMS seperti Sanity, dsb menciptakan ketergantungan pihak ketiga (vendor lock-in)
-  - Kontrol penuh terhadap data dan business logic di sini menggunakan cloudflare D1 untuk database dan R1 untuk cloud storage-nya
-  - Arsitektur dapat dicustom lebih sederhana untuk kebutuhan spesifik
+  Mostly AI melakukan overengineering atau simplify suatu project, jadi pengalaman developer/engineernya tetap berpengaruh di sini untuk memberikan context ke AI nya sehingga AI Modelnya bisa memberikan solusi yang tepat.
+
+  Jadi tidak memberikan hak sepenuhnya ke AI dari awal untuk membuat keputusan pemilihan arsitektur tanpa ada batasan atau context yg jelas di awal adalah strategy untuk membuat AI nya memberikan hasil yg lebih sesuai nantinya.
