@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile } from "fs/promises";
 import path from "path";
+import { isR2Configured, uploadToR2 } from "@/lib/r2";
 
 export async function POST(req: NextRequest) {
   try {
@@ -31,6 +32,26 @@ export async function POST(req: NextRequest) {
       .slice(0, 30);
     const fileName = `${Date.now()}-${cleanBase}${ext}`;
 
+    // 1. Prioritize Cloudflare R2 if configured
+    if (isR2Configured) {
+      try {
+        const r2Url = await uploadToR2({
+          fileBuffer: buffer,
+          fileName,
+          contentType: file.type || "image/jpeg",
+        });
+
+        return NextResponse.json({
+          success: true,
+          url: r2Url,
+        });
+      } catch (r2Err) {
+        console.error("[Upload to Cloudflare R2 Error]:", r2Err);
+        // continue to fallback below
+      }
+    }
+
+    // 2. Fallback to local disk (development)
     try {
       const uploadDir = path.join(process.cwd(), "public", "uploads");
       const filePath = path.join(uploadDir, fileName);
@@ -41,7 +62,7 @@ export async function POST(req: NextRequest) {
       });
     } catch (writeErr) {
       console.warn("[Upload to Disk Fallback to Data URL]:", writeErr);
-      // Fallback to Data URL for serverless/readonly environments
+      // 3. Fallback to Data URL for serverless without R2 / readonly environments
       const base64 = buffer.toString("base64");
       const dataUrl = `data:${file.type};base64,${base64}`;
       return NextResponse.json({
