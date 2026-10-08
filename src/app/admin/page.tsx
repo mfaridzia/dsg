@@ -597,37 +597,21 @@ export default function AdminPortalPage() {
             <span className="text-xs text-slate-400">Kodeva Admin</span>
             <span className="text-slate-300">/</span>
             <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-              {activeTab === "overview" && "Dashboard Ikhtisar"}
-              {activeTab === "landing" && "Konten Landing Page & FAQ"}
-              {activeTab === "blogs" && "Manajemen Blog & Artikel"}
-              {activeTab === "leads" && "Database Leads & Tracking"}
+              {activeTab === "overview" && "Dashboard"}
+              {activeTab === "landing" && "Konten Landing Page"}
+              {activeTab === "blogs" && "Manajemen Blog"}
+              {activeTab === "leads" && "Data Leads & CRM"}
             </span>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>D1 SQLite Ready</span>
-            </div>
-
             {activeTab === "blogs" && (
               <button
                 onClick={handleOpenNewBlog}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Tulis Artikel</span>
-              </button>
-            )}
-
-            {activeTab === "landing" && (
-              <button
-                onClick={handleSaveLanding}
-                disabled={savingLanding}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white text-xs font-bold shadow-xs transition"
-              >
-                <Save className="w-3.5 h-3.5" />
-                <span>{savingLanding ? "Menyimpan..." : "Simpan Landing"}</span>
               </button>
             )}
           </div>
@@ -636,16 +620,16 @@ export default function AdminPortalPage() {
         {/* Inner Page View */}
         <main className="p-8 max-w-7xl w-full mx-auto space-y-8">
           {/* ========================================================= */}
-          {/* TAB 1: OVERVIEW / DASHBOARD SUMMARY                       */}
+          {/* TAB 1: OVERVIEW / DASHBOARD                               */}
           {/* ========================================================= */}
           {activeTab === "overview" && (
             <div className="space-y-8 animate-fade-in">
               <div>
                 <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-                  Dashboard Administrator
+                  Dashboard
                 </h1>
                 <p className="text-xs text-slate-500 mt-1">
-                  Ringkasan performa kampanye Promo Akhir Tahun, database leads masuk, dan konten sistem Kodeva.
+                  Data calon klien, publikasi artikel blog, dan konten website.
                 </p>
               </div>
 
@@ -659,7 +643,7 @@ export default function AdminPortalPage() {
                   <div className="text-2xl font-black text-slate-900">{leadsList.length}</div>
                   <div className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
                     <TrendingUp className="w-3 h-3" />
-                    <span>Terverifikasi Anti-Bot</span>
+                    <span>Valid (Anti-Spam)</span>
                   </div>
                 </div>
 
@@ -669,7 +653,7 @@ export default function AdminPortalPage() {
                     <BookOpen className="w-4 h-4 text-sky-600" />
                   </div>
                   <div className="text-2xl font-black text-slate-900">{blogsList.length}</div>
-                  <div className="text-[11px] text-slate-500">Tayang di Google SEO</div>
+                  <div className="text-[11px] text-slate-500">Dipublikasikan</div>
                 </div>
 
                 <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
@@ -678,7 +662,7 @@ export default function AdminPortalPage() {
                     <Layers className="w-4 h-4 text-amber-600" />
                   </div>
                   <div className="text-2xl font-black text-slate-900">{PRODUCTS.length}</div>
-                  <div className="text-[11px] text-amber-600 font-semibold">Diskon Hingga 45%</div>
+                  <div className="text-[11px] text-amber-600 font-semibold">Produk Siap Pakai</div>
                 </div>
 
                 <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
@@ -689,7 +673,7 @@ export default function AdminPortalPage() {
                   <div className="text-2xl font-black text-slate-900">
                     {landingData?.faqs.length ?? 0}
                   </div>
-                  <div className="text-[11px] text-slate-500">Dinamis tanpa limit</div>
+                  <div className="text-[11px] text-slate-500">Daftar pertanyaan aktif</div>
                 </div>
               </div>
 
@@ -807,23 +791,13 @@ export default function AdminPortalPage() {
           {/* ========================================================= */}
           {activeTab === "landing" && landingData && (
             <div className="space-y-8 animate-fade-in">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-black text-slate-900 tracking-tight">
-                    Editor Konten Landing Page
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Perubahan disimpan ke SQLite / D1 dan langsung direvalidasi otomatis pada halaman beranda.
-                  </p>
-                </div>
-                <button
-                  onClick={handleSaveLanding}
-                  disabled={savingLanding}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white font-bold text-xs shadow-md transition"
-                >
-                  <Save className="w-3.5 h-3.5" />
-                  <span>{savingLanding ? "Menyimpan..." : "Simpan Semua Perubahan"}</span>
-                </button>
+              <div>
+                <h2 className="text-xl font-black text-slate-900 tracking-tight">
+                  Editor Konten Landing Page
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Perubahan langsung diperbarui pada halaman beranda.
+                </p>
               </div>
 
               {/* Hero Banner Section */}
@@ -983,6 +957,19 @@ export default function AdminPortalPage() {
                   )}
                 </div>
               </div>
+
+              {/* Tombol Simpan Tunggal di Bagian Paling Bawah */}
+              <div className="pt-2 pb-6 flex justify-end">
+                <button
+                  type="button"
+                  onClick={handleSaveLanding}
+                  disabled={savingLanding}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white font-bold text-xs shadow-md transition cursor-pointer"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>{savingLanding ? "Menyimpan Perubahan..." : "Simpan Perubahan Landing Page"}</span>
+                </button>
+              </div>
             </div>
           )}
 
@@ -994,10 +981,10 @@ export default function AdminPortalPage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <h2 className="text-xl font-black text-slate-900 tracking-tight">
-                    Manajemen Artikel Blog Bisnis
+                    Manajemen Artikel Blog
                   </h2>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Tulis artikel SEO bisnis UMKM dengan editor WYSIWYG Quill, upload foto sampul, dan tautkan ke produk software.
+                    Tulis dan publikasikan artikel blog, kelola gambar sampul, dan tautkan ke produk software.
                   </p>
                 </div>
                 <button

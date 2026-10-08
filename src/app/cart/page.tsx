@@ -84,8 +84,8 @@ export function CartPage() {
   return (
     <div className="py-12 sm:py-16 bg-slate-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <div className="mb-8">
+        {/* Breadcrumb: hidden on desktop */}
+        <div className="mb-6 md:hidden">
           <Link
             href="/marketplace"
             className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition"

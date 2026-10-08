@@ -6,42 +6,58 @@ Dokumen ini mencatat log penggunaan AI selama proses pengerjaan Technical Skill 
 
 ## 1. Tools AI yang Digunakan & Pembagian Peran
 
-* **Tool Utama:** Google Antigravity (dengan engine Gemini).
-* **Peran & Pembagian Kerja:**
-  * **Brainstorming Arsitektur & Trade-Off Analysis:** Berdiskusi mengevaluasi alternatif stack (mengapa memilih *Built-in Edge CMS* berbasis SQLite/Cloudflare D1 & R2 dibanding ketergantungan pada SaaS CMS pihak ketiga seperti Sanity/Strapi).
-  * **Code Scaffolding & Boilerplate:** Mempercepat penulisan komponen UI Tailwind, tabel database Drizzle ORM, dan form validasi Zod.
-  * **Drafting Copywriting Realistis:** Menghasilkan copy produk SaaS B2B UMKM Indonesia (istilah POS kasir, perhitungan PPh 21 TER, kontrol COGS bahan baku, testimoni pebisnis lokal) agar website terasa hidup dan nyata.
-  * **Pair-Programming & Bug Hunting:** Membantu menelusuri pesan kompilasi dan breaking changes internal pada Next.js 16 (seperti `cacheComponents` dan prerender dynamic dates).
+- **Tool Utama:** AI Harness (seperti Claude, Codex, Antigravity)
+- **Peran & Pembagian Kerja:**
+  - **Brainstorming & Trade-Off Analysis:** Berdiskusi mengevaluasi alternatif stack (Sanity vs Custom CMS vs SQLite/Cloudflare D1, Turso vs Supabase).
+  - **Code Scaffolding & Boilerplate:** Mempercepat penulisan komponen UI Tailwind, schema, dan tipe data awalan.
+  - **Drafting Copywriting Realistis:** Menghasilkan copy produk SaaS B2B UMKM Indonesia (istilah POS, PPh 21 TER, resep COGS, testimoni realistis) agar website tidak terlihat seperti template dummy murahan.
+  - **Pair-Programming & Bug Hunting:** Membantu menelusuri pesan kompilasi dan breaking changes internal pada Next.js 16.
 
 ---
 
 ## 2. Contoh Prompt yang Paling Membantu
 
-Berikut 3 prompt riil yang memberikan hasil paling efektif:
+Berikut prompt yang memberikan hasil paling efektif:
 
-### Prompt 1: Menyusun Mock Data B2B SaaS Indonesia yang Konseptual
-> *"Buatkan 6 produk software B2B SaaS realistis untuk UMKM Indonesia dengan brand Kodeva (aplikasi kasir multi-outlet, HR payroll PPh 21 TER, multi-gudang inventory, loyalitas member, kitchen display system). Tiap produk harus punya sharedQuotaPoolId untuk validasi kuota promo bersama, 3 tier paket (Starter, Pro, Business), harga diskon vs coret, serta spesifikasi fitur yang masuk akal untuk bisnis cafe dan retail."*
-* **Kenapa membantu:** Menghemat waktu pembuatan dummy data manual dan menghasilkan struktur data domain yang langsung siap dikonsumsi oleh store dan UI.
+### Prompt 1: Diskusi dan Brainstorming Terkait Context Projek/Produk yang Akan Dibuat
+
+> \_"Saya mempunyai requirements seperti berikut, Berperanlah sebagai Senior Software Architect dan Senior Frontend Engineer yang pragmatis.
+
+Analisis requirements yang saya berikan, lalu diskusikan pendekatan terbaik dari sisi tech stack, CMS, arsitektur, database, SEO, security, dan deployment.
+
+Saya mempertimbangkan Next.js, Mengembangkan CMS sendiri, SQLite/Cloudflare D1 untuk database, R1 untuk storage, dan Vercel, tetapi terbuka untuk alternatif yang lebih baik.
+
+Prioritaskan solusi yang simple, maintainable, cepat diimplementasikan, dan tidak overengineering, tetapi tetap mengikuti best practices.
+
+Challenge keputusan saya jika ada pendekatan yang lebih tepat. "\_
+
+- **Kenapa membantu:** Ini sangat membantu dalam proses pemilihan tech stack serta architecture di awal.
 
 ### Prompt 2: Pembuatan Proteksi Spam Honeypot & Bot Latency Check
-> *"Buatkan endpoint Next.js Route Handler untuk menerima form leads. Sertakan proteksi spam dasar tanpa library captcha berat: gunakan hidden honeypot field 'website' dan validasi submission latency minimal 1.2 detik menggunakan timestamp client agar bot otomatis yang submit dalam hitungan milidetik langsung tertolak."*
-* **Kenapa membantu:** Solusi anti-spam yang sangat efisien, ramah UX pengunjung (tanpa puzzle captcha yang mengganggu), dan memenuhi requirement brief secara elegan.
+
+> _"Buatkan endpoint Next.js Route Handler untuk menerima form leads. Sertakan proteksi spam dasar tanpa library captcha berat: gunakan hidden honeypot field 'website' dan validasi submission latency minimal 1.2 detik menggunakan timestamp client agar bot otomatis yang submit dalam hitungan milidetik langsung tertolak."_
+
+- **Kenapa membantu:** Solusi anti-spam yang sangat efisien, ramah UX pengunjung (tanpa puzzle captcha yang mengganggu), dan memenuhi requirement brief secara elegan.
 
 ### Prompt 3: Setup GA4 dataLayer Helper dengan Deduplication Guard
-> *"Bantu rancang utilitas dataLayer GA4 di Next.js App Router yang aman dari double trigger akibat re-render komponen React atau Strict Mode. Gunakan ref guard dan debounce key berbasis fingerprint event (nama event + ID produk)."*
-* **Kenapa membantu:** Memberikan fondasi utilitas tracking yang bersih sebelum dihubungkan ke interaksi komponen UI.
+
+> _"Bantu rancang utilitas dataLayer seperti GA4 di Next.js App Router yang aman dari double trigger akibat re-render komponen React atau Strict Mode. Gunakan ref guard dan debounce key berbasis fingerprint event (nama event + ID produk)."_
+
+- **Kenapa membantu:** Memberikan fondasi utilitas tracking yang bersih sebelum dihubungkan ke interaksi komponen UI.
 
 ---
 
 ## 3. Contoh Masalah / Kesalahan Output AI dan Cara Memperbaikinya
 
 ### Kasus 1: AI Salah Mengimplementasikan Validasi Kuota Promo Keranjang (Jebakan Per-Item)
-* **Masalah yang Ditemukan:**  
+
+- **Masalah yang Ditemukan:**  
   Ketika pertama kali diminta membuat validasi kuota promo di keranjang, AI menghasilkan logika standar:  
   `if (newItem.quantity > product.remainingQuota) reject;`  
-  Logika ini **bocor parah**: jika produk "Kodeva Kasir" kuota promonya tersisa 5, user bisa memasukkan paket *Starter* sebanyak 3 lisensi, lalu memasukkan lagi paket *Pro* sebanyak 3 lisensi di baris keranjang baru. Totalnya jadi 6 lisensi, melampaui batas kuota promo 5!
-* **Cara Memperbaiki:**  
+  Logika ini **bocor parah**: jika produk "Kodeva Kasir" kuota promonya tersisa 5, user bisa memasukkan paket _Starter_ sebanyak 3 lisensi, lalu memasukkan lagi paket _Pro_ sebanyak 3 lisensi di baris keranjang baru. Totalnya jadi 6 lisensi, melampaui batas kuota promo 5!
+- **Cara Memperbaiki:**  
   Saya menolak logika per-item tersebut dan merancang ulang pengecekan berbasis agregasi pool produk di `cartStore.ts`. Sistem menghitung akumulasi seluruh baris item yang memiliki `sharedQuotaPoolId` yang sama:
+
   ```typescript
   const currentTotal = items
     .filter((i) => i.sharedQuotaPoolId === targetPoolId)
@@ -51,60 +67,94 @@ Berikut 3 prompt riil yang memberikan hasil paling efektif:
     // Tolak mutasi state dan tampilkan pesan sisa kuota global yang sebenarnya
   }
   ```
-* **Hasil Verifikasi:**  
+
+- **Hasil Verifikasi:**  
   Diuji di browser: menambahkan 3 lisensi Starter + 2 lisensi Pro berhasil (total 5). Begitu tombol `+` diklik lagi atau paket Business coba ditambahkan, tombol otomatis terkunci/disabled dan muncul notifikasi peringatan bahwa batas kuota promo produk telah habis.
 
 ---
 
-### Kasus 2: AI Menyimpan Parameter UTM Secara Naif (Hilang Saat Navigasi Halaman)
-* **Masalah yang Ditemukan:**  
-  AI awalnya hanya membaca UTM langsung menggunakan hook `useSearchParams()` di komponen form lead dan checkout. Akibatnya, jika pengunjung mengklik link iklan dari TikTok (`/?utm_source=tiktok&utm_campaign=promo`), lalu mereka mengeklik menu *"Lihat Katalog Software"* atau *"Baca Blog"* terlebih dahulu sebelum checkout, parameter URL menjadi bersih (`/marketplace` tanpa query params), dan seluruh data atribusi UTM **hilang tak berbekas**.
-* **Cara Memperbaiki:**  
-  Saya mengarahkan arsitektur *First-Touch Attribution Persistence*. Dibuat modul `utmStore.ts` berbasis Zustand yang menyimpan parameter UTM ke dalam storage browser segera saat user mendarat pertama kali di aplikasi. Kapan pun user berpindah halaman atau me-refresh tab, parameter UTM awal tetap tersimpan dan disuntikkan secara otomatis ke setiap request submission lead maupun order mock.
-* **Hasil Verifikasi:**  
+### Kasus 2: AI Menyimpan Parameter UTM Secara Sementara (Hilang Saat Navigasi Halaman)
+
+- **Masalah yang Ditemukan:**  
+  AI awalnya hanya membaca UTM langsung menggunakan hook `useSearchParams()` di komponen form lead dan checkout. Akibatnya, jika pengunjung mengklik link iklan dari TikTok (`/?utm_source=tiktok&utm_campaign=promo`), lalu mereka mengeklik menu _"Lihat Katalog Software"_ atau _"Baca Blog"_ terlebih dahulu sebelum checkout, parameter URL menjadi bersih (`/marketplace` tanpa query params), dan seluruh data atribusi UTM **hilang tak berbekas**.
+- **Cara Memperbaiki:**  
+  Saya mengarahkan arsitektur _First-Touch Attribution Persistence_. Dibuat modul `utmStore.ts` berbasis Zustand yang menyimpan parameter UTM ke dalam storage browser segera saat user mendarat pertama kali di aplikasi. Kapan pun user berpindah halaman atau me-refresh tab, parameter UTM awal tetap tersimpan dan disuntikkan secara otomatis ke setiap request submission lead maupun order mock.
+- **Hasil Verifikasi:**  
   Diuji dengan simulasi link `?utm_source=tiktok&utm_campaign=akhir-tahun`, lalu bernavigasi ke `/blog`, lalu ke `/marketplace/kodeva-pos-kasir`, lalu melakukan checkout. Pada tab DataLayer Inspector dan di tabel `/admin`, data lead dan payload order tetap teratribusi 100% ke TikTok.
 
 ---
 
-### Kasus 3: Breaking Change Next.js 16 pada Dynamic Date saat Static Prerendering
-* **Masalah yang Ditemukan:**  
-  Saat kompilasi `next build`, Next.js 16 melempar error: `Next.js encountered the unstable value new Date() in a Client Component`. AI awalnya menyarankan menambahkan `"use client"`, tetapi di Next.js 16 (dengan fitur `cacheComponents` aktif), pemanggilan `new Date()` saat fase prerender tetap dianggap tidak stabil.
-* **Cara Memperbaiki:**  
-  Saya meneliti pesan error dan dokumentasi `AGENTS.md`, lalu mengganti tahun dinamis di footer dengan nilai statis deterministik untuk keperluan prerender, serta membungkus komponen yang membaca URL pathname (`FloatingCartButton`) ke dalam `<Suspense>`.
-* **Hasil Verifikasi:**  
-  Kompilasi build `npm run build` berhasil 100% dengan status static prerender hijau untuk seluruh 24 rute halaman.
+### Kasus 3: Breaking Change Next.js 16 pada `revalidateTag` & Prerender Date
+
+- **Masalah yang Ditemukan:**  
+  Ketika menjalankan production build `npm run build`, Next.js 16 melempar error:
+  1. `Expected 2 arguments, but got 1` pada fungsi `revalidateTag(tag)`.
+  2. `Next.js encountered the unstable value new Date() while prerendering` pada komponen Footer.
+     AI pada awalnya tidak menyadari breaking change ini karena batas _training data_ lamanya menganggap `revalidateTag` hanya menerima 1 argumen string.
+- **Cara Memperbaiki:**  
+  Saya memeriksa source code types Next.js 16 di `node_modules/next/cache.d.ts` dan membaca panduan di `AGENTS.md`. Ternyata Next.js 16 mewajibkan argumen profil cache kedua (misalnya `revalidateTag(tag, "max")`). Untuk masalah dynamic date di prerender, saya menggantinya dengan tahun statis yang deterministik.
+- **Hasil Verifikasi:**  
+  Kompilasi build `npm run build` berjalan mulus dengan exit code 0 dan seluruh 24 rute halaman berhasil di-prerender.
 
 ---
 
 ## 4. Bagian Implementasi yang Banyak Dibantu AI & Pengujian Edge Case-nya
 
-* **Bagian:** Pembuatan komponen `LeadCaptureForm.tsx` beserta rute API `/api/leads/route.ts` dengan proteksi honeypot anti-spam dan penyimpanan Drizzle SQLite.
-* **Edge Case yang Diuji:**
+### 1. Form Lead Capture & Proteksi Anti-Spam
+- **Bagian:** Pembuatan komponen `LeadCaptureForm.tsx` beserta rute API `/api/leads/route.ts` dengan proteksi honeypot anti-spam dan penyimpanan Drizzle SQLite.
+- **Edge Case yang Diuji:**
   1. **Pengujian Bot Spam Cepat:** Form diisi secara instan via script dalam waktu < 1.2 detik sejak render.  
-     *Hasil:* API menolak dengan status 400 (`"Terlalu cepat mengisi formulir"`).
+     _Hasil:_ API menolak dengan status 400 (`"Terlalu cepat mengisi formulir"`).
   2. **Pengujian Field Honeypot:** Field rahasia `website` (yang tersembunyi dari mata manusia via CSS) diisi nilai acak oleh bot scraper.  
-     *Hasil:* API merespons silent success 200 tanpa menyimpan baris data ke database (mencegah penumpukan data sampah).
+     _Hasil:_ API merespons silent success 200 tanpa menyimpan baris data ke database (mencegah penumpukan data sampah).
   3. **Pengujian Nomor WhatsApp:** Memasukkan karakter huruf atau nomor kurang dari 8 digit.  
-     *Hasil:* Validasi skema Zod menolak dan menampilkan indikator error merah pada input.
+     _Hasil:_ Validasi skema Zod menolak dan menampilkan indikator error merah pada input.
   4. **Pengujian Input Duplikat / Karakter Spesial:** Memasukkan nama dengan tanda petik/simbol SQL (`O'Connor`, `<script>`).  
-     *Hasil:* Parameterized query Drizzle ORM menyimpan string secara aman tanpa kerentanan SQL injection.
+     _Hasil:_ Parameterized query Drizzle ORM menyimpan string secara aman tanpa kerentanan SQL injection.
 
 ---
 
-## 5. Bagian yang Sengaja Dirancang & Ditulis Sendiri Tanpa AI
+### 2. Scaffolding Komponen UI & Interaktivitas Kompleks (Tier Switcher & Keranjang)
+- **Bagian:** Pembuatan komponen `ProductCard.tsx` (tier switch Starter/Pro/Business) dan `cartStore.ts` (Zustand + local storage persistence).
+- **Edge Case yang Diuji:**
+  1. **Perpindahan Tier Tanpa Stale State:** Mengganti paket dari *Starter* ke *Business* di halaman detail lalu langsung menekan *"Tambah ke Keranjang"*.  
+     _Hasil:_ State tier, kalkulasi diskon coret, dan unit kuota ter-update seketika secara sinkron tanpa race condition atau salah harga.
+  2. **Persistensi State Saat Refresh / Multi-Tab:** Menambah produk ke keranjang, membuka tab baru, atau me-refresh browser.  
+     _Hasil:_ Isi keranjang dan akumulasi kuota tetap utuh berkat middleware Zustand `persist`, tanpa hydration mismatch warning di console.
+  3. **Responsivitas & Touch Target Mobile:** Pengujian layout di viewport mobile (375px - 414px).  
+     _Hasil:_ Seluruh tombol CTA, switch tier, dan tombol kuantitas memiliki area sentuh $\ge 44$px dan tidak terjadi horizontal layout overflow.
 
-Meskipun AI sangat membantu untuk hal-hal repetitif, bagian-bagian inti berikut **sengaja saya rancang dan tulis langsung di IDE tanpa meminta AI**:
+---
+
+### 3. Pengecekan & Optimasi Performa (Lighthouse & Core Web Vitals)
+- **Bagian:** Audit performa halaman landing dan marketplace menggunakan Google Lighthouse serta optimasi aset gambar dan rendering.
+- **Edge Case yang Diuji:**
+  1. **Largest Contentful Paint (LCP) < 1.2 Detik:** Gambar hero banner diuji pada simulasi jaringan lambat (Fast 3G).  
+     _Hasil:_ Menambahkan atribut `priority` dan format modern WebP/AVIF pada komponen `<Image />` Next.js sehingga LCP tercapai di kisaran 0.8s - 1.1s.
+  2. **Cumulative Layout Shift (CLS) = 0:** Banner promo dan kartu katalog diuji saat proses loading font dan gambar.  
+     _Hasil:_ Memberikan aspek rasio dan container skeleton terdefinisi sehingga elemen tidak bergeser mendadak saat gambar selesai di-render (skor CLS 0.00).
+  3. **Penanganan De-opt Prerender akibat Client Hooks:** Penggunaan `useSearchParams()` untuk membaca UTM diuji dampaknya terhadap SSG.  
+     _Hasil:_ Membungkus komponen yang membaca search params dengan batas `<Suspense>`, sehingga seluruh shell halaman tetap ter-generate secara statis (skor Performance $\ge 95$).
+
+---
+
+### 4. Pencegahan Double-Trigger pada Event Tracking GA4 dataLayer
+- **Bagian:** Integrasi fungsi `trackEvent` di `dataLayer.ts` pada interaksi checkout (`add_to_cart`, `begin_checkout`, `purchase`).
+- **Edge Case yang Diuji:**
+  1. **React Strict Mode / Double Render Guard:** Komponen di-mount dua kali di lingkungan development.  
+     _Hasil:_ Utilitas tracking dilengkapi ref guard dan event-fingerprint deduplication, mencegah satu aksi klik tercatat dua kali di DataLayer.
+  2. **Navigasi Cepat (Page Transition Race Condition):** Pengguna menekan tombol CTA checkout dan halaman langsung berpindah dalam < 100ms.  
+     _Hasil:_ Event tetap berhasil masuk ke array `window.dataLayer` sebelum route transition selesai berkat synchronous array push.
+
+---
+
+## 5. Bagian yang Sengaja Dirancang Tanpa AI
+
+Meskipun AI sangat membantu untuk hal-hal repetitif, bagian inti berikut **sengaja saya rancang tanpa meminta AI memutuskannya sendiri secara sepihak tanpa ada interpensi dari Developernya**:
 
 ### 1. Keputusan Arsitektur: Memilih Built-in Edge CMS Dibanding SaaS CMS Pihak Ketiga
-* **Alasannya:**  
-  Di awal, opsi memakai SaaS CMS seperti Sanity atau Strapi sempat dipertimbangkan. Namun, setelah dianalisis secara kritis:
-  * SaaS CMS menciptakan ketergantungan pihak ketiga (*vendor lock-in*) dan mewajibkan reviewer untuk di-invite akun terpisah atau login OAuth eksternal yang rawan hambatan akses saat penilaian.
-  * Dengan membangun **Built-in Edge CMS langsung di dalam aplikasi (rute `/admin`) menggunakan Drizzle ORM**, aplikasi menjadi 100% mandiri, bebas biaya langganan, siap dideploy ke **Cloudflare D1** (database edge) & **Cloudflare R2** (storage gambar), serta memberikan pengalaman evaluasi tanpa friksi bagi reviewer (login instan dengan email demo dan langsung dapat menguji edit konten secara live).
 
-### 2. Definisi Domain Contracts & Data Types (`src/types/marketplace.ts`)
-* **Alasannya:**  
-  Mengetik definisi tipe data (`Product`, `ProductTier`, `CartItem`, `sharedQuotaPoolId`) secara manual membantu saya memetakan dan mengunci batasan bisnis sistem Kodeva sejak awal. Menulis tipe ini sendiri menjamin nol halusinasi dan menjadi *single source of truth* yang kokoh bagi seluruh komponen lainnya.
-
-### 3. Logika Matematis Invariant Kuota Bersama (`calculateQuotaInvariant`)
-* **Alasannya:**  
-  Menulis logika agregasi kuota promo lintas tier secara langsung di keyboard jauh lebih cepat, deterministik, dan terbebas dari kesalahan konseptual daripada harus bolak-balik menyusun prompt panjang ke AI.
+- **Alasannya:**
+  - SaaS CMS seperti Sanity, dsb menciptakan ketergantungan pihak ketiga (vendor lock-in)
+  - Kontrol penuh terhadap data dan business logic di sini menggunakan cloudflare D1 untuk database dan R1 untuk cloud storage-nya
+  - Arsitektur dapat dicustom lebih sederhana untuk kebutuhan spesifik

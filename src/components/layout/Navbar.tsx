@@ -23,10 +23,6 @@ export function Navbar() {
   const items = useCartStore((state) => state.items);
   const totalLicenseCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
-  if (pathname?.startsWith("/admin")) {
-    return null;
-  }
-
   useEffect(() => {
     useCartStore.persist.rehydrate();
     setMounted(false);
@@ -34,6 +30,10 @@ export function Navbar() {
     const timer = setTimeout(() => setMounted(true), 10);
     return () => clearTimeout(timer);
   }, []);
+
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   const handleNavClick = (ctaName: string) => {
     trackCtaClick(ctaName, "navbar");

@@ -27,7 +27,7 @@ export default function QuillEditor({ value, onChange, placeholder }: QuillEdito
 
       const quill = new Quill(editorRef.current, {
         theme: "snow",
-        placeholder: placeholder || "Tulis isi artikel yang lengkap dan menarik di sini...",
+        placeholder: placeholder || "Tulis isi artikel di sini...",
         modules: {
           toolbar: [
             [{ header: [2, 3, 4, false] }],
@@ -71,8 +71,54 @@ export default function QuillEditor({ value, onChange, placeholder }: QuillEdito
   }, [value, isLoaded]);
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-      <div ref={editorRef} style={{ minHeight: "280px" }} />
+    <div className="quill-wrapper bg-white rounded-xl overflow-hidden shadow-xs border border-slate-200">
+      <style jsx global>{`
+        .quill-wrapper .ql-toolbar.ql-snow {
+          border: none !important;
+          border-bottom: 1px solid #e2e8f0 !important;
+          background-color: #f8fafc !important;
+          padding: 8px 12px !important;
+        }
+        .quill-wrapper .ql-container.ql-snow {
+          border: none !important;
+          background-color: #ffffff !important;
+          font-family: inherit !important;
+        }
+        .quill-wrapper .ql-editor {
+          color: #0f172a !important;
+          font-size: 14px !important;
+          line-height: 1.7 !important;
+          min-height: 280px !important;
+          padding: 16px !important;
+        }
+        .quill-wrapper .ql-editor p,
+        .quill-wrapper .ql-editor span,
+        .quill-wrapper .ql-editor li,
+        .quill-wrapper .ql-editor strong,
+        .quill-wrapper .ql-editor em {
+          color: #0f172a !important;
+        }
+        .quill-wrapper .ql-editor h2 {
+          color: #0f172a !important;
+          font-size: 20px !important;
+          font-weight: 700 !important;
+          margin-top: 16px !important;
+          margin-bottom: 8px !important;
+        }
+        .quill-wrapper .ql-editor h3 {
+          color: #0f172a !important;
+          font-size: 16px !important;
+          font-weight: 700 !important;
+          margin-top: 12px !important;
+          margin-bottom: 6px !important;
+        }
+        .quill-wrapper .ql-editor.ql-blank::before {
+          color: #94a3b8 !important;
+          font-style: normal !important;
+          left: 16px !important;
+        }
+      `}</style>
+      <div ref={editorRef} />
     </div>
   );
 }
