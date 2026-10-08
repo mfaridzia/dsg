@@ -145,20 +145,14 @@ export const DEFAULT_BLOG_POSTS: BlogPost[] = [
     title: "Panduan Lengkap Memilih Aplikasi Kasir untuk Cafe & Resto Multi-Outlet",
     excerpt:
       "Hindari kesalahan umum pemilik F&B: pelajari fitur wajib seperti split bill, manajemen meja, dan kontrol bahan baku COGS sebelum membeli lisensi POS.",
-    content: `
-Mengelola satu outlet cafe berbeda jauh dengan mengelola 3 atau 5 cabang sekaligus. Kesalahan paling umum dari pemilik bisnis F&B yang sedang bertumbuh adalah memilih sistem kasir yang hanya dirancang untuk *single-store*.
-
-### 1. Sinkronisasi Realtime & Akses Multi-Device
-Pastikan aplikasi kasir Anda dapat diakses dari beberapa perangkat kasir sekaligus tanpa tabrakan nomor struk. Jika satu kasir sedang melayani *dine-in*, kasir lain bisa fokus melayani pesanan *take-away* atau ojek online.
-
-### 2. Manajemen Meja dan Split Bill
-Pelanggan cafe dan resto sering kali meminta pisah tagihan (*split bill*) atau pindah meja. Software kasir yang baik harus memudahkan barista atau kasir melakukan pembagian pembayaran per menu tanpa harus membatalkan transaksi dari awal.
-
-### 3. Kontrol Bahan Baku (Cost of Goods Sold / COGS)
-Kunci keuntungan bisnis F&B bukan hanya di omzet, melainkan di efisiensi bahan baku. Pastikan setiap menu yang terjual (misalnya segelas Caffe Latte) otomatis memotong stok 18gr biji kopi, 150ml susu fresh milk, dan 1 paper cup di gudang Anda.
-
-Solusi **Kodeva POS Kasir Multi-Outlet** dirancang khusus untuk mengatasi seluruh tantangan operasional ini dalam satu dasbor yang mudah dipahami.
-    `,
+    content: `<p>Mengelola satu outlet cafe berbeda jauh dengan mengelola 3 atau 5 cabang sekaligus. Kesalahan paling umum dari pemilik bisnis F&B yang sedang bertumbuh adalah memilih sistem kasir yang hanya dirancang untuk <em>single-store</em>.</p>
+<h2>1. Sinkronisasi Realtime & Akses Multi-Device</h2>
+<p>Pastikan aplikasi kasir Anda dapat diakses dari beberapa perangkat kasir sekaligus tanpa tabrakan nomor struk. Jika satu kasir sedang melayani <em>dine-in</em>, kasir lain bisa fokus melayani pesanan <em>take-away</em> atau ojek online.</p>
+<h2>2. Manajemen Meja dan Split Bill</h2>
+<p>Pelanggan cafe dan resto sering kali meminta pisah tagihan (<em>split bill</em>) atau pindah meja. Software kasir yang baik harus memudahkan barista atau kasir melakukan pembagian pembayaran per menu tanpa harus membatalkan transaksi dari awal.</p>
+<h2>3. Kontrol Bahan Baku (Cost of Goods Sold / COGS)</h2>
+<p>Kunci keuntungan bisnis F&B bukan hanya di omzet, melainkan di efisiensi bahan baku. Pastikan setiap menu yang terjual (misalnya segelas Caffe Latte) otomatis memotong stok 18gr biji kopi, 150ml susu fresh milk, dan 1 paper cup di gudang Anda.</p>
+<p>Solusi <strong>Kodeva POS Kasir Multi-Outlet</strong> dirancang khusus untuk mengatasi seluruh tantangan operasional ini dalam satu Dashboard yang mudah dipahami.</p>`,
     coverImageUrl:
       "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80",
     category: "Kasir & Operasional",
@@ -178,20 +172,17 @@ Solusi **Kodeva POS Kasir Multi-Outlet** dirancang khusus untuk mengatasi seluru
     title: "Perhitungan PPh 21 Tarif Efektif Rata-Rata (TER): Panduan Praktis HR UMKM",
     excerpt:
       "Memahami skema pemotongan PPh 21 terbaru dari Direktorat Jenderal Pajak agar penghitungan slip gaji bulanan karyawan akurat dan patuh hukum.",
-    content: `
-Sejak berlakunya Peraturan Pemerintah terkait Tarif Efektif Rata-Rata (TER) PPh Pasal 21, banyak pemilik UMKM dan staf administrasi keuangan yang kebingungan menghitung potongan pajak penghasilan karyawan tetap maupun lepas.
-
-### Mengapa Skema TER Diterapkan?
-Skema TER bertujuan menyederhanakan perhitungan pajak bulanan dari masa Januari hingga November. HR tidak perlu lagi menghitung Penghasilan Tidak Kena Pajak (PTKP) tahunan secara manual setiap bulan.
-
-### Klasifikasi Kategori TER:
-1. **Kategori A:** Dikenakan pada PTKP TK/0, TK/1, dan K/0.
-2. **Kategori B:** Dikenakan pada PTKP TK/2, TK/3, K/1, dan K/2.
-3. **Kategori C:** Dikenakan pada PTKP K/3.
-
-### Mengapa Perlu Otomatisasi dengan Software Payroll?
-Menghitung ratusan kombinasi tarif TER secara manual di spreadsheet sangat rawan *human error*. Dengan **Kodeva HR & Payroll**, sistem langsung mencocokkan status PTKP dan penghasilan bruto karyawan untuk mendapatkan persentase TER yang tepat secara otomatis.
-    `,
+    content: `<p>Sejak berlakunya Peraturan Pemerintah terkait Tarif Efektif Rata-Rata (TER) PPh Pasal 21, banyak pemilik UMKM dan staf administrasi keuangan yang kebingungan menghitung potongan pajak penghasilan karyawan tetap maupun lepas.</p>
+<h2>Mengapa Skema TER Diterapkan?</h2>
+<p>Skema TER bertujuan menyederhanakan perhitungan pajak bulanan dari masa Januari hingga November. HR tidak perlu lagi menghitung Penghasilan Tidak Kena Pajak (PTKP) tahunan secara manual setiap bulan.</p>
+<h2>Klasifikasi Kategori TER</h2>
+<ul>
+<li><strong>Kategori A:</strong> Dikenakan pada PTKP TK/0, TK/1, dan K/0.</li>
+<li><strong>Kategori B:</strong> Dikenakan pada PTKP TK/2, TK/3, K/1, dan K/2.</li>
+<li><strong>Kategori C:</strong> Dikenakan pada PTKP K/3.</li>
+</ul>
+<h2>Mengapa Perlu Otomatisasi dengan Software Payroll?</h2>
+<p>Menghitung ratusan kombinasi tarif TER secara manual di spreadsheet sangat rawan <em>human error</em>. Dengan <strong>Kodeva HR & Payroll</strong>, sistem langsung mencocokkan status PTKP dan penghasilan bruto karyawan untuk mendapatkan persentase TER yang tepat secara otomatis.</p>`,
     coverImageUrl:
       "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=1200&q=80",
     category: "SDM & Regulasi",
@@ -211,18 +202,13 @@ Menghitung ratusan kombinasi tarif TER secara manual di spreadsheet sangat rawan
     title: "5 Strategi Jitu Mengatasi Selisih Stok Barang Antar Gudang dan Toko",
     excerpt:
       "Selisih stok barang bisa menggerus laba hingga 15% per bulan. Terapkan audit kartu stok, barcode scanner, dan alur transfer surat jalan digital.",
-    content: `
-Bagi pelaku usaha retail dan distribusi, barang hilang atau rusak tanpa pertanggungjawaban adalah mimpi buruk. Tanpa pengawasan ketat, selisih stok sering kali baru terdeteksi saat *stock opname* tahunan, saat kerugian sudah terlanjur membengkak.
-
-### 1. Standarisasi Penerimaan Barang dengan Purchase Order
-Jangan biarkan staf gudang menerima kiriman supplier tanpa dokumen PO yang sah di sistem. Setiap barang yang masuk harus diverifikasi kuantitas dan nomor batch-nya.
-
-### 2. Terapkan Surat Jalan Digital untuk Mutasi Antar Cabang
-Saat outlet cabang A kekurangan stok dan meminta kiriman dari cabang B, proses transfer harus memiliki status: *Diminta*, *Dalam Pengiriman*, dan *Diterima*. Ini memastikan penanggung jawab jelas jika terjadi kehilangan di perjalanan.
-
-### 3. Lakukan Cycle Counting Berkala
-Jangan menunggu akhir tahun untuk menghitung fisik stok. Lakukan penghitungan berkala per kategori produk setiap minggu (Cycle Counting) menggunakan pemindai barcode kamera HP.
-    `,
+    content: `<p>Bagi pelaku usaha retail dan distribusi, barang hilang atau rusak tanpa pertanggungjawaban adalah mimpi buruk. Tanpa pengawasan ketat, selisih stok sering kali baru terdeteksi saat <em>stock opname</em> tahunan, saat kerugian sudah terlanjur membengkak.</p>
+<h2>1. Standarisasi Penerimaan Barang dengan Purchase Order</h2>
+<p>Jangan biarkan staf gudang menerima kiriman supplier tanpa dokumen PO yang sah di sistem. Setiap barang yang masuk harus diverifikasi kuantitas dan nomor batch-nya.</p>
+<h2>2. Terapkan Surat Jalan Digital untuk Mutasi Antar Cabang</h2>
+<p>Saat outlet cabang A kekurangan stok dan meminta kiriman dari cabang B, proses transfer harus memiliki status: <strong>Diminta</strong>, <strong>Dalam Pengiriman</strong>, dan <strong>Diterima</strong>. Ini memastikan penanggung jawab jelas jika terjadi kehilangan di perjalanan.</p>
+<h2>3. Lakukan Cycle Counting Berkala</h2>
+<p>Jangan menunggu akhir tahun untuk menghitung fisik stok. Lakukan penghitungan berkala per kategori produk setiap minggu (Cycle Counting) menggunakan pemindai barcode kamera HP.</p>`,
     coverImageUrl:
       "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80",
     category: "Operasional & Stok",
@@ -242,19 +228,17 @@ Jangan menunggu akhir tahun untuk menghitung fisik stok. Lakukan penghitungan be
     title: "Rahasia Toko Retail Meningkatkan Omzet 35% Lewat Member Loyalty WhatsApp",
     excerpt:
       "Mendapatkan pelanggan baru 5x lebih mahal daripada mempertahankan pelanggan lama. Pelajari cara memanfaatkan kupon loyalitas berbasis nomor WhatsApp.",
-    content: `
-Banyak pelaku usaha mengeluhkan mahalnya biaya iklan digital di media sosial. Padahal, aset terbesar mereka adalah pelanggan yang sudah pernah bertransaksi.
-
-### Mengapa Kartu Member Plastik Sudah Ketinggalan Zaman?
-Pelanggan enggan membawa kartu fisik di dompet mereka. Dengan memanfaatkan nomor WhatsApp saat pembayaran kasir, pelanggan langsung terdaftar sebagai member tanpa perlu mengisi formulir panjang.
-
-### Kunci Sukses Loyalty Marketing:
-- **Poin Transaksi Instan:** Berikan 1 poin setiap kelipatan Rp 10.000 belanja.
-- **Kupon Ulang Tahun Otomatis:** Kirim voucher diskon eksklusif 3 hari sebelum hari ulang tahun pelanggan.
-- **Pesan Win-Back:** Otomatis kirim tawaran promo bagi pelanggan yang sudah tidak berkunjung selama lebih dari 45 hari.
-    `,
+    content: `<p>Banyak pelaku usaha mengeluhkan mahalnya biaya iklan digital di media sosial. Padahal, aset terbesar mereka adalah pelanggan yang sudah pernah bertransaksi.</p>
+<h2>Mengapa Kartu Member Plastik Sudah Ketinggalan Zaman?</h2>
+<p>Pelanggan enggan membawa kartu fisik di dompet mereka. Dengan memanfaatkan nomor WhatsApp saat pembayaran kasir, pelanggan langsung terdaftar sebagai member tanpa perlu mengisi formulir panjang.</p>
+<h2>Kunci Sukses Loyalty Marketing</h2>
+<ul>
+<li><strong>Poin Transaksi Instan:</strong> Berikan 1 poin setiap kelipatan Rp 10.000 belanja.</li>
+<li><strong>Kupon Ulang Tahun Otomatis:</strong> Kirim voucher diskon eksklusif 3 hari sebelum hari ulang tahun pelanggan.</li>
+<li><strong>Pesan Win-Back:</strong> Otomatis kirim tawaran promo bagi pelanggan yang sudah tidak berkunjung selama lebih dari 45 hari.</li>
+</ul>`,
     coverImageUrl:
-      "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1200&q=80",
     category: "Marketing & CRM",
     author: {
       name: "Rizky Pratama",

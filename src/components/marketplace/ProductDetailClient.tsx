@@ -20,6 +20,7 @@ import {
   Check,
   AlertCircle,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface ProductDetailClientProps {
   product: Product;
@@ -80,11 +81,13 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
     if (result.success) {
       trackAddToCart(product, activeTier, quantity, utmStore.getUtmPayload());
+      toast.success(`${quantity} lisensi ${product.name} (${activeTier.name}) ditambahkan ke keranjang!`);
       setFeedbackMsg({
         type: "success",
         text: `Berhasil menambahkan ${quantity} lisensi ${product.name} (${activeTier.name}) ke keranjang!`,
       });
     } else {
+      toast.error(result.error || "Gagal menambahkan item ke keranjang.");
       setFeedbackMsg({
         type: "error",
         text: result.error || "Gagal menambahkan item ke keranjang.",

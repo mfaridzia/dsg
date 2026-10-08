@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useCartStore } from "@/lib/store/cartStore";
 import { trackCtaClick } from "@/lib/analytics/dataLayer";
@@ -16,10 +17,15 @@ import {
 } from "lucide-react";
 
 export function Navbar() {
+  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const items = useCartStore((state) => state.items);
   const totalLicenseCount = items.reduce((sum, item) => sum + item.quantity, 0);
+
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   useEffect(() => {
     useCartStore.persist.rehydrate();

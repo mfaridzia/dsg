@@ -83,7 +83,7 @@ export const PRODUCTS: Product[] = [
     screenshots: [
       {
         url: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80",
-        caption: "Dasbor perhitungan slip gaji karyawan dengan kalkulasi PPh 21 TER otomatis",
+        caption: "Dashboard perhitungan slip gaji karyawan dengan kalkulasi PPh 21 TER otomatis",
       },
       {
         url: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80",

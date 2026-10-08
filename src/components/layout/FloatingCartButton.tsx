@@ -19,8 +19,8 @@ function FloatingCartButtonContent() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Do not show on /cart or /checkout page itself to avoid redundant clutter
-  if (!mounted || items.length === 0 || pathname === "/cart" || pathname === "/checkout") {
+  // Do not show on /cart, /checkout, or /admin pages
+  if (!mounted || items.length === 0 || pathname === "/cart" || pathname === "/checkout" || pathname?.startsWith("/admin")) {
     return null;
   }
 

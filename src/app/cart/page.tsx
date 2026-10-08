@@ -16,6 +16,7 @@ import {
   ArrowLeft,
   Sparkles,
 } from "lucide-react";
+import { toast } from "sonner";
 
 export function CartPage() {
   const [mounted, setMounted] = useState(false);
@@ -49,7 +50,15 @@ export function CartPage() {
     const result = cartStore.updateItemQuantity(productId, tierId, delta);
     if (!result.success) {
       setErrorMessage(result.error || "Gagal mengubah jumlah lisensi.");
+      toast.error(result.error || "Gagal mengubah jumlah lisensi.");
+    } else {
+      toast.info("Jumlah lisensi di keranjang diperbarui.");
     }
+  };
+
+  const handleRemoveItem = (productId: string, tierId: string, name: string) => {
+    cartStore.removeItem(productId, tierId);
+    toast.info(`${name} dihapus dari keranjang.`);
   };
 
   const handleBeginCheckout = () => {
@@ -206,7 +215,7 @@ export function CartPage() {
 
                       <button
                         type="button"
-                        onClick={() => cartStore.removeItem(item.productId, item.tierId)}
+                        onClick={() => handleRemoveItem(item.productId, item.tierId, item.productName)}
                         className="p-2 text-slate-400 hover:text-rose-600 transition rounded-lg hover:bg-rose-50"
                         title="Hapus Dari Keranjang"
                       >

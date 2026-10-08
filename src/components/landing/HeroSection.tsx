@@ -86,7 +86,7 @@ export function HeroSection({ content }: HeroSectionProps) {
               <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-200/80 bg-slate-900 group">
                 <Image
                   src={content.heroImageUrl}
-                  alt="Dasbor Aplikasi Kasir dan HR Kodeva"
+                  alt="Dashboard Aplikasi Kasir dan HR Kodeva"
                   width={640}
                   height={420}
                   priority

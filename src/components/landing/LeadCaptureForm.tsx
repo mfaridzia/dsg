@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useUtmStore } from "@/lib/store/utmStore";
 import { trackCtaClick } from "@/lib/analytics/dataLayer";
 import { ShieldCheck, Send, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 export function LeadCaptureForm() {
   const [name, setName] = useState("");
@@ -63,8 +64,11 @@ export function LeadCaptureForm() {
       }
 
       setSubmitted(true);
+      toast.success("Konsultasi berhasil diajukan! Tim spesialis Kodeva akan segera menghubungi Anda.");
     } catch (err: unknown) {
-      setErrorMsg(err instanceof Error ? err.message : "Terjadi kesalahan koneksi.");
+      const msg = err instanceof Error ? err.message : "Terjadi kesalahan koneksi.";
+      setErrorMsg(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

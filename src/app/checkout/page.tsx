@@ -24,6 +24,7 @@ import {
   ArrowLeft,
   FileText,
 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -158,6 +159,7 @@ export default function CheckoutPage() {
         invoiceNumber,
         licenseKeys,
       });
+      toast.success("Pembayaran berhasil dikonfirmasi! Kunci lisensi software Anda telah aktif.");
     } else {
       setOrderResult({
         status: "failed",
@@ -165,6 +167,7 @@ export default function CheckoutPage() {
         errorReason:
           "Otorisasi bank ditolak: Saldo rekening tidak mencukupi atau batas harian transaksi kartu terlampaui. Silakan gunakan metode pembayaran lain.",
       });
+      toast.error("Pembayaran gagal diproses. Silakan coba kembali.");
     }
 
     setIsProcessing(false);
@@ -173,6 +176,7 @@ export default function CheckoutPage() {
   const handleCopyKey = (key: string) => {
     navigator.clipboard.writeText(key);
     setCopiedKey(key);
+    toast.success("Kunci lisensi berhasil disalin ke clipboard!");
     setTimeout(() => setCopiedKey(null), 2000);
   };
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FloatingCartButton } from "@/components/layout/FloatingCartButton";
@@ -65,6 +66,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 font-sans">
+        <Toaster richColors position="top-right" closeButton />
         <UtmTracker />
         <Navbar />
         <main className="flex-1">{children}</main>
