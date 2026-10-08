@@ -1,22 +1,95 @@
-import { drizzle } from "drizzle-orm/libsql";
+import { drizzle as drizzleLibsql } from "drizzle-orm/libsql";
+import { drizzle as drizzleProxy } from "drizzle-orm/sqlite-proxy";
 import { createClient } from "@libsql/client";
 import * as schema from "./schema";
 import { DEFAULT_LANDING_CONTENT, DEFAULT_BLOG_POSTS } from "@/lib/data/cmsContent";
 import path from "path";
 import os from "os";
 
-// Store local SQLite file in os.tmpdir() during development to prevent
-// Next.js Turbopack file watcher from triggering infinite HMR reload loops
-const defaultLocalDb = `file:${path.join(os.tmpdir(), "kodeva-edge-cms.db")}`;
-const databaseUrl = process.env.TURSO_DATABASE_URL || defaultLocalDb;
-const authToken = process.env.TURSO_AUTH_TOKEN;
+const cfAccountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+const cfDatabaseId = process.env.CLOUDFLARE_DATABASE_ID;
+const cfApiToken = process.env.CLOUDFLARE_API_TOKEN || process.env.CLOUDFLARE_D1_TOKEN;
 
-export const client = createClient({
-  url: databaseUrl,
-  authToken,
-});
+const isCloudflareD1 = Boolean(cfAccountId && cfDatabaseId && cfApiToken);
 
-export const db = drizzle(client, { schema });
+export interface QueryClient {
+  execute(query: string | { sql: string; args?: unknown[] }): Promise<{ rows: Record<string, unknown>[] }>;
+}
+
+let dbInstance: ReturnType<typeof drizzleLibsql> | ReturnType<typeof drizzleProxy>;
+let clientInstance: QueryClient;
+
+if (isCloudflareD1) {
+  // Query Cloudflare D1 via REST API
+  clientInstance = {
+    async execute(query: string | { sql: string; args?: unknown[] }) {
+      const sql = typeof query === "string" ? query : query.sql;
+      const params = typeof query === "string" ? [] : query.args || [];
+      const url = `https://api.cloudflare.com/client/v4/accounts/${cfAccountId}/d1/database/${cfDatabaseId}/query`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${cfApiToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sql, params }),
+        cache: "no-store",
+      });
+      const data = await res.json();
+      if (!data.success) {
+        throw new Error(`Cloudflare D1 Query Error: ${JSON.stringify(data.errors)}`);
+      }
+      return { rows: (data.result?.[0]?.results || []) as Record<string, unknown>[] };
+    },
+  };
+
+  dbInstance = drizzleProxy(
+    async (sql, params, method) => {
+      const url = `https://api.cloudflare.com/client/v4/accounts/${cfAccountId}/d1/database/${cfDatabaseId}/raw`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${cfApiToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sql, params }),
+        cache: "no-store",
+      });
+      const data = await res.json();
+      if (!data.success) {
+        throw new Error(`Cloudflare D1 Error: ${JSON.stringify(data.errors)}`);
+      }
+      const rawRows = (data.result?.[0]?.results?.rows || []) as unknown[][];
+      return { rows: rawRows };
+    },
+    { schema }
+  );
+} else {
+  // Fallback to local SQLite / Libsql
+  const defaultLocalDb = `file:${path.join(os.tmpdir(), "kodeva-edge-cms.db")}`;
+  const databaseUrl = process.env.TURSO_DATABASE_URL || defaultLocalDb;
+  const authToken = process.env.TURSO_AUTH_TOKEN;
+
+  const libsqlClient = createClient({
+    url: databaseUrl,
+    authToken,
+  });
+
+  clientInstance = {
+    async execute(query) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const res = await libsqlClient.execute(query as any);
+      return { rows: (res.rows || []) as Record<string, unknown>[] };
+    },
+  };
+
+  dbInstance = drizzleLibsql(libsqlClient, { schema });
+}
+
+export const client = clientInstance;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const db: any = dbInstance;
+
 
 let isInitialized = false;
 

@@ -19,7 +19,8 @@ export default async function BlogPage() {
       .orderBy(desc(blogPosts.publishedAt));
 
     if (rows.length > 0) {
-      posts = rows.map((r) => ({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      posts = rows.map((r: any) => ({
         id: r.id,
         slug: r.slug,
         title: r.title,
