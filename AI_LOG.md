@@ -7,6 +7,7 @@
   - **Brainstorming & Trade-Off Analysis:** Berdiskusi mengevaluasi alternatif stack (Sanity vs Custom CMS vs SQLite/Cloudflare D1, Turso vs Supabase).
   - **Code Scaffolding & Boilerplate:** Mempercepat penulisan komponen UI Tailwind, schema, dan tipe data awalan.
   - **Drafting Copywriting Realistis:** Menghasilkan copy produk SaaS B2B UMKM Indonesia (istilah POS, PPh 21 TER, resep COGS, testimoni realistis) agar website tidak terlihat seperti template dummy murahan.
+  - **Code Generation based on Context:** Membantu membuat fitur berdasarkan prompt/context instruksi yang sudah diberikan
   - **Pair-Programming & Bug Hunting:** Membantu menelusuri pesan kompilasi dan breaking changes internal pada Next.js 16.
 
 ---

@@ -6,7 +6,7 @@ Aplikasi web landing page promosi, sistem blog dengan CMS mandiri (_Built-in Edg
 
 ## ⏱️ Waktu Pengerjaan Sebenarnya
 
-- **Total Durasi:** ~8 jam kerja aktif.
+- **Total Durasi:** ~8+ jam kerja aktif.
 - **Rincian:**
   - Analisis brief, pemodelan domain, dan keputusan arsitektur stack
   - Setup Next.js 16, Drizzle ORM, Edge SQLite / Cloudflare D1-ready schema
@@ -103,7 +103,7 @@ flowchart LR
    - _Ambiguitas:_ Bagaimana kuota promo bekerja bila produk memiliki 3 opsi tier (Starter, Pro, Business)?
    - _Asumsi:_ Kuota promo dihitung sebagai **satu pool unit global per produk**. Contoh: Jika "Kodeva POS Kasir" memiliki sisa kuota promo 5 lisensi, maka pembelian 3 lisensi Starter + 2 lisensi Pro langsung menghabiskan kuota promo produk tersebut menjadi 0. Penambahan berikutnya otomatis dikunci oleh sistem keranjang belanja.
 3. **Kami perlu tahu berapa orang yang klik tombol beli dari landing page.**
-   - Di sini asumsi saya nantinya menggunakan event tracking seperti Google Analytics, Posthog, dsb untuk melacak jumlah berapa orang yg sudah klik tombol beli. Namun, untuk technical test ini saya tidak memasang Google Analytics nya untuk kesederhaanaan, tapi gantinya saya sudah menyiapkan pipeline data yg valid di window.dataLayer untuk nantinya dihubungkan/diganti dengan event tracking aslinya seperti GA4. Dan untuk simulasi juga sudah dibuatkan floating box di kanan bawah untuk melacak/melihat event yg sudah di track ketika user melakukan suatu "action".
+   - Asumsinya menggunakan event tracking seperti Google Analytics, Posthog, dsb untuk melacak/mengetahui jumlah berapa orang yg sudah klik tombol beli atau melacak jumlah klik pada suatu action. Namun, untuk technical test ini saya tidak memasang Google Analytics nya untuk kesederhanaan, tapi gantinya saya sudah menyiapkan pipeline data yg valid di _window.dataLayer_ untuk nantinya dihubungkan/diganti dengan event tracking aslinya seperti GA4. Dan untuk simulasi juga sudah dibuatkan floating box di kanan bawah untuk melacak/melihat event yg sudah di track ketika user melakukan suatu "action".
 
 ---
 

@@ -144,10 +144,8 @@ export function LeadsManagerTab({
                 <td className="px-6 py-4 text-slate-700">
                   {lead.company || <span className="text-slate-400 italic">Pribadi</span>}
                 </td>
-                <td className="px-6 py-4">
-                  <span className="bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-md text-[11px] font-semibold border border-indigo-100">
-                    {lead.interest || "Konsultasi Umum"}
-                  </span>
+                <td className="px-6 py-4 text-slate-800 font-medium min-w-[180px]">
+                  {lead.interest || "Konsultasi Umum"}
                 </td>
                 <td className="px-6 py-4">
                   <div className="space-y-0.5 text-[11px]">
