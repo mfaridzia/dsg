@@ -46,6 +46,42 @@ describe("2. Pricing & Annual Billing Logic", () => {
     // 100.000 * 12 = 1.200.000 - 20% = 960.000
     assert.equal(expectedYearly, 960000);
   });
+
+  it("harus mencocokkan item tahunan saat update quantity dan remove item", () => {
+    interface TestItem {
+      productId: string;
+      tierId: string;
+      billingCycle?: "monthly" | "yearly";
+      quantity: number;
+    }
+
+    const items: TestItem[] = [
+      { productId: "prod-1", tierId: "pro", billingCycle: "yearly", quantity: 1 },
+      { productId: "prod-2", tierId: "basic", billingCycle: "monthly", quantity: 2 },
+    ];
+
+    // Find yearly item with explicit billingCycle
+    const yearlyIndex = items.findIndex((i) => {
+      if (i.productId !== "prod-1" || i.tierId !== "pro") return false;
+      return (i.billingCycle || "monthly") === "yearly";
+    });
+    assert.equal(yearlyIndex, 0, "Item tahunan harus ditemukan dengan billingCycle: 'yearly'");
+
+    // Fallback find if billingCycle is undefined
+    const fallbackIndex = items.findIndex((i) => {
+      if (i.productId !== "prod-1" || i.tierId !== "pro") return false;
+      return true;
+    });
+    assert.equal(fallbackIndex, 0, "Item tahunan harus ditemukan saat billingCycle tidak dispesifikasikan");
+
+    // Remove yearly item
+    const filtered = items.filter((i) => {
+      if (i.productId !== "prod-1" || i.tierId !== "pro") return true;
+      return (i.billingCycle || "monthly") !== "yearly";
+    });
+    assert.equal(filtered.length, 1);
+    assert.equal(filtered[0].productId, "prod-2");
+  });
 });
 
 describe("3. Voucher Code Validation & Calculation Rules", () => {

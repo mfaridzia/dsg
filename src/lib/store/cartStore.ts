@@ -147,11 +147,20 @@ export const useCartStore = create<CartStore>()(
         return { success: true };
       },
 
-      updateItemQuantity: (productId: string, tierId: string, delta: number, billingCycle: "monthly" | "yearly" = "monthly") => {
+      updateItemQuantity: (
+        productId: string,
+        tierId: string,
+        delta: number,
+        billingCycle?: "monthly" | "yearly"
+      ) => {
         const items = [...get().items];
-        const index = items.findIndex(
-          (i) => i.productId === productId && i.tierId === tierId && (i.billingCycle || "monthly") === billingCycle
-        );
+        const index = items.findIndex((i) => {
+          if (i.productId !== productId || i.tierId !== tierId) return false;
+          if (billingCycle) {
+            return (i.billingCycle || "monthly") === billingCycle;
+          }
+          return true;
+        });
 
         if (index === -1) {
           return { success: false, error: "Item tidak ditemukan di keranjang." };
@@ -185,10 +194,18 @@ export const useCartStore = create<CartStore>()(
         return { success: true };
       },
 
-      removeItem: (productId: string, tierId: string, billingCycle: "monthly" | "yearly" = "monthly") => {
-        const items = get().items.filter(
-          (i) => !(i.productId === productId && i.tierId === tierId && (i.billingCycle || "monthly") === billingCycle)
-        );
+      removeItem: (
+        productId: string,
+        tierId: string,
+        billingCycle?: "monthly" | "yearly"
+      ) => {
+        const items = get().items.filter((i) => {
+          if (i.productId !== productId || i.tierId !== tierId) return true;
+          if (billingCycle) {
+            return (i.billingCycle || "monthly") !== billingCycle;
+          }
+          return false;
+        });
         set({ items });
       },
 

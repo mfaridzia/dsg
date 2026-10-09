@@ -45,9 +45,14 @@ export function CartPage() {
   const originalSubtotal = cartStore.getOriginalSubtotal();
   const totalLicenses = cartStore.getTotalLicenseCount();
 
-  const handleUpdateQty = (productId: string, tierId: string, delta: number) => {
+  const handleUpdateQty = (
+    productId: string,
+    tierId: string,
+    delta: number,
+    billingCycle?: "monthly" | "yearly"
+  ) => {
     setErrorMessage(null);
-    const result = cartStore.updateItemQuantity(productId, tierId, delta);
+    const result = cartStore.updateItemQuantity(productId, tierId, delta, billingCycle);
     if (!result.success) {
       setErrorMessage(result.error || "Gagal mengubah jumlah lisensi.");
       toast.error(result.error || "Gagal mengubah jumlah lisensi.");
@@ -56,8 +61,13 @@ export function CartPage() {
     }
   };
 
-  const handleRemoveItem = (productId: string, tierId: string, name: string) => {
-    cartStore.removeItem(productId, tierId);
+  const handleRemoveItem = (
+    productId: string,
+    tierId: string,
+    name: string,
+    billingCycle?: "monthly" | "yearly"
+  ) => {
+    cartStore.removeItem(productId, tierId, billingCycle);
     toast.info(`${name} dihapus dari keranjang.`);
   };
 
@@ -154,7 +164,7 @@ export function CartPage() {
               <div className="bg-white rounded-3xl border border-slate-200 shadow-xs divide-y divide-slate-100 overflow-hidden">
                 {items.map((item) => (
                   <div
-                    key={`${item.productId}-${item.tierId}`}
+                    key={`${item.productId}-${item.tierId}-${item.billingCycle || "monthly"}`}
                     className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6 hover:bg-slate-50/50 transition"
                   >
                     {/* Item Details */}
@@ -190,7 +200,7 @@ export function CartPage() {
                       <div className="flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
                         <button
                           type="button"
-                          onClick={() => handleUpdateQty(item.productId, item.tierId, -1)}
+                          onClick={() => handleUpdateQty(item.productId, item.tierId, -1, item.billingCycle)}
                           className="px-3 py-1.5 text-slate-600 hover:bg-slate-200 text-sm font-bold transition"
                           title="Kurangi Lisensi"
                         >
@@ -201,7 +211,7 @@ export function CartPage() {
                         </span>
                         <button
                           type="button"
-                          onClick={() => handleUpdateQty(item.productId, item.tierId, 1)}
+                          onClick={() => handleUpdateQty(item.productId, item.tierId, 1, item.billingCycle)}
                           className="px-3 py-1.5 text-slate-600 hover:bg-slate-200 text-sm font-bold transition"
                           title="Tambah Lisensi"
                         >
@@ -220,7 +230,7 @@ export function CartPage() {
 
                       <button
                         type="button"
-                        onClick={() => handleRemoveItem(item.productId, item.tierId, item.productName)}
+                        onClick={() => handleRemoveItem(item.productId, item.tierId, item.productName, item.billingCycle)}
                         className="p-2 text-slate-400 hover:text-rose-600 transition rounded-lg hover:bg-rose-50"
                         title="Hapus Dari Keranjang"
                       >
