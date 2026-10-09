@@ -17,11 +17,22 @@ export const useUtmStore = create<UtmStore>()(
       capturedAt: null,
 
       captureFromUrl: (searchParams: URLSearchParams) => {
-        const source = searchParams.get("utm_source");
-        const medium = searchParams.get("utm_medium");
-        const campaign = searchParams.get("utm_campaign");
-        const content = searchParams.get("utm_content");
-        const term = searchParams.get("utm_term");
+        const source =
+          searchParams.get("utm_source") ||
+          searchParams.get("source") ||
+          searchParams.get("ref");
+        const medium =
+          searchParams.get("utm_medium") ||
+          searchParams.get("medium");
+        const campaign =
+          searchParams.get("utm_campaign") ||
+          searchParams.get("campaign");
+        const content =
+          searchParams.get("utm_content") ||
+          searchParams.get("content");
+        const term =
+          searchParams.get("utm_term") ||
+          searchParams.get("term");
 
         // If at least one UTM parameter is present, record it
         if (source || medium || campaign || content || term) {
