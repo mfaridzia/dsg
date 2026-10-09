@@ -45,6 +45,13 @@ interface OrderSnapshot {
     quantity: number;
   }[];
   totalAmount: number;
+  utm?: {
+    utm_source?: string;
+    utm_medium?: string;
+    utm_campaign?: string;
+    utm_content?: string;
+    utm_term?: string;
+  };
 }
 
 function generateInvoiceNumber(): string {
@@ -179,6 +186,7 @@ export default function CheckoutPage() {
         quantity: item.quantity,
       })),
       totalAmount: finalTotal,
+      utm: utmStore.getUtmPayload(),
     };
 
     setPendingOrder(snapshot);
