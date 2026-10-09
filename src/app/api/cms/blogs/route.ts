@@ -3,6 +3,7 @@ import { db, ensureDatabaseTables } from "@/db";
 import { blogPosts } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { normalizeDate } from "@/lib/utils";
 
 export async function GET() {
   try {
@@ -11,7 +12,30 @@ export async function GET() {
       .select()
       .from(blogPosts)
       .orderBy(desc(blogPosts.publishedAt));
-    return NextResponse.json({ success: true, data: rows });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const formatted = rows.map((r: any) => ({
+      id: r.id,
+      slug: r.slug,
+      title: r.title,
+      excerpt: r.excerpt,
+      content: r.content,
+      coverImageUrl: r.coverImageUrl,
+      category: r.category,
+      author: {
+        name: r.authorName || "Tim Editorial Kodeva",
+        role: r.authorRole || "Author & Editor",
+        avatarUrl:
+          r.authorAvatarUrl ||
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80",
+      },
+      publishedAt: normalizeDate(r.publishedAt).toISOString(),
+      readTimeMinutes: r.readTimeMinutes,
+      linkedProductSlug: r.linkedProductSlug,
+      status: r.status,
+    }));
+
+    return NextResponse.json({ success: true, data: formatted });
   } catch (err: unknown) {
     console.error("[Get Blogs Error]:", err);
     return NextResponse.json(

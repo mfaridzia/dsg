@@ -14,8 +14,38 @@ export function formatIDR(amount: number): string {
   }).format(amount);
 }
 
+export function normalizeDate(date: string | Date | number): Date {
+  let d: Date;
+  if (date instanceof Date) {
+    d = date;
+  } else if (typeof date === "number") {
+    // If it's in seconds (< 1e11), convert to milliseconds (* 1000)
+    d = date < 1e11 ? new Date(date * 1000) : new Date(date);
+  } else if (typeof date === "string") {
+    const num = Number(date);
+    if (!isNaN(num) && date.trim() !== "") {
+      d = num < 1e11 ? new Date(num * 1000) : new Date(num);
+    } else {
+      d = new Date(date);
+    }
+  } else {
+    d = new Date();
+  }
+
+  if (isNaN(d.getTime())) {
+    return new Date();
+  }
+
+  // Auto-heal year > 3000 (e.g. 57897) caused by Drizzle mode: "timestamp" multiplying millisecond integers by 1000
+  if (d.getFullYear() > 3000) {
+    d = new Date(Math.round(d.getTime() / 1000));
+  }
+
+  return d;
+}
+
 export function formatDate(date: string | Date | number): string {
-  const d = new Date(date);
+  const d = normalizeDate(date);
   if (isNaN(d.getTime())) return "-";
   return new Intl.DateTimeFormat("id-ID", {
     timeZone: "Asia/Jakarta",

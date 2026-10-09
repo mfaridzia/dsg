@@ -7,7 +7,7 @@ import { blogPosts } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { DEFAULT_BLOG_POSTS, BlogPost } from "@/lib/data/cmsContent";
 import { PRODUCTS } from "@/lib/data/products";
-import { formatDate, formatIDR } from "@/lib/utils";
+import { formatDate, formatIDR, normalizeDate } from "@/lib/utils";
 import {
   Calendar,
   Clock,
@@ -63,7 +63,7 @@ export default async function BlogPreviewPage({ params }: BlogPreviewPageProps) 
           role: r.authorRole,
           avatarUrl: r.authorAvatarUrl,
         },
-        publishedAt: new Date(r.publishedAt).toISOString(),
+        publishedAt: normalizeDate(r.publishedAt).toISOString(),
         readTimeMinutes: r.readTimeMinutes,
         linkedProductSlug: r.linkedProductSlug || undefined,
         status: r.status,

@@ -7,7 +7,7 @@ import { blogPosts } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { DEFAULT_BLOG_POSTS, BlogPost } from "@/lib/data/cmsContent";
 import { PRODUCTS } from "@/lib/data/products";
-import { formatDate, formatIDR, getOptimizedOgImageUrl } from "@/lib/utils";
+import { formatDate, formatIDR, getOptimizedOgImageUrl, normalizeDate } from "@/lib/utils";
 import { Calendar, Clock, ArrowLeft, ArrowRight, Tag, Sparkles } from "lucide-react";
 
 interface BlogPostPageProps {
@@ -109,7 +109,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         coverImageUrl: r.coverImageUrl,
         category: r.category,
         author: { name: r.authorName, role: r.authorRole, avatarUrl: r.authorAvatarUrl },
-        publishedAt: new Date(r.publishedAt).toISOString(),
+        publishedAt: normalizeDate(r.publishedAt).toISOString(),
         readTimeMinutes: r.readTimeMinutes,
         linkedProductSlug: r.linkedProductSlug || undefined,
       };

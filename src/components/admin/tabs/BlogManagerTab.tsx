@@ -17,6 +17,7 @@ import {
   Loader2,
   Sparkles,
   Eye,
+  User,
 } from "lucide-react";
 import { BlogPost, BlogFormData } from "@/types/blog";
 import { PRODUCTS } from "@/lib/data/products";
@@ -114,10 +115,10 @@ export function BlogManagerTab({
       coverImageUrl:
         editingBlog.coverImageUrl ||
         "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1200&q=80",
-      authorName: editingBlog.author?.name || "Tim Editorial Kodeva",
-      authorRole: editingBlog.author?.role || "Business Specialist",
+      authorName: editingBlog.author?.name?.trim() || "Tim Editorial Kodeva",
+      authorRole: editingBlog.author?.role?.trim() || "Business Specialist",
       authorAvatarUrl:
-        editingBlog.author?.avatarUrl ||
+        editingBlog.author?.avatarUrl?.trim() ||
         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80",
       readTimeMinutes: editingBlog.readTimeMinutes || 5,
       linkedProductSlug: editingBlog.linkedProductSlug,
@@ -380,6 +381,106 @@ export function BlogManagerTab({
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Author Information Section */}
+            <div className="sm:col-span-2 p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+              <div className="flex items-center gap-2 border-b border-slate-200/80 pb-2.5">
+                <User className="w-4 h-4 text-indigo-600" />
+                <span className="font-bold text-slate-800 text-xs">
+                  Identitas Penulis Artikel (Author)
+                </span>
+                <span className="text-[10px] text-slate-400">
+                  (Dapat disesuaikan bebas oleh admin untuk redaksi / guest writer)
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-700 text-[11px]">Nama Penulis</label>
+                  <input
+                    type="text"
+                    value={editingBlog.author?.name ?? ""}
+                    onChange={(e) =>
+                      setEditingBlog((prev) =>
+                        prev
+                          ? {
+                              ...prev,
+                              author: {
+                                name: e.target.value,
+                                role: prev.author?.role || "",
+                                avatarUrl: prev.author?.avatarUrl || "",
+                              },
+                            }
+                          : prev
+                      )
+                    }
+                    placeholder="Contoh: Farid Zia"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-slate-900 font-semibold focus:border-indigo-400"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-700 text-[11px]">Jabatan / Peran</label>
+                  <input
+                    type="text"
+                    value={editingBlog.author?.role ?? ""}
+                    onChange={(e) =>
+                      setEditingBlog((prev) =>
+                        prev
+                          ? {
+                              ...prev,
+                              author: {
+                                name: prev.author?.name || "",
+                                role: e.target.value,
+                                avatarUrl: prev.author?.avatarUrl || "",
+                              },
+                            }
+                          : prev
+                      )
+                    }
+                    placeholder="Contoh: Tech Specialist, Kodeva"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:border-indigo-400"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-700 text-[11px]">Foto Avatar (URL)</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="url"
+                      value={editingBlog.author?.avatarUrl ?? ""}
+                      onChange={(e) =>
+                        setEditingBlog((prev) =>
+                          prev
+                            ? {
+                                ...prev,
+                                author: {
+                                  name: prev.author?.name || "",
+                                  role: prev.author?.role || "",
+                                  avatarUrl: e.target.value,
+                                },
+                              }
+                            : prev
+                        )
+                      }
+                      placeholder="https://images.unsplash.com/..."
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-slate-900 font-mono text-[10px] focus:border-indigo-400"
+                    />
+                    {editingBlog.author?.avatarUrl && (
+                      <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0 border border-slate-300 bg-slate-100">
+                        <Image
+                          src={editingBlog.author.avatarUrl}
+                          alt=""
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="sm:col-span-2 space-y-1">

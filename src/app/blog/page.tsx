@@ -4,6 +4,7 @@ import { blogPosts } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { DEFAULT_BLOG_POSTS, BlogPost } from "@/lib/data/cmsContent";
 import { BlogListClient } from "@/components/blog/BlogListClient";
+import { normalizeDate } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Pusat Edukasi & Blog Bisnis UMKM — Kodeva",
@@ -73,7 +74,7 @@ export default async function BlogPage() {
           role: r.authorRole,
           avatarUrl: r.authorAvatarUrl,
         },
-        publishedAt: new Date(r.publishedAt).toISOString(),
+        publishedAt: normalizeDate(r.publishedAt).toISOString(),
         readTimeMinutes: r.readTimeMinutes,
         linkedProductSlug: r.linkedProductSlug || undefined,
       }));

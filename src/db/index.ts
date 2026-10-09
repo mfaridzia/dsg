@@ -162,6 +162,21 @@ export async function ensureDatabaseTables() {
       )
     `);
 
+    // Safe migration: fix millisecond timestamps in SQLite integer columns
+    try {
+      await client.execute(
+        "UPDATE blog_posts SET published_at = CAST(published_at / 1000 AS INTEGER) WHERE published_at > 100000000000"
+      );
+      await client.execute(
+        "UPDATE blog_posts SET updated_at = CAST(updated_at / 1000 AS INTEGER) WHERE updated_at > 100000000000"
+      );
+      await client.execute(
+        "UPDATE landing_content SET updated_at = CAST(updated_at / 1000 AS INTEGER) WHERE updated_at > 100000000000"
+      );
+    } catch {
+      // Ignore if table doesn't have rows or already migrated
+    }
+
     // Seed default Landing Content if empty
     const existingLanding = await client.execute("SELECT id FROM landing_content WHERE id = 'main'");
     if (existingLanding.rows.length === 0) {
@@ -183,7 +198,7 @@ export async function ensureDatabaseTables() {
           DEFAULT_LANDING_CONTENT.hero.ctaSecondaryLink,
           JSON.stringify(DEFAULT_LANDING_CONTENT.faqs),
           JSON.stringify(DEFAULT_LANDING_CONTENT.testimonials),
-          Date.now(),
+          Math.floor(Date.now() / 1000),
         ],
       });
     }
@@ -212,8 +227,8 @@ export async function ensureDatabaseTables() {
             post.readTimeMinutes,
             post.linkedProductSlug || null,
             "published",
-            new Date(post.publishedAt).getTime(),
-            Date.now(),
+            Math.floor(new Date(post.publishedAt).getTime() / 1000),
+            Math.floor(Date.now() / 1000),
           ],
         });
       }
