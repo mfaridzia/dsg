@@ -41,6 +41,7 @@ export default function QuillEditor({ value, onChange, placeholder }: QuillEdito
           toolbar: [
             [{ header: [2, 3, 4, false] }],
             ["bold", "italic", "underline", "strike"],
+            [{ color: [] }, { background: [] }],
             [{ list: "ordered" }, { list: "bullet" }],
             ["blockquote", "code-block"],
             ["link", "clean"],
@@ -81,46 +82,86 @@ export default function QuillEditor({ value, onChange, placeholder }: QuillEdito
   }, [value, isLoaded]);
 
   return (
-    <div className="quill-wrapper bg-white rounded-xl overflow-hidden shadow-xs border border-slate-200">
+    <div className="quill-wrapper bg-white rounded-xl shadow-xs border border-slate-200">
       <style jsx global>{`
+        .quill-wrapper {
+          position: relative;
+        }
         .quill-wrapper .ql-toolbar.ql-snow {
+          position: sticky !important;
+          top: 64px !important;
+          z-index: 20 !important;
           border: none !important;
           border-bottom: 1px solid #e2e8f0 !important;
           background-color: #f8fafc !important;
           padding: 8px 12px !important;
+          border-top-left-radius: 0.75rem !important;
+          border-top-right-radius: 0.75rem !important;
+          box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05) !important;
         }
         .quill-wrapper .ql-container.ql-snow {
           border: none !important;
           background-color: #ffffff !important;
           font-family: inherit !important;
+          border-bottom-left-radius: 0.75rem !important;
+          border-bottom-right-radius: 0.75rem !important;
         }
         .quill-wrapper .ql-editor {
-          color: #0f172a !important;
-          font-size: 14px !important;
-          line-height: 1.7 !important;
-          min-height: 280px !important;
-          padding: 16px !important;
-        }
-        .quill-wrapper .ql-editor p,
-        .quill-wrapper .ql-editor span,
-        .quill-wrapper .ql-editor li,
-        .quill-wrapper .ql-editor strong,
-        .quill-wrapper .ql-editor em {
-          color: #0f172a !important;
+          color: #0f172a;
+          font-size: 14px;
+          line-height: 1.7;
+          min-height: 320px;
+          padding: 16px;
         }
         .quill-wrapper .ql-editor h2 {
-          color: #0f172a !important;
-          font-size: 20px !important;
-          font-weight: 700 !important;
-          margin-top: 16px !important;
-          margin-bottom: 8px !important;
+          color: #0f172a;
+          font-size: 20px;
+          font-weight: 700;
+          margin-top: 18px;
+          margin-bottom: 8px;
         }
         .quill-wrapper .ql-editor h3 {
-          color: #0f172a !important;
-          font-size: 16px !important;
-          font-weight: 700 !important;
-          margin-top: 12px !important;
-          margin-bottom: 6px !important;
+          color: #0f172a;
+          font-size: 16px;
+          font-weight: 700;
+          margin-top: 14px;
+          margin-bottom: 6px;
+        }
+        .quill-wrapper .ql-editor a {
+          color: #4f46e5 !important;
+          text-decoration: underline !important;
+          font-weight: 600 !important;
+        }
+        .quill-wrapper .ql-editor blockquote {
+          border-left: 4px solid #6366f1 !important;
+          background-color: #f8fafc !important;
+          padding: 8px 16px !important;
+          border-radius: 0 8px 8px 0 !important;
+          color: #334155 !important;
+          font-style: italic !important;
+          margin: 12px 0 !important;
+        }
+        .quill-wrapper .ql-editor pre.ql-syntax,
+        .quill-wrapper .ql-editor pre {
+          background-color: #0f172a !important;
+          color: #f8fafc !important;
+          border-radius: 8px !important;
+          padding: 12px 16px !important;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+          font-size: 13px !important;
+          margin: 12px 0 !important;
+        }
+        .quill-wrapper .ql-editor code {
+          background-color: #f1f5f9;
+          color: #4338ca;
+          padding: 2px 4px;
+          border-radius: 4px;
+          font-size: 85%;
+        }
+        .quill-wrapper .ql-editor pre code {
+          background-color: transparent !important;
+          color: inherit !important;
+          padding: 0 !important;
         }
         .quill-wrapper .ql-editor.ql-blank::before {
           color: #94a3b8 !important;

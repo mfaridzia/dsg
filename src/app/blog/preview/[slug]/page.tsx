@@ -8,6 +8,7 @@ import { eq } from "drizzle-orm";
 import { DEFAULT_BLOG_POSTS, BlogPost } from "@/lib/data/cmsContent";
 import { PRODUCTS } from "@/lib/data/products";
 import { formatDate, formatIDR, normalizeDate } from "@/lib/utils";
+import { ArticleContent } from "@/components/blog/ArticleContent";
 import {
   Calendar,
   Clock,
@@ -211,10 +212,7 @@ export default async function BlogPreviewPage({ params }: BlogPreviewPageProps) 
           </div>
 
           {/* Rich Content Body */}
-          <div
-            className="prose prose-slate max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-slate-900 prose-p:text-slate-700 prose-p:leading-relaxed prose-li:text-slate-700 prose-strong:text-slate-900 prose-a:text-indigo-600 prose-a:underline hover:prose-a:text-indigo-700"
-            dangerouslySetInnerHTML={{ __html: post.content }}
-          />
+          <ArticleContent content={post.content} />
 
           {/* Linked Product Banner */}
           {linkedProduct && (

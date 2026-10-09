@@ -8,6 +8,7 @@ import { eq } from "drizzle-orm";
 import { DEFAULT_BLOG_POSTS, BlogPost } from "@/lib/data/cmsContent";
 import { PRODUCTS } from "@/lib/data/products";
 import { formatDate, formatIDR, getOptimizedOgImageUrl, normalizeDate } from "@/lib/utils";
+import { ArticleContent } from "@/components/blog/ArticleContent";
 import { Calendar, Clock, ArrowLeft, ArrowRight, Tag, Sparkles } from "lucide-react";
 
 interface BlogPostPageProps {
@@ -195,40 +196,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
 
         {/* Article Body Content */}
-        {post.content.includes("<p>") || post.content.includes("<h") ? (
-          <div
-            className="prose prose-slate max-w-none text-slate-700 leading-relaxed text-sm sm:text-base space-y-4 [&>h2]:text-xl sm:[&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-slate-900 [&>h2]:pt-4 [&>h3]:text-lg sm:[&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-slate-900 [&>h3]:pt-3 [&>p]:leading-relaxed [&>ul]:list-disc [&>ul]:pl-5 [&>ol]:list-decimal [&>ol]:pl-5 [&>blockquote]:border-l-4 [&>blockquote]:border-indigo-500 [&>blockquote]:pl-4 [&>blockquote]:italic"
-            dangerouslySetInnerHTML={{ __html: post.content }}
-          />
-        ) : (
-          <div className="prose prose-slate max-w-none text-slate-700 leading-relaxed text-sm sm:text-base space-y-4">
-            {post.content.split("\n\n").map((block, idx) => {
-              const lines = block.trim().split("\n");
-              if (lines[0].startsWith("### ")) {
-                const heading = lines[0].replace("### ", "");
-                const rest = lines.slice(1).join(" ");
-                return (
-                  <div key={idx} className="space-y-2 pt-2">
-                    <h3 className="text-lg sm:text-xl font-bold text-slate-900">
-                      {heading}
-                    </h3>
-                    {rest && <p className="text-slate-600 leading-relaxed">{rest}</p>}
-                  </div>
-                );
-              }
-              if (lines[0].startsWith("- ")) {
-                return (
-                  <ul key={idx} className="list-disc pl-5 space-y-1">
-                    {lines.map((li, lidx) => (
-                      <li key={lidx}>{li.replace("- ", "")}</li>
-                    ))}
-                  </ul>
-                );
-              }
-              return <p key={idx} className="text-slate-600 leading-relaxed">{block}</p>;
-            })}
-          </div>
-        )}
+        <ArticleContent content={post.content} />
 
         {/* Linked Product Banner */}
         {linkedProduct && (
