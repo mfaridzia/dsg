@@ -133,6 +133,7 @@ export function BlogListClient({ initialPosts }: BlogListClientProps) {
                         alt={post.author.name}
                         fill
                         sizes="28px"
+                        unoptimized={post.author.avatarUrl?.startsWith("data:")}
                         className="object-cover"
                       />
                     </div>

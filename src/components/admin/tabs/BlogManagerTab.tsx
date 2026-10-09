@@ -97,6 +97,45 @@ export function BlogManagerTab({
     }
   };
 
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingAvatar(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (!data.success || !data.url) {
+        throw new Error(data.error || "Gagal mengunggah foto profil");
+      }
+      setEditingBlog((prev) =>
+        prev
+          ? {
+              ...prev,
+              author: {
+                name: prev.author?.name || "",
+                role: prev.author?.role || "",
+                avatarUrl: data.url,
+              },
+            }
+          : prev
+      );
+      toast.success("Foto profil penulis berhasil diunggah!");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Gagal mengunggah foto profil");
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingBlog) return;
@@ -445,7 +484,33 @@ export function BlogManagerTab({
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-bold text-slate-700 text-[11px]">Foto Avatar (URL)</label>
+                  <div className="flex items-center justify-between">
+                    <label className="font-bold text-slate-700 text-[11px]">Foto Avatar Penulis</label>
+                    <label
+                      htmlFor="author-avatar-upload"
+                      className="cursor-pointer text-[10px] text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1"
+                    >
+                      {uploadingAvatar ? (
+                        <>
+                          <Loader2 className="w-2.5 h-2.5 animate-spin" />
+                          <span>Mengunggah...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="w-2.5 h-2.5" />
+                          <span>Upload File</span>
+                        </>
+                      )}
+                    </label>
+                    <input
+                      type="file"
+                      id="author-avatar-upload"
+                      accept="image/png, image/jpeg, image/webp"
+                      onChange={handleAvatarUpload}
+                      disabled={uploadingAvatar}
+                      className="hidden"
+                    />
+                  </div>
                   <div className="flex items-center gap-2">
                     <input
                       type="url"
@@ -464,14 +529,14 @@ export function BlogManagerTab({
                             : prev
                         )
                       }
-                      placeholder="https://images.unsplash.com/..."
+                      placeholder="https://... (URL foto bebas / Cloudflare / dsb)"
                       className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-slate-900 font-mono text-[10px] focus:border-indigo-400"
                     />
                     {editingBlog.author?.avatarUrl && (
-                      <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0 border border-slate-300 bg-slate-100">
+                      <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0 border border-slate-300 bg-slate-100 shadow-xs">
                         <Image
                           src={editingBlog.author.avatarUrl}
-                          alt=""
+                          alt="Avatar"
                           fill
                           className="object-cover"
                           unoptimized

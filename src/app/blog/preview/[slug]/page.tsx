@@ -183,6 +183,7 @@ export default async function BlogPreviewPage({ params }: BlogPreviewPageProps) 
                   alt={post.author.name}
                   fill
                   sizes="44px"
+                  unoptimized={post.author.avatarUrl?.startsWith("data:")}
                   className="object-cover"
                 />
               </div>

@@ -170,6 +170,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 alt={post.author.name}
                 fill
                 sizes="40px"
+                unoptimized={post.author.avatarUrl?.startsWith("data:")}
                 className="object-cover"
               />
             </div>
