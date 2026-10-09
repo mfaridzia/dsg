@@ -570,7 +570,7 @@ export function BlogManagerTab({
 
             <div className="sm:col-span-2 flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-100">
               <div>
-                {editingBlog.slug ? (
+                {"id" in editingBlog && editingBlog.id && editingBlog.slug ? (
                   <Link
                     href={`/blog/preview/${editingBlog.slug}`}
                     target="_blank"
